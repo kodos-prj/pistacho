@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/kodos-prj/chisel/pkg/config"
-	"github.com/kodos-prj/chisel/pkg/database"
+	"github.com/kodos-prj/pistacho/pkg/config"
+	"github.com/kodos-prj/pistacho/pkg/database"
 )
 
 // SyncCommand implements the 'chisel sync' command.

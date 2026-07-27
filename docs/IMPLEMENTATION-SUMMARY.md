@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `chisel install-scripts` command provides a complete solution for executing post-install and post-upgrade scripts in both non-chroot and chroot environments. This document summarizes the implementation details.
+The `pith install-scripts` command provides a complete solution for executing post-install and post-upgrade scripts in both non-chroot and chroot environments. This document summarizes the implementation details.
 
 ## Implementation Status: ✅ COMPLETE
 
@@ -48,7 +48,7 @@ All components have been implemented, tested, and documented.
 #### Non-Chroot Mode (Direct Execution)
 
 ```
-Command:  chisel install-scripts bash
+Command:  pith install-scripts bash
 
 Flow:
   1. Parse --chroot (empty)
@@ -66,7 +66,7 @@ Result:
 #### Chroot Mode (Containerized Execution)
 
 ```
-Command:  chisel install-scripts --chroot /tmp/chroot bash
+Command:  pith install-scripts --chroot /tmp/chroot bash
 
 Flow:
   1. Parse --chroot /tmp/chroot
@@ -278,12 +278,12 @@ ok  github.com/kodos-prj/chisel/internal/cli  0.015s
 ## Quick Start
 
 ### Non-Chroot Mode (Default)
-chisel install bash              # Auto-executes scripts
-chisel install-scripts bash      # Manual re-run
+pith install bash              # Auto-executes scripts
+pith install-scripts bash      # Manual re-run
 
 ### Chroot Mode
-chisel install --chroot /tmp/chroot bash
-chisel install-scripts --chroot /tmp/chroot bash
+pith install --chroot /tmp/chroot bash
+pith install-scripts --chroot /tmp/chroot bash
 ```
 
 ---
@@ -293,7 +293,7 @@ chisel install-scripts --chroot /tmp/chroot bash
 ### Example 1: Basic Non-Chroot Installation
 
 ```bash
-$ chisel install bash
+$ pith install bash
 Downloading bash...
 Extracting bash...
 Creating symlinks...
@@ -306,16 +306,16 @@ Running post_install for bash/5.3.9-1...
 ### Example 2: Chroot Installation with Deferred Scripts
 
 ```bash
-$ chisel install --chroot /tmp/chroot bash
+$ pith install --chroot /tmp/chroot bash
 Downloading bash...
 Extracting bash...
 Creating symlinks...
 
 Note: Install scripts must be executed in chroot context.
 Run the following command to execute install scripts:
-  chisel install-scripts --chroot /tmp/chroot
+  pith install-scripts --chroot /tmp/chroot
 
-$ chisel install-scripts --chroot /tmp/chroot bash
+$ pith install-scripts --chroot /tmp/chroot bash
 Running install scripts (chroot /tmp/chroot) for 1 package(s)...
 ✓ bash: post_install completed
 ✓ 1 install script(s) executed
@@ -324,7 +324,7 @@ Running install scripts (chroot /tmp/chroot) for 1 package(s)...
 ### Example 3: Batch Processing with Verbose Output
 
 ```bash
-$ chisel install-scripts bash glibc grep --verbose
+$ pith install-scripts bash glibc grep --verbose
 Running install scripts (current system context) for 3 package(s)...
 Running post_install for bash/5.3.9-1...
 Running post_install for glibc/2.39-1...
@@ -368,8 +368,8 @@ Running post_install for grep/3.11-1...
 
 ### Help Message
 ```bash
-$ chisel install-scripts --help
-Usage: chisel install-scripts [options] [package ...]
+$ pith install-scripts --help
+Usage: pith install-scripts [options] [package ...]
 Execute post_install/post_upgrade scripts for packages
 
 Options:
@@ -378,13 +378,13 @@ Options:
 
 Examples:
   # Execute scripts directly in current system context
-  chisel install-scripts bash
-  chisel install-scripts bash glibc
-  chisel install-scripts  # Run all packages with scripts
+  pith install-scripts bash
+  pith install-scripts bash glibc
+  pith install-scripts  # Run all packages with scripts
 
   # Execute scripts in chroot context
-  chisel install-scripts --chroot /tmp/chroot bash
-  chisel install-scripts --chroot /tmp/chroot bash glibc
+  pith install-scripts --chroot /tmp/chroot bash
+  pith install-scripts --chroot /tmp/chroot bash glibc
 ```
 
 ### Feature Verification
@@ -451,7 +451,7 @@ Examples:
 - ✅ Works with existing packages without modification
 
 ### Upgrade Path
-1. Users update to new chisel version
+1. Users update to new pith version
 2. Existing registry continues to work
 3. New packages detected automatically
 4. Can run `install-scripts` on demand
@@ -484,7 +484,7 @@ Examples:
 
 ✅ **Dual-mode installation script support is fully implemented**
 
-The `chisel install-scripts` command provides:
+The `pith install-scripts` command provides:
 1. **Complete functionality** - Both non-chroot and chroot modes work
 2. **Comprehensive testing** - 8+ test cases covering all scenarios
 3. **Clear documentation** - User guide with examples and troubleshooting
@@ -503,10 +503,10 @@ The `chisel install-scripts` command provides:
 ## Next Steps
 
 For users:
-1. Update chisel binary: `go build -o chisel ./cmd/chisel`
+1. Update pith binary: `go build -o pith ./cmd/chisel`
 2. Read [INSTALL-SCRIPTS.md](docs/user-guides/INSTALL-SCRIPTS.md)
-3. Try examples: `chisel install-scripts --help`
-4. Use in workflows: `chisel install bash` or `chisel install-scripts bash`
+3. Try examples: `pith install-scripts --help`
+4. Use in workflows: `pith install bash` or `pith install-scripts bash`
 
 For developers:
 1. Review code: `internal/cli/install_scripts.go`

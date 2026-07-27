@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- **Deferred Install Script Execution**: New `chisel install-scripts` command for executing post-install/post-upgrade scripts
+- **Deferred Install Script Execution**: New `pith install-scripts` command for executing post-install/post-upgrade scripts
   - Dual-mode execution: non-chroot (direct) and chroot (containerized)
   - Automatic script detection during package extraction
   - Registry-based operation tracking (`post_install` vs `post_upgrade`)
@@ -25,9 +25,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - **Package Group Support**: Install entire package collections with a single command
-  - `chisel-user install gnome` to install all GNOME desktop packages
-  - `chisel-user search --groups` to list all available package groups
-  - `chisel-user search --group gnome` to view packages in a specific group
+  - `pith-user install gnome` to install all GNOME desktop packages
+  - `pith-user search --groups` to list all available package groups
+  - `pith-user search --group gnome` to view packages in a specific group
   - Support for mixed group and individual package installation
   - Automatic dependency resolution for all packages in groups
 

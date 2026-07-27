@@ -6,8 +6,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/kodos-prj/chisel/pkg/config"
-	"github.com/kodos-prj/chisel/pkg/store"
+	"github.com/kodos-prj/pistacho/pkg/config"
+	"github.com/kodos-prj/pistacho/pkg/store"
 )
 
 // ExtractCommand handles extracting packages.
@@ -23,7 +23,7 @@ func NewExtractCommand(cfg *config.Config) *ExtractCommand {
 }
 
 // Run executes the extract command.
-// Usage: chisel extract <package.pkg.tar.zst> [<package2.pkg.tar.zst>] ...
+// Usage: pith extract <package.pkg.tar.zst> [<package2.pkg.tar.zst>] ...
 func (e *ExtractCommand) Run(args []string) error {
 	if len(args) == 0 {
 		return fmt.Errorf("package file path required")

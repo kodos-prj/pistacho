@@ -10,12 +10,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/kodos-prj/chisel/pkg/build"
-	"github.com/kodos-prj/chisel/pkg/config"
-	"github.com/kodos-prj/chisel/pkg/registry"
-	"github.com/kodos-prj/chisel/pkg/store"
-	"github.com/kodos-prj/chisel/pkg/symlink"
-	"github.com/kodos-prj/chisel/pkg/wrapper"
+	"github.com/kodos-prj/pistacho/pkg/build"
+	"github.com/kodos-prj/pistacho/pkg/config"
+	"github.com/kodos-prj/pistacho/pkg/registry"
+	"github.com/kodos-prj/pistacho/pkg/store"
+	"github.com/kodos-prj/pistacho/pkg/symlink"
+	"github.com/kodos-prj/pistacho/pkg/wrapper"
 )
 
 // Ensure build package is imported for BuildManager usage

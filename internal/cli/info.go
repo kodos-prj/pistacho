@@ -4,9 +4,9 @@ package cli
 import (
 	"fmt"
 
-	"github.com/kodos-prj/chisel/pkg/alpm"
-	"github.com/kodos-prj/chisel/pkg/aur"
-	"github.com/kodos-prj/chisel/pkg/config"
+	"github.com/kodos-prj/pistacho/pkg/alpm"
+	"github.com/kodos-prj/pistacho/pkg/aur"
+	"github.com/kodos-prj/pistacho/pkg/config"
 )
 
 // InfoCommand implements the 'chisel info' command.

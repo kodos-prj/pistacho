@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/kodos-prj/chisel/pkg/config"
+	"github.com/kodos-prj/pistacho/pkg/config"
 )
 
 // CacheCommand implements the 'chisel cache-clean' command.

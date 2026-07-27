@@ -1,26 +1,26 @@
-# Chisel User-Level Package Manager Guide
+# Pistacho User-Level Package Manager Guide
 
-This guide explains how to use chisel as a regular user to install and manage packages at the user level without requiring root/sudo access.
+This guide explains how to use pith as a regular user to install and manage packages at the user level without requiring root/sudo access.
 
 ## Overview
 
-By default, chisel stores packages in `/kod/` which requires root access. This guide shows how to configure chisel to use user-level directories following the XDG Base Directory specification, allowing any user to independently manage packages.
+By default, pith stores packages in `/kod/` which requires root access. This guide shows how to configure pith to use user-level directories following the XDG Base Directory specification, allowing any user to independently manage packages.
 
 **Key Benefits:**
 - ✅ No root/sudo required
 - ✅ Packages isolated per user
 - ✅ Follows XDG standards (~/.local, ~/.config)
 - ✅ Easy to set up and tear down
-- ✅ Compatible with all chisel features
+- ✅ Compatible with all pith features
 
 ## Quick Start
 
 ### 1. Initialize User Environment
 
-Run the setup script to automatically configure chisel for user-level use:
+Run the setup script to automatically configure pith for user-level use:
 
 ```bash
-./chisel-user-init.sh
+./pith-user-init.sh
 ```
 
 This script:
@@ -53,24 +53,24 @@ source ~/.config/fish/config.fish
 
 ```bash
 # Sync package databases
-chisel-user sync
+pith-user sync
 
 # Search for a package
-chisel-user search vim
+pith-user search vim
 
 # Install a package
-chisel-user install nano
+pith-user install nano
 
 # List installed packages
-chisel-user list
+pith-user list
 
 # Remove a package
-chisel-user remove nano
+pith-user remove nano
 ```
 
 ## User-Level Directory Structure
 
-When you run the setup script, chisel creates this directory structure:
+When you run the setup script, pith creates this directory structure:
 
 ```
 ~/.local/share/chisel/              # Main data directory (CHISEL_USER_BASE_DIR)
@@ -98,15 +98,15 @@ Chisel uses this priority order for configuration:
 4. **System config file** (`/etc/chisel/config.json`)
 5. **Built-in defaults** (`/kod`, `/etc/chisel/config.json`)
 
-### Using chisel-user vs chisel
+### Using pith-user vs pith
 
-**chisel-user** (recommended for users):
+**pith-user** (recommended for users):
 - Automatically uses user-level configuration
 - Seamless user experience
 - Falls back to system config if needed
 
 ```bash
-chisel-user install nano
+pith-user install nano
 ```
 
 **chisel** (with environment variables):
@@ -116,7 +116,7 @@ chisel-user install nano
 ```bash
 export CHISEL_USER_BASE_DIR=~/.local/share/chisel
 export CHISEL_CONFIG=~/.config/chisel/config.json
-chisel install nano
+pith install nano
 ```
 
 **Direct flag usage:**
@@ -158,16 +158,16 @@ export CHISEL_SYMLINK_DIR=$HOME/custom/bin
 
 ```bash
 # Search for packages
-chisel-user search vim
+pith-user search vim
 
 # Get detailed package information
-chisel-user info vim
+pith-user info vim
 
 # Install with all dependencies automatically resolved
-chisel-user install vim
+pith-user install vim
 
 # Install without extracting (if already in store)
-chisel-user install vim --no-extract
+pith-user install vim --no-extract
 ```
 
 ### Installing Package Groups
@@ -178,7 +178,7 @@ Chisel supports package groups, which are collections of related packages that y
 
 ```bash
 # See all available package groups
-chisel-user search --groups
+pith-user search --groups
 ```
 
 This shows all available groups with the number of packages in each:
@@ -197,29 +197,29 @@ xfce (45 packages)
 
 ```bash
 # See all packages in a specific group
-chisel-user search --group gnome
+pith-user search --group gnome
 
 # Search for packages in the development tools group
-chisel-user search --group base-devel
+pith-user search --group base-devel
 ```
 
 #### Install a Package Group
 
 ```bash
 # Install all packages from a group
-chisel-user install gnome
+pith-user install gnome
 
 # Install all development tools
-chisel-user install base-devel
+pith-user install base-devel
 
 # Install multiple groups together
-chisel-user install gnome development-tools
+pith-user install gnome development-tools
 
 # Mix groups with individual packages
-chisel-user install gnome vim curl
+pith-user install gnome vim curl
 ```
 
-When installing a group, chisel will:
+When installing a group, pith will:
 1. Show you which packages are from the group
 2. Resolve all dependencies automatically
 3. Download and extract all packages
@@ -230,19 +230,19 @@ When installing a group, chisel will:
 **Desktop Environments:**
 ```bash
 # Install GNOME desktop
-chisel-user install gnome
+pith-user install gnome
 
 # Install KDE Plasma
-chisel-user install kde
+pith-user install kde
 
 # Install XFCE desktop
-chisel-user install xfce
+pith-user install xfce
 ```
 
 **Development Setup:**
 ```bash
 # Install essential development tools
-chisel-user install base-devel development-tools editors
+pith-user install base-devel development-tools editors
 
 # This installs compilers, build tools, version control, and editors
 ```
@@ -250,7 +250,7 @@ chisel-user install base-devel development-tools editors
 **Terminal User:**
 ```bash
 # Install common terminal applications
-chisel-user install base editors
+pith-user install base editors
 ```
 
 ### Chroot Support with Symlink Prefix Stripping
@@ -270,15 +270,15 @@ mkdir /tmp/demo
 cd /tmp/demo
 
 # Install with symlink prefix
-sudo chisel-user install vim --chroot=/tmp/demo
+sudo pith-user install vim --chroot=/tmp/demo
 
 # Or use space-separated syntax
-sudo chisel-user install vim --chroot /tmp/demo
+sudo pith-user install vim --chroot /tmp/demo
 ```
 
 #### What Gets Created
 
-When you run the above command, chisel creates:
+When you run the above command, pith creates:
 
 ```
 /tmp/demo/
@@ -319,7 +319,7 @@ This design allows the `/tmp/demo` directory to be portable—it can be moved, m
 ```bash
 # Setup and install
 mkdir /tmp/dev-chroot
-sudo chisel install --chroot=/tmp/dev-chroot gcc git vim
+sudo pith install --chroot=/tmp/dev-chroot gcc git vim
 
 # Verify symlinks are in the chroot
 ls -la /tmp/dev-chroot/usr/bin/gcc
@@ -345,10 +345,10 @@ Both of these are equivalent:
 
 ```bash
 # Equals-separated syntax
-chisel install vim --chroot=/tmp/demo
+pith install vim --chroot=/tmp/demo
 
 # Space-separated syntax
-chisel install vim --chroot /tmp/demo
+pith install vim --chroot /tmp/demo
 ```
 
 #### Advanced Usage
@@ -357,17 +357,17 @@ Combine with other flags:
 
 ```bash
 # Install with prefix stripping and force overwrite
-chisel install vim --chroot=/tmp/demo --force
+pith install vim --chroot=/tmp/demo --force
 
 # Install multiple packages with prefix stripping
-chisel install vim curl wget --chroot=/tmp/demo
+pith install vim curl wget --chroot=/tmp/demo
 
 # Combine with --base-dir for complete isolation
-sudo chisel --base-dir=/tmp/demo/kod \
+sudo pith --base-dir=/tmp/demo/kod \
   install --chroot=/tmp/demo vim gcc
 
 # Install from AUR with prefix stripping
-chisel install yay --source=aur --chroot=/tmp/demo
+pith install yay --source=aur --chroot=/tmp/demo
 ```
 
 #### Common Mistakes
@@ -376,17 +376,17 @@ chisel install yay --source=aur --chroot=/tmp/demo
 ```bash
 # ❌ Wrong - symlinks created in /tmp/chroot, not /tmp/my-chroot
 mkdir /tmp/my-chroot
-sudo chisel install --chroot=/tmp/chroot vim
+sudo pith install --chroot=/tmp/chroot vim
 
 # ✓ Correct - use the actual directory
-sudo chisel install --chroot=/tmp/my-chroot vim
+sudo pith install --chroot=/tmp/my-chroot vim
 ```
 
 **Mistake 2: Trying to access symlinks on host**
 ```bash
 # ❌ This won't work
 mkdir /tmp/demo
-sudo chisel install --chroot=/tmp/demo vim
+sudo pith install --chroot=/tmp/demo vim
 which vim  # Shows nothing - symlinks are inside /tmp/demo, not on host
 
 # ✓ Correct - access inside the directory
@@ -398,75 +398,75 @@ which vim  # Now it works!
 
 ```bash
 # List all packages
-chisel-user list
+pith-user list
 
 # List with detailed information
-chisel-user list --verbose
+pith-user list --verbose
 
 # Remove a package
-chisel-user remove vim
+pith-user remove vim
 
 # Remove without confirmation
-chisel-user remove vim --force
+pith-user remove vim --force
 ```
 
 ### Updates and Cleanup
 
 ```bash
 # Check for updates
-chisel-user upgrade --dry-run
+pith-user upgrade --dry-run
 
 # Upgrade all packages
-chisel-user upgrade
+pith-user upgrade
 
 # Upgrade specific packages
-chisel-user upgrade bash curl
+pith-user upgrade bash curl
 
 # Remove old versions (keeps 3 most recent)
-chisel-user cleanup --dry-run
+pith-user cleanup --dry-run
 
 # Remove old versions without confirmation
-chisel-user cleanup --force
+pith-user cleanup --force
 
 # Preview cleanup in verbose mode
-chisel-user cleanup --verbose --dry-run
+pith-user cleanup --verbose --dry-run
 ```
 
 ### Cache Management
 
 ```bash
 # Show cache contents
-chisel-user cache --list
+pith-user cache --list
 
 # Preview cache clean
-chisel-user cache --dry-run
+pith-user cache --dry-run
 
 # Clean all cached packages
-chisel-user cache --force
+pith-user cache --force
 ```
 
 ## Troubleshooting
 
-### "Command not found: chisel-user"
+### "Command not found: pith-user"
 
 Make sure you:
-1. Ran `./chisel-user-init.sh`
+1. Ran `./pith-user-init.sh`
 2. Reloaded your shell (`source ~/.bashrc`)
 3. Have ~/.local/bin in your PATH
 
 Check:
 ```bash
 echo $PATH
-ls -la ~/.local/bin/chisel-user
+ls -la ~/.local/bin/pith-user
 ```
 
 ### Setup script not found
 
-The setup script must be in the same directory as the chisel binary:
+The setup script must be in the same directory as the pith binary:
 
 ```bash
 ls -la chisel*
-# Should show: chisel, chisel-user, chisel-user-init.sh
+# Should show: chisel, pith-user, pith-user-init.sh
 ```
 
 ### Packages not in PATH
@@ -484,7 +484,7 @@ echo $PATH
 If packages still aren't available:
 1. Reload your shell: `source ~/.bashrc`
 2. Check LD_LIBRARY_PATH: `echo $LD_LIBRARY_PATH`
-3. Verify package was installed: `chisel-user list`
+3. Verify package was installed: `pith-user list`
 
 ### Database sync fails
 
@@ -492,7 +492,7 @@ Make sure you have internet connectivity:
 
 ```bash
 # Try syncing with verbose output
-chisel-user sync --verbose
+pith-user sync --verbose
 
 # Check if you can reach the mirror
 curl -I https://mirror.rackspace.com/archlinux/core/os/x86_64/core.db
@@ -500,7 +500,7 @@ curl -I https://mirror.rackspace.com/archlinux/core/os/x86_64/core.db
 
 ### Installation fails with permission errors
 
-User-level chisel should not require sudo. If you get permission errors:
+User-level pith should not require sudo. If you get permission errors:
 
 1. Check directory permissions:
 ```bash
@@ -533,7 +533,7 @@ If packages don't work correctly with `--chroot`:
 1. Verify the prefix matches your chroot path:
 ```bash
 # If you're building in /tmp/demo, use that exact prefix
-chisel-user install vim --chroot=/tmp/demo
+pith-user install vim --chroot=/tmp/demo
 ```
 
 2. Check that symlinks were created correctly:
@@ -553,8 +553,8 @@ cat ~/.local/share/chisel/wrappers/vim-wrapper.sh
 4. If paths still contain the prefix:
 ```bash
 # Reinstall without the prefix and try again
-chisel-user remove vim
-chisel-user install vim --chroot=/tmp/demo
+pith-user remove vim
+pith-user install vim --chroot=/tmp/demo
 ```
 
 ## Advanced Usage
@@ -565,14 +565,14 @@ Each user can run the setup independently:
 
 ```bash
 # User 1
-user1@host:~$ ./chisel-user-init.sh
+user1@host:~$ ./pith-user-init.sh
 
 # User 2 (different user)
-user2@host:~$ ./chisel-user-init.sh
+user2@host:~$ ./pith-user-init.sh
 
 # Each has isolated packages
-user1@host:~$ chisel-user list
-user2@host:~$ chisel-user list    # Different packages
+user1@host:~$ pith-user list
+user2@host:~$ pith-user list    # Different packages
 ```
 
 ### Custom Base Directories
@@ -582,10 +582,10 @@ Override the user base directory:
 ```bash
 # Use a different location
 export CHISEL_USER_BASE_DIR=/tmp/my-packages
-chisel-user sync
+pith-user sync
 
 # Or use the wrapper with explicit path
-chisel-user --base-dir /tmp/my-packages install vim
+pith-user --base-dir /tmp/my-packages install vim
 ```
 
 ### Temporary Package Testing
@@ -598,8 +598,8 @@ mkdir /tmp/chisel-test
 export CHISEL_USER_BASE_DIR=/tmp/chisel-test
 
 # Install and test
-chisel-user sync
-chisel-user install test-package
+pith-user sync
+pith-user install test-package
 
 # Clean up
 rm -rf /tmp/chisel-test
@@ -631,17 +631,17 @@ If you have packages installed system-wide and want to migrate to user-level:
 
 ```bash
 # Initialize user environment
-./chisel-user-init.sh
+./pith-user-init.sh
 
 # Reinstall packages in user location
-chisel-user sync
-chisel-user install package1 package2 package3
+pith-user sync
+pith-user install package1 package2 package3
 
 # Verify new installation
-chisel-user list --verbose
+pith-user list --verbose
 
 # Remove system-level packages (requires sudo)
-sudo chisel remove package1 package2 package3
+sudo pith remove package1 package2 package3
 ```
 
 ## Cleanup and Uninstall
@@ -649,13 +649,13 @@ sudo chisel remove package1 package2 package3
 ### Remove Individual Packages
 
 ```bash
-chisel-user remove package-name
+pith-user remove package-name
 ```
 
 ### Remove All User Data
 
 ```bash
-# Remove all chisel user data
+# Remove all pith user data
 rm -rf ~/.local/share/chisel
 rm -rf ~/.config/chisel
 
@@ -672,23 +672,23 @@ rm -rf ~/.local/bin/*
 
 ```bash
 # Periodically remove old versions
-chisel-user cleanup --dry-run    # Preview first
-chisel-user cleanup --force      # Then execute
+pith-user cleanup --dry-run    # Preview first
+pith-user cleanup --force      # Then execute
 ```
 
 ### 2. Cache Management
 
 ```bash
 # Clean cache after upgrades
-chisel-user cache --list         # See what's there
-chisel-user cache --force        # Remove all
+pith-user cache --list         # See what's there
+pith-user cache --force        # Remove all
 ```
 
 ### 3. Database Updates
 
 ```bash
 # Keep databases fresh
-chisel-user sync                # Sync databases regularly
+pith-user sync                # Sync databases regularly
 ```
 
 ### 4. Monitoring Usage
@@ -698,7 +698,7 @@ chisel-user sync                # Sync databases regularly
 du -sh ~/.local/share/chisel/
 
 # List packages and sizes
-chisel-user list --verbose
+pith-user list --verbose
 ```
 
 ## FAQ
@@ -707,10 +707,10 @@ chisel-user list --verbose
 A: By default, each user has isolated packages. To share, set the same CHISEL_USER_BASE_DIR and ensure read permissions.
 
 **Q: Do I need sudo for anything?**
-A: No. User-level chisel is completely sudo-free. All packages go to user-owned directories.
+A: No. User-level pith is completely sudo-free. All packages go to user-owned directories.
 
-**Q: Can I use the system chisel and chisel-user together?**
-A: Yes. System chisel uses /kod, user-level uses ~/.local/share/chisel. They don't conflict.
+**Q: Can I use the system pith and pith-user together?**
+A: Yes. System pith uses /kod, user-level uses ~/.local/share/chisel. They don't conflict.
 
 **Q: What if ~/.local/bin is not in my PATH?**
 A: The setup script adds it. If not, manually add to your ~/.bashrc:
@@ -737,12 +737,12 @@ export LD_LIBRARY_PATH="$HOME/.local/lib:$LD_LIBRARY_PATH"
 ## Getting Help
 
 ```bash
-# Show help for chisel-user
-chisel-user --help
+# Show help for pith-user
+pith-user --help
 
 # Show help for setup
-./chisel-user-init.sh --help
+./pith-user-init.sh --help
 
-# Show chisel help
+# Show pith help
 chisel help
 ```

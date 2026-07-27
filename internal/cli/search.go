@@ -7,9 +7,9 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/kodos-prj/chisel/pkg/alpm"
-	"github.com/kodos-prj/chisel/pkg/aur"
-	"github.com/kodos-prj/chisel/pkg/config"
+	"github.com/kodos-prj/pistacho/pkg/alpm"
+	"github.com/kodos-prj/pistacho/pkg/aur"
+	"github.com/kodos-prj/pistacho/pkg/config"
 )
 
 // SearchCommand implements the 'chisel search' command.

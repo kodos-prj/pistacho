@@ -9,16 +9,16 @@ import (
 	"strings"
 	"time"
 
-	"github.com/kodos-prj/chisel/pkg/alpm"
-	"github.com/kodos-prj/chisel/pkg/aur"
-	"github.com/kodos-prj/chisel/pkg/build"
-	"github.com/kodos-prj/chisel/pkg/config"
-	"github.com/kodos-prj/chisel/pkg/download"
-	"github.com/kodos-prj/chisel/pkg/extract"
-	"github.com/kodos-prj/chisel/pkg/registry"
-	"github.com/kodos-prj/chisel/pkg/store"
-	"github.com/kodos-prj/chisel/pkg/symlink"
-	"github.com/kodos-prj/chisel/pkg/wrapper"
+	"github.com/kodos-prj/pistacho/pkg/alpm"
+	"github.com/kodos-prj/pistacho/pkg/aur"
+	"github.com/kodos-prj/pistacho/pkg/build"
+	"github.com/kodos-prj/pistacho/pkg/config"
+	"github.com/kodos-prj/pistacho/pkg/download"
+	"github.com/kodos-prj/pistacho/pkg/extract"
+	"github.com/kodos-prj/pistacho/pkg/registry"
+	"github.com/kodos-prj/pistacho/pkg/store"
+	"github.com/kodos-prj/pistacho/pkg/symlink"
+	"github.com/kodos-prj/pistacho/pkg/wrapper"
 )
 
 // InstallCommand handles installing packages from official repos or AUR.
@@ -97,7 +97,7 @@ type InstallOptions struct {
 }
 
 // Run executes the install command.
-// Usage: chisel install [options] <package> [package2] ...
+// Usage: pith install [options] <package> [package2] ...
 //
 //	--source=aur        Install from AUR only (skip official repositories)
 //	--source=official   Install from official repositories only (skip AUR)

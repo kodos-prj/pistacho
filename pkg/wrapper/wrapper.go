@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/kodos-prj/chisel/pkg/symlink"
+	"github.com/kodos-prj/pistacho/pkg/symlink"
 )
 
 // Generator handles wrapper script creation for packages.

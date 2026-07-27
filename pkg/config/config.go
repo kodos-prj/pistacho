@@ -10,7 +10,7 @@ import (
 
 const (
 	// DefaultConfigPath is the default location for the config file
-	DefaultConfigPath = "/etc/chisel/config.json"
+	DefaultConfigPath = "/etc/pith/config.json"
 
 	// DefaultBaseDir is the default base directory for all chisel data
 	DefaultBaseDir = "/kod"

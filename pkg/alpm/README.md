@@ -192,7 +192,7 @@ The pure Go implementation is the primary ALPM client used throughout chisel.
 
 ## License
 
-Same as chisel project (see main LICENSE)
+Same as pith project (see main LICENSE)
 
 ## References
 

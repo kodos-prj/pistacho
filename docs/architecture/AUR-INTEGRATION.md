@@ -239,23 +239,23 @@ ResolveDependencies(packageName, includeAUR=true)
 
 ```bash
 # Search AUR for packages
-chisel search --aur "programming"
+pith search --aur "programming"
 
 # Show AUR-only packages
-chisel search --aur --exact vim
+pith search --aur --exact vim
 ```
 
 ### Install from AUR
 
 ```bash
 # Install an AUR package (builds from source)
-sudo chisel install --aur vim-plug
+sudo pith install --aur vim-plug
 
 # Install with build dependencies
-sudo chisel install --aur --build-deps vim-plug
+sudo pith install --aur --build-deps vim-plug
 
 # Force rebuild even if cached
-sudo chisel install --aur --rebuild vim-plug
+sudo pith install --aur --rebuild vim-plug
 ```
 
 ### Get Package Info
@@ -273,26 +273,26 @@ chisel info --aur vim # AUR version (if available)
 
 ```bash
 # Upgrade all packages (checks both sources)
-sudo chisel upgrade
+sudo pith upgrade
 
 # Upgrade only official packages
-sudo chisel upgrade --no-aur
+sudo pith upgrade --no-aur
 
 # Rebuild outdated AUR packages
-sudo chisel upgrade --aur --rebuild-outdated
+sudo pith upgrade --aur --rebuild-outdated
 ```
 
 ### List and Cleanup
 
 ```bash
 # List installed packages, showing source
-chisel list --verbose
+pith list --verbose
 
 # Clean AUR build cache
-chisel cleanup --aur-cache
+pith cleanup --aur-cache
 
 # Remove build logs
-chisel cleanup --aur-logs
+pith cleanup --aur-logs
 ```
 
 ---
@@ -347,18 +347,18 @@ Registry tracks AUR packages:
 
 **--aur**: Include AUR in search/install operations
 ```bash
-chisel install --aur package-name
-chisel search --aur pattern
+pith install --aur package-name
+pith search --aur pattern
 ```
 
 **--rebuild**: Force rebuild of AUR package
 ```bash
-chisel install --aur --rebuild package-name
+pith install --aur --rebuild package-name
 ```
 
 **--build-deps**: Install build dependencies (usually automatic)
 ```bash
-chisel install --aur --build-deps package-name
+pith install --aur --build-deps package-name
 ```
 
 ### Build Environment
@@ -401,12 +401,12 @@ LOGDEST=/kod/build-logs
 
 **First Build**: Slower (download sources, compile)
 ```
-chisel install --aur package-name  [Slow first time]
+pith install --aur package-name  [Slow first time]
 ```
 
 **Incremental Build**: Faster (reuse sources if PKGBUILD unchanged)
 ```
-chisel install --aur --rebuild package-name  [Faster with cached sources]
+pith install --aur --rebuild package-name  [Faster with cached sources]
 ```
 
 **Cache Location**: `/kod/build-cache/`
@@ -449,7 +449,7 @@ chisel install --aur --rebuild package-name  [Faster with cached sources]
 1. Check build logs: `/kod/build-logs/{package}.log`
 2. Review PKGBUILD for errors
 3. Check dependency resolution
-4. Try clean rebuild: `chisel install --aur --rebuild package`
+4. Try clean rebuild: `pith install --aur --rebuild package`
 
 ### Dependency Issues
 

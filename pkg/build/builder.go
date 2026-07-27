@@ -11,7 +11,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/kodos-prj/chisel/pkg/aur"
+	"github.com/kodos-prj/pistacho/pkg/aur"
 )
 
 // BuildManager manages the build process for AUR packages

@@ -6,8 +6,8 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/kodos-prj/chisel/pkg/config"
-	"github.com/kodos-prj/chisel/pkg/registry"
+	"github.com/kodos-prj/pistacho/pkg/config"
+	"github.com/kodos-prj/pistacho/pkg/registry"
 )
 
 // ListCommand implements the 'chisel list' command.

@@ -6,9 +6,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/kodos-prj/chisel/pkg/config"
-	"github.com/kodos-prj/chisel/pkg/extract"
-	"github.com/kodos-prj/chisel/pkg/registry"
+	"github.com/kodos-prj/pistacho/pkg/config"
+	"github.com/kodos-prj/pistacho/pkg/extract"
+	"github.com/kodos-prj/pistacho/pkg/registry"
 )
 
 func TestNewRemoveCommand(t *testing.T) {

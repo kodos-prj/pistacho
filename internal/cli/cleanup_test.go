@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/kodos-prj/chisel/pkg/config"
+	"github.com/kodos-prj/pistacho/pkg/config"
 )
 
 // TestCleanupCommandCreation tests creating cleanup command instances
