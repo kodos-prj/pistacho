@@ -41,13 +41,13 @@ jobs:
         run: |
           go mod download
           mkdir -p build
-          OUTPUT_NAME="chisel-${{ steps.version.outputs.version }}-linux-amd64"
-          go build -ldflags="-s -w" -o "./build/${OUTPUT_NAME}" ./cmd/chisel
+          OUTPUT_NAME="pith-${{ steps.version.outputs.version }}-linux-amd64"
+          go build -ldflags="-s -w" -o "./build/${OUTPUT_NAME}" ./cmd/pith
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: chisel-${{ steps.version.outputs.version }}-linux-amd64
+          name: pith-${{ steps.version.outputs.version }}-linux-amd64
           path: build/
           retention-days: 30
 
