@@ -180,7 +180,7 @@ func TestDefaultUserConfig(t *testing.T) {
 	}
 
 	// Verify derived paths are set
-	if cfg.StoreRoot != filepath.Join(cfg.BaseDir, "store") {
+	if cfg.PoolRoot != filepath.Join(cfg.BaseDir, "store") {
 		t.Error("store root not properly derived from base dir")
 	}
 
@@ -249,7 +249,7 @@ func TestUserConfigPaths(t *testing.T) {
 		actual := ""
 		switch name {
 		case "StoreRoot":
-			actual = cfg.StoreRoot
+			actual = cfg.PoolRoot
 		case "RegistryPath":
 			actual = cfg.RegistryPath
 		case "DBPath":

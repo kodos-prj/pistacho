@@ -13,7 +13,7 @@ import (
 func TestCleanupCommandCreation(t *testing.T) {
 	cfg := &config.Config{
 		BaseDir:      "/tmp/chisel",
-		StoreRoot:    "/tmp/chisel/store",
+		PoolRoot:    "/tmp/chisel/pool",
 		RegistryPath: "/tmp/chisel/registry.json",
 	}
 
@@ -115,13 +115,13 @@ func TestExecuteWithNilOptions(t *testing.T) {
 	tmpDir := t.TempDir()
 	cfg := &config.Config{
 		BaseDir:      tmpDir,
-		StoreRoot:    filepath.Join(tmpDir, "store"),
+		PoolRoot:    filepath.Join(tmpDir, "pool"),
 		RegistryPath: filepath.Join(tmpDir, "registry.json"),
 		KeepVersions: 2,
 	}
 
 	// Create necessary directories
-	os.MkdirAll(cfg.StoreRoot, 0755)
+	os.MkdirAll(cfg.PoolRoot, 0755)
 
 	// Create minimal registry file
 	regPath := cfg.RegistryPath
@@ -143,13 +143,13 @@ func TestExecuteEmptyStore(t *testing.T) {
 	tmpDir := t.TempDir()
 	cfg := &config.Config{
 		BaseDir:      tmpDir,
-		StoreRoot:    filepath.Join(tmpDir, "store"),
+		PoolRoot:    filepath.Join(tmpDir, "pool"),
 		RegistryPath: filepath.Join(tmpDir, "registry.json"),
 		KeepVersions: 2,
 	}
 
 	// Create necessary directories
-	os.MkdirAll(cfg.StoreRoot, 0755)
+	os.MkdirAll(cfg.PoolRoot, 0755)
 
 	// Create minimal registry file
 	os.WriteFile(cfg.RegistryPath, []byte("{}"), 0644)
@@ -170,7 +170,7 @@ func TestExecuteEmptyStore(t *testing.T) {
 func TestFindOldVersionsNone(t *testing.T) {
 	tmpDir := t.TempDir()
 	cfg := &config.Config{
-		StoreRoot: filepath.Join(tmpDir, "store"),
+		PoolRoot: filepath.Join(tmpDir, "pool"),
 	}
 
 	cmd := NewCleanupCommand(cfg)
@@ -292,12 +292,12 @@ func TestCleanupCommandWithKeepVersions(t *testing.T) {
 	tmpDir := t.TempDir()
 	cfg := &config.Config{
 		BaseDir:      tmpDir,
-		StoreRoot:    filepath.Join(tmpDir, "store"),
+		PoolRoot:    filepath.Join(tmpDir, "pool"),
 		RegistryPath: filepath.Join(tmpDir, "registry.json"),
 		KeepVersions: 3,
 	}
 
-	os.MkdirAll(cfg.StoreRoot, 0755)
+	os.MkdirAll(cfg.PoolRoot, 0755)
 	os.WriteFile(cfg.RegistryPath, []byte("{}"), 0644)
 
 	cmd := NewCleanupCommand(cfg)
@@ -319,12 +319,12 @@ func TestCleanupCommandDryRun(t *testing.T) {
 	tmpDir := t.TempDir()
 	cfg := &config.Config{
 		BaseDir:      tmpDir,
-		StoreRoot:    filepath.Join(tmpDir, "store"),
+		PoolRoot:    filepath.Join(tmpDir, "pool"),
 		RegistryPath: filepath.Join(tmpDir, "registry.json"),
 		KeepVersions: 2,
 	}
 
-	os.MkdirAll(cfg.StoreRoot, 0755)
+	os.MkdirAll(cfg.PoolRoot, 0755)
 	os.WriteFile(cfg.RegistryPath, []byte("{}"), 0644)
 
 	cmd := NewCleanupCommand(cfg)
@@ -370,12 +370,12 @@ func TestRegistryNotFound(t *testing.T) {
 	tmpDir := t.TempDir()
 	cfg := &config.Config{
 		BaseDir:      tmpDir,
-		StoreRoot:    filepath.Join(tmpDir, "store"),
+		PoolRoot:    filepath.Join(tmpDir, "pool"),
 		RegistryPath: filepath.Join(tmpDir, "nonexistent.json"),
 		KeepVersions: 2,
 	}
 
-	os.MkdirAll(cfg.StoreRoot, 0755)
+	os.MkdirAll(cfg.PoolRoot, 0755)
 
 	cmd := NewCleanupCommand(cfg)
 	summary, err := cmd.Execute(&CleanupOptions{})
@@ -455,13 +455,13 @@ func TestCleanupWithAUREnabled(t *testing.T) {
 	tmpDir := t.TempDir()
 	cfg := &config.Config{
 		BaseDir:      tmpDir,
-		StoreRoot:    filepath.Join(tmpDir, "store"),
+		PoolRoot:    filepath.Join(tmpDir, "pool"),
 		RegistryPath: filepath.Join(tmpDir, "registry.json"),
 		KeepVersions: 2,
 	}
 
 	// Create necessary directories
-	os.MkdirAll(cfg.StoreRoot, 0755)
+	os.MkdirAll(cfg.PoolRoot, 0755)
 	os.MkdirAll(filepath.Join(tmpDir, "build-cache"), 0755)
 	os.MkdirAll(filepath.Join(tmpDir, "build-logs"), 0755)
 
@@ -523,12 +523,12 @@ func TestCleanupAURWithoutBuildDirs(t *testing.T) {
 	tmpDir := t.TempDir()
 	cfg := &config.Config{
 		BaseDir:      tmpDir,
-		StoreRoot:    filepath.Join(tmpDir, "store"),
+		PoolRoot:    filepath.Join(tmpDir, "pool"),
 		RegistryPath: filepath.Join(tmpDir, "registry.json"),
 		KeepVersions: 2,
 	}
 
-	os.MkdirAll(cfg.StoreRoot, 0755)
+	os.MkdirAll(cfg.PoolRoot, 0755)
 	os.WriteFile(cfg.RegistryPath, []byte("{}"), 0644)
 
 	// Don't create build-cache or build-logs directories
@@ -553,13 +553,13 @@ func TestCleanupMixedPackagesAndAUR(t *testing.T) {
 	tmpDir := t.TempDir()
 	cfg := &config.Config{
 		BaseDir:      tmpDir,
-		StoreRoot:    filepath.Join(tmpDir, "store"),
+		PoolRoot:    filepath.Join(tmpDir, "pool"),
 		RegistryPath: filepath.Join(tmpDir, "registry.json"),
 		KeepVersions: 2,
 	}
 
 	// Create directory structure
-	os.MkdirAll(cfg.StoreRoot, 0755)
+	os.MkdirAll(cfg.PoolRoot, 0755)
 	os.MkdirAll(filepath.Join(tmpDir, "build-cache"), 0755)
 	os.MkdirAll(filepath.Join(tmpDir, "build-logs"), 0755)
 
@@ -615,12 +615,12 @@ func TestCleanupAllOptionsEnabled(t *testing.T) {
 	tmpDir := t.TempDir()
 	cfg := &config.Config{
 		BaseDir:      tmpDir,
-		StoreRoot:    filepath.Join(tmpDir, "store"),
+		PoolRoot:    filepath.Join(tmpDir, "pool"),
 		RegistryPath: filepath.Join(tmpDir, "registry.json"),
 		KeepVersions: 2,
 	}
 
-	os.MkdirAll(cfg.StoreRoot, 0755)
+	os.MkdirAll(cfg.PoolRoot, 0755)
 	os.MkdirAll(filepath.Join(tmpDir, "build-cache"), 0755)
 	os.MkdirAll(filepath.Join(tmpDir, "build-logs"), 0755)
 	os.WriteFile(cfg.RegistryPath, []byte("{}"), 0644)
@@ -654,19 +654,19 @@ func TestCleanupAURWithOfficial(t *testing.T) {
 	tmpDir := t.TempDir()
 	cfg := &config.Config{
 		BaseDir:      tmpDir,
-		StoreRoot:    filepath.Join(tmpDir, "store"),
+		PoolRoot:    filepath.Join(tmpDir, "pool"),
 		RegistryPath: filepath.Join(tmpDir, "registry.json"),
 		KeepVersions: 2,
 	}
 
-	os.MkdirAll(cfg.StoreRoot, 0755)
+	os.MkdirAll(cfg.PoolRoot, 0755)
 	os.MkdirAll(filepath.Join(tmpDir, "build-cache"), 0755)
 	os.MkdirAll(filepath.Join(tmpDir, "build-logs"), 0755)
 	os.WriteFile(cfg.RegistryPath, []byte("{}"), 0644)
 
 	// Simulate official packages in store
-	os.MkdirAll(filepath.Join(cfg.StoreRoot, "bash"), 0755)
-	os.MkdirAll(filepath.Join(cfg.StoreRoot, "bash", "5.0.0"), 0755)
+	os.MkdirAll(filepath.Join(cfg.PoolRoot, "bash"), 0755)
+	os.MkdirAll(filepath.Join(cfg.PoolRoot, "bash", "5.0.0"), 0755)
 
 	cmd := NewCleanupCommand(cfg)
 	opts := &CleanupOptions{

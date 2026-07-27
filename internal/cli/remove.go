@@ -150,7 +150,7 @@ func (r *RemoveCommand) Run(args []string) error {
 
 	// Remove wrapper scripts
 	fmt.Println("\nRemoving wrapper scripts...")
-	wrapperGen := wrapper.NewGenerator(r.config.StoreRoot, r.config.WrapperDir, r.config.SymlinkRoot)
+	wrapperGen := wrapper.NewGenerator(r.config.PoolRoot, r.config.WrapperDir, r.config.SymlinkRoot)
 	for _, pkg := range toRemove {
 		for _, exec := range pkg.Executables {
 			if err := wrapperGen.RemoveWrapper(exec); err != nil {

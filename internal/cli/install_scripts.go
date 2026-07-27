@@ -147,8 +147,8 @@ func (i *InstallScriptsCommand) runInstallScript(pkg *registry.Package, operatio
 
 // runInstallScriptDirect executes an install script directly in the current system context
 func (i *InstallScriptsCommand) runInstallScriptDirect(pkg *registry.Package, operation string) error {
-	// Path: /kod/store/<name>/<version>/.INSTALL
-	extractDir := filepath.Join(i.config.StoreRoot, pkg.Name, pkg.Version)
+	// Path: /kod/pool/<name>/<version>/.INSTALL
+	extractDir := filepath.Join(i.config.PoolRoot, pkg.Name, pkg.Version)
 	scriptPath := filepath.Join(extractDir, ".INSTALL")
 
 	// Verify script exists
@@ -158,7 +158,8 @@ func (i *InstallScriptsCommand) runInstallScriptDirect(pkg *registry.Package, op
 
 	// Execute script from root directory context (/), allowing relative paths in scripts to resolve correctly
 	// Source the .INSTALL file using absolute path, then call the function
-	shellCmd := fmt.Sprintf("source '%s' && %s", scriptPath, operation)
+	// Explicitly cd to / to ensure correct working directory for scripts
+	shellCmd := fmt.Sprintf("cd / && source '%s' && %s", scriptPath, operation)
 	cmd := exec.Command("bash", "-c", shellCmd)
 
 	// Capture output
@@ -171,9 +172,10 @@ func (i *InstallScriptsCommand) runInstallScriptDirect(pkg *registry.Package, op
 // runInstallScriptChroot executes an install script in chroot context
 func (i *InstallScriptsCommand) runInstallScriptChroot(pkg *registry.Package, operation string, chrootDir string) error {
 	// Execute script from root directory context, allowing relative paths in scripts to resolve correctly
-	// In chroot, /kod/store/<name>/<version>/.INSTALL is the correct absolute path
-	scriptPath := filepath.Join("/kod/store", pkg.Name, pkg.Version, ".INSTALL")
-	shellCmd := fmt.Sprintf("source %s && %s", scriptPath, operation)
+	// In chroot, /kod/pool/<name>/<version>/.INSTALL is the correct absolute path
+	// Explicitly cd to / to ensure correct working directory for scripts
+	scriptPath := filepath.Join("/kod/pool", pkg.Name, pkg.Version, ".INSTALL")
+	shellCmd := fmt.Sprintf("cd / && source %s && %s", scriptPath, operation)
 
 	cmd := exec.Command("chroot", chrootDir, "bash", "-c", shellCmd)
 

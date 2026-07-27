@@ -43,12 +43,12 @@ func StripPrefix(path, stripPrefix string) (string, error) {
 
 // Manager handles symlink operations for package files.
 type Manager struct {
-	storeRoot   string // Root of the package store (e.g., /kod/store)
+	storeRoot   string // Root of the package pool (e.g., /kod/pool)
 	symlinkRoot string // Root where symlinks are created (e.g., /)
 }
 
 // NewManager creates a new symlink manager.
-// storeRoot is where packages are stored (e.g., /kod/store)
+// storeRoot is where packages are stored (e.g., /kod/pool)
 // symlinkRoot is where symlinks are created (e.g., / for system root)
 func NewManager(storeRoot, symlinkRoot string) *Manager {
 	if symlinkRoot == "" {

@@ -30,7 +30,7 @@ func (e *ExtractCommand) Run(args []string) error {
 	}
 
 	// Create store manager
-	storeManager := store.NewStore(e.config.StoreRoot)
+	storeManager := store.NewStore(e.config.PoolRoot)
 
 	var totalExtracted int
 	var totalSize int64

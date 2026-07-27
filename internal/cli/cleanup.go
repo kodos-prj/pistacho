@@ -121,7 +121,7 @@ func (c *CleanupCommand) Execute(opts *CleanupOptions) (*CleanupSummary, error) 
 	}
 
 	// Create store and symlink managers
-	storeManager := store.NewStore(c.config.StoreRoot)
+	storeManager := store.NewStore(c.config.PoolRoot)
 
 	// Determine symlink directory
 	symlinkDir := c.symlinkDir
@@ -129,7 +129,7 @@ func (c *CleanupCommand) Execute(opts *CleanupOptions) (*CleanupSummary, error) 
 		symlinkDir = c.config.SymlinkRoot
 	}
 
-	symlinkMgr := symlink.NewManager(c.config.StoreRoot, symlinkDir)
+	symlinkMgr := symlink.NewManager(c.config.PoolRoot, symlinkDir)
 
 	// Find old versions
 	oldVersions, err := c.findOldVersions(keepVersions)
@@ -346,7 +346,7 @@ func (c *CleanupCommand) cleanupAUR(opts *CleanupOptions) (int64, int, int, erro
 // findOldVersions identifies versions that can be removed (keeps N most recent)
 
 func (c *CleanupCommand) findOldVersions(keepCount int) (map[string][]string, error) {
-	storeManager := store.NewStore(c.config.StoreRoot)
+	storeManager := store.NewStore(c.config.PoolRoot)
 
 	allPackages, err := storeManager.GetAllPackages()
 	if err != nil {
@@ -435,7 +435,7 @@ func (c *CleanupCommand) isSymlinkActive(pkgName, version string, reg *registry.
 		}
 
 		// Check if target contains this version path
-		expectedPath := filepath.Join(c.config.StoreRoot, pkgName, version)
+		expectedPath := filepath.Join(c.config.PoolRoot, pkgName, version)
 		if strings.Contains(target, expectedPath) {
 			return true, nil // Found active symlink to this version
 		}
@@ -451,7 +451,7 @@ func (c *CleanupCommand) isWrapperActive(pkgName, version string) (bool, error) 
 		symlinkDir = c.config.SymlinkRoot
 	}
 
-	wrapperGen := wrapper.NewGenerator(c.config.StoreRoot, filepath.Join(c.config.BaseDir, "wrappers"), symlinkDir)
+	wrapperGen := wrapper.NewGenerator(c.config.PoolRoot, filepath.Join(c.config.BaseDir, "wrappers"), symlinkDir)
 	wrapperPath := wrapperGen.GetWrapperPath(pkgName)
 
 	// Check if wrapper exists
@@ -475,7 +475,7 @@ func (c *CleanupCommand) isWrapperActive(pkgName, version string) (bool, error) 
 	}
 
 	// Check if version appears in wrapper (in LD_LIBRARY_PATH)
-	versionPath := filepath.Join(c.config.StoreRoot, pkgName, version)
+	versionPath := filepath.Join(c.config.PoolRoot, pkgName, version)
 	if strings.Contains(string(content), versionPath) {
 		return true, nil // Wrapper references this version
 	}

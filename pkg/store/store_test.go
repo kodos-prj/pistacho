@@ -55,8 +55,8 @@ func TestNewStore(t *testing.T) {
 	if store == nil {
 		t.Fatal("NewStore returned nil")
 	}
-	if store.root != DefaultStoreRoot {
-		t.Errorf("Expected root %s, got %s", DefaultStoreRoot, store.root)
+	if store.root != DefaultPoolRoot {
+		t.Errorf("Expected root %s, got %s", DefaultPoolRoot, store.root)
 	}
 
 	customRoot := "/custom/store"

@@ -12,7 +12,7 @@ import (
 func TestInstallScriptsCommandCreation(t *testing.T) {
 	cfg := &config.Config{
 		BaseDir:      "/tmp/chisel",
-		StoreRoot:    "/tmp/chisel/store",
+		PoolRoot:    "/tmp/chisel/pool",
 		RegistryPath: "/tmp/chisel/registry.json",
 	}
 
@@ -120,7 +120,7 @@ func TestExecuteInstallScriptsWithNoScripts(t *testing.T) {
 	
 	cfg := &config.Config{
 		BaseDir:      tmpDir,
-		StoreRoot:    filepath.Join(tmpDir, "store"),
+		PoolRoot:    filepath.Join(tmpDir, "pool"),
 		RegistryPath: filepath.Join(tmpDir, "registry.json"),
 	}
 
@@ -188,7 +188,7 @@ func TestExecuteInstallScriptsNonChrootMode(t *testing.T) {
 	
 	cfg := &config.Config{
 		BaseDir:      tmpDir,
-		StoreRoot:    filepath.Join(tmpDir, "store"),
+		PoolRoot:    filepath.Join(tmpDir, "pool"),
 		RegistryPath: filepath.Join(tmpDir, "registry.json"),
 	}
 
@@ -228,7 +228,7 @@ func TestExecuteInstallScriptsChrootMode(t *testing.T) {
 	
 	cfg := &config.Config{
 		BaseDir:      tmpDir,
-		StoreRoot:    filepath.Join(tmpDir, "store"),
+		PoolRoot:    filepath.Join(tmpDir, "pool"),
 		RegistryPath: filepath.Join(tmpDir, "registry.json"),
 	}
 
@@ -269,7 +269,7 @@ func TestRunInstallScriptDispatcher(t *testing.T) {
 	
 	cfg := &config.Config{
 		BaseDir:      tmpDir,
-		StoreRoot:    filepath.Join(tmpDir, "store"),
+		PoolRoot:    filepath.Join(tmpDir, "pool"),
 		RegistryPath: filepath.Join(tmpDir, "registry.json"),
 	}
 
@@ -285,7 +285,7 @@ func TestRunInstallScriptDispatcher(t *testing.T) {
 	if err1 == nil {
 		t.Error("expected error for missing script in non-chroot mode")
 	}
-	if err1.Error() != "script not found at " + filepath.Join(cfg.StoreRoot, "test", "1.0.0", ".INSTALL") {
+	if err1.Error() != "script not found at " + filepath.Join(cfg.PoolRoot, "test", "1.0.0", ".INSTALL") {
 		t.Logf("Got expected non-chroot dispatch error: %v", err1)
 	}
 
