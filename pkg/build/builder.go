@@ -1,4 +1,4 @@
-// Package build provides build system integration for Chisel.
+// Package build provides build system integration for Pistacho.
 // builder.go implements the build manager for compiling AUR packages.
 package build
 

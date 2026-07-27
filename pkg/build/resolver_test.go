@@ -1,4 +1,4 @@
-// Package build provides build system integration for Chisel.
+// Package build provides build system integration for Pistacho.
 // resolver_test.go contains tests for mixed dependency resolution.
 package build
 

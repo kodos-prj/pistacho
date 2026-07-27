@@ -12,7 +12,7 @@ import (
 
 func TestListCommand_Execute(t *testing.T) {
 	// Create temporary directory for test
-	tmpDir, err := os.MkdirTemp("", "chisel-list-test-*")
+	tmpDir, err := os.MkdirTemp("", "pistacho-list-test-*")
 	if err != nil {
 		t.Fatalf("failed to create temp dir: %v", err)
 	}
@@ -79,7 +79,7 @@ func TestListCommand_Execute(t *testing.T) {
 
 func TestListCommand_EmptyRegistry(t *testing.T) {
 	// Create temporary directory for test
-	tmpDir, err := os.MkdirTemp("", "chisel-list-empty-*")
+	tmpDir, err := os.MkdirTemp("", "pistacho-list-empty-*")
 	if err != nil {
 		t.Fatalf("failed to create temp dir: %v", err)
 	}
@@ -108,7 +108,7 @@ func TestListCommand_EmptyRegistry(t *testing.T) {
 
 func TestListCommand_NonExistentRegistry(t *testing.T) {
 	// Create temporary directory for test
-	tmpDir, err := os.MkdirTemp("", "chisel-list-noexist-*")
+	tmpDir, err := os.MkdirTemp("", "pistacho-list-noexist-*")
 	if err != nil {
 		t.Fatalf("failed to create temp dir: %v", err)
 	}

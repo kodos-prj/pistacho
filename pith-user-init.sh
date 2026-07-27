@@ -21,13 +21,13 @@ NC='\033[0m' # No Color
 
 # Configuration
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PITH_BIN="${SCRIPT_DIR}/chisel"
+PITH_BIN="${SCRIPT_DIR}/pith"
 
 # Determine user directories following XDG spec
 XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
-PITH_CONFIG_DIR="${XDG_CONFIG_HOME}/chisel"
-PITH_DATA_DIR="${XDG_DATA_HOME}/chisel"
+PITH_CONFIG_DIR="${XDG_CONFIG_HOME}/pith"
+PITH_DATA_DIR="${XDG_DATA_HOME}/pith"
 PITH_BIN_DIR="${HOME}/.local/bin"
 PITH_CONFIG_FILE="${PITH_CONFIG_DIR}/config.json"
 
@@ -93,7 +93,7 @@ check_prerequisites() {
 
   if [[ ! -x "$PITH_BIN" ]]; then
     log_error "Pistacho binary not found at $PITH_BIN"
-    log_info "Run: go build -o pith ./cmd/chisel"
+    log_info "Run: go build -o pith ./cmd/pith"
     exit 1
   fi
 
@@ -205,7 +205,7 @@ update_shell_config() {
 
   # Check if already configured
   if grep -q "PITH_USER_BASE_DIR" "$SHELL_RC" 2>/dev/null; then
-    log_warning "Shell already configured for chisel"
+    log_warning "Shell already configured for pith"
     log_info "Skipping shell configuration update"
     echo ""
     return
@@ -270,7 +270,7 @@ main() {
   echo "  3. List packages:    pith list"
   echo "  4. Remove packages:  pith remove <package>"
   echo ""
-  log_info "To use chisel:"
+  log_info "To use pith:"
   echo "  pith --help"
   echo ""
 }

@@ -1,6 +1,6 @@
 # Pistacho Workflow Test Script
 
-This script (`test-workflow.sh`) demonstrates and tests a complete Chisel package management workflow.
+This script (`test-workflow.sh`) demonstrates and tests a complete Pistacho package management workflow.
 
 ## Overview
 
@@ -58,16 +58,16 @@ sudo ./test-workflow.sh
 
 ```
 ================================================================================
-Chisel Workflow Test Script
+Pistacho Workflow Test Script
 ================================================================================
 
    Test package: nano
-   Base directory: /tmp/chisel-test-12345
+   Base directory: /tmp/pistacho-test-12345
    Dry run: false
 
 ==> Checking prerequisites...
-✓ Chisel binary found
-   Chisel version: pith version 0.1.0-dev
+✓ Pistacho binary found
+   Pistacho version: pith version 0.1.0-dev
 
 ================================================================================
 STEP 1: Sync Package Databases
@@ -102,18 +102,18 @@ Found 8 package(s) matching 'nano':
 - **Root access** - For actual package installation (not needed for --dry-run)
 - **jq** (optional) - For pretty-printing registry contents
 
-## Building Chisel First
+## Building Pistacho First
 
-Before running the test script, build chisel:
+Before running the test script, build pistacho:
 
 ```bash
-go build -o pith ./cmd/chisel
+go build -o pith ./cmd/pistacho
 ```
 
 ## Test Environment
 
 The script creates an isolated test environment:
-- Test directory: `/tmp/chisel-test-<pid>`
+- Test directory: `/tmp/pistacho-test-<pid>`
 - Databases: `<testdir>/var/lib/pacman/sync/`
 - Package store: `<testdir>/store/`
 - Registry: `<testdir>/registry.json`
@@ -152,7 +152,7 @@ sudo ./test-workflow.sh --package nodejs
 Keep test files for inspection:
 ```bash
 sudo ./test-workflow.sh --skip-cleanup
-# Inspect /tmp/chisel-test-*/
+# Inspect /tmp/pistacho-test-*/
 ```
 
 ## Phase 5: Cleanup and Cache Management
@@ -174,8 +174,8 @@ This validates:
 ### Step 9: Cache Cleanup
 The workflow tests the cache management command:
 ```bash
-chisel cache --list
-chisel cache --dry-run
+pith cache --list
+pith cache --dry-run
 ```
 
 This validates:
@@ -206,9 +206,9 @@ Both operations include:
 
 ## Troubleshooting
 
-**"Chisel binary not found"**
+**"Pistacho binary not found"**
 ```bash
-go build -o pith ./cmd/chisel
+go build -o pith ./cmd/pistacho
 ```
 
 **"Not running as root"**
@@ -231,13 +231,13 @@ This script can be used in automated testing:
 
 ```bash
 # In CI pipeline
-go build -o pith ./cmd/chisel
+go build -o pith ./cmd/pistacho
 ./test-workflow.sh --dry-run || exit 1
 ```
 
 For full integration testing in CI:
 ```bash
 # Run in Docker with privileges
-docker run --privileged -v $(pwd):/workspace chisel-test \
+docker run --privileged -v $(pwd):/workspace pistacho-test \
   bash -c "cd /workspace && ./test-workflow.sh"
 ```

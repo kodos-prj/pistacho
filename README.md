@@ -1,14 +1,14 @@
 # Pistacho - Cross-Distribution Package Manager
 
-Bring **Arch Linux packages to any Linux distribution**. Chisel runs Arch packages natively on Ubuntu, Fedora, Debian, and other systemd-based distributions with complete dependency isolation and zero host contamination.
+Bring **Arch Linux packages to any Linux distribution**. Pistacho runs Arch packages natively on Ubuntu, Fedora, Debian, and other systemd-based distributions with complete dependency isolation and zero host contamination.
 
 ## Purpose
 
-Chisel solves a real problem: stable LTS distributions (Ubuntu 22.04, Debian 12) have outdated packages, but you need bleeding-edge development tools. Instead of wrestling with PPAs, backports, or containers, Chisel lets you install Arch packages directly with all their dependencies isolated from your host system.
+Pistacho solves a real problem: stable LTS distributions (Ubuntu 22.04, Debian 12) have outdated packages, but you need bleeding-edge development tools. Instead of wrestling with PPAs, backports, or containers, Pistacho lets you install Arch packages directly with all their dependencies isolated from your host system.
 
 ## Key Innovation
 
-Chisel brings Arch packages to any distribution by:
+Pistacho brings Arch packages to any distribution by:
 1. **Complete dependency isolation** - ALL dependencies from Arch (glibc, gcc-libs, everything)
 2. **Wrapper scripts** - Set `LD_LIBRARY_PATH` dynamically so binaries load Arch libraries, not host libraries
 3. **Custom ALPM root** - Uses `/kod/` instead of `/`, works independently of host package manager
@@ -23,7 +23,7 @@ Chisel brings Arch packages to any distribution by:
 
 ```bash
 # Build the project (pure Go, no system dependencies)
-go build -o pith ./cmd/chisel
+go build -o pith ./cmd/pith
 
 # Sync Arch databases
 sudo ./pith sync
@@ -45,10 +45,10 @@ go test ./...
 
 ### User-Level Package Management (no sudo!)
 
-Want to install packages **without sudo**? Chisel supports user-level package management!
+Want to install packages **without sudo**? Pistacho supports user-level package management!
 
 ```bash
-# One-time setup (creates ~/.local/share/chisel and ~/.config/chisel)
+# One-time setup (creates ~/.local/share/pistacho and ~/.config/pistacho)
 ./pith-user-init.sh
 
 # Reload your shell
@@ -67,7 +67,7 @@ pith-user cleanup
 
 **Key Benefits:**
 - ✅ No sudo required
-- ✅ Packages isolated in `~/.local/share/chisel/`
+- ✅ Packages isolated in `~/.local/share/pistacho/`
 - ✅ Executables in `~/.local/bin/`
 - ✅ Per-user isolation
 - ✅ Follows XDG directory standards
@@ -80,7 +80,7 @@ See [USER-GUIDE.md](USER-GUIDE.md) for comprehensive documentation.
 | Feature | System (sudo) | User-Level |
 |---------|--------------|-----------|
 | Installation | `sudo pith install vim` | `pith-user install vim` |
-| Location | `/kod/` (global) | `~/.local/share/chisel/` (per-user) |
+| Location | `/kod/` (global) | `~/.local/share/pistacho/` (per-user) |
 | Permissions | Root required | No sudo needed |
 | Isolation | Shared across users | Per-user |
 | Usage | Server/CI environments | Development, personal use |
@@ -127,7 +127,7 @@ See [USER-GUIDE.md](USER-GUIDE.md) for comprehensive documentation.
 - **Complete isolation** - never mixes host and Arch libraries
 - **Storage overhead** - 2-3x size (worth it for universal compatibility)
 
-## What is Chisel?
+## What is Pistacho?
 
 A **cross-distribution package manager** that:
 - Brings **Arch Linux packages** to Ubuntu, Fedora, Debian, and other systemd-based distributions
@@ -154,14 +154,14 @@ A **cross-distribution package manager** that:
 
 ### CLI
 - **Output**: Color-coded text, progress indicators
-- **Config**: JSON format (`/etc/chisel/config.json`)
+- **Config**: JSON format (`/etc/pistacho/config.json`)
 
 ### Data Storage
 - **Registry**: JSON file at `/kod/registry.json`
 - **Package Store**: Directory structure at `/kod/store/`
 - **Databases**: Arch databases at `/kod/db/` (synced from mirrors)
 - **Wrappers**: Shell scripts at `/kod/wrappers/`
-- **Configuration**: `/etc/chisel/config.json` (JSON, not YAML)
+- **Configuration**: `/etc/pistacho/config.json` (JSON, not YAML)
 
 ### Testing
 - **Unit Tests**: Go's built-in testing package
@@ -203,7 +203,7 @@ A **cross-distribution package manager** that:
 ### Building
 ```bash
 # Build the project (pure Go, no system dependencies)
-go build -o pith ./cmd/chisel
+go build -o pith ./cmd/pith
 
 # Run tests
 go test ./...
@@ -214,9 +214,9 @@ go test -cover ./...
 
 ### Project Structure
 ```
-chisel/
+pistacho/
 ├── cmd/
-│   └── chisel/              # Main CLI entry point
+│   └── pistacho/              # Main CLI entry point
 ├── pkg/                     # Public reusable packages
 │   ├── alpm/                # Package parsing (pure Go ALPM)
 │   ├── build/               # AUR builder and mixed resolver
@@ -271,7 +271,7 @@ When working on this project:
 
 ## Use Cases
 
-Chisel solves three primary use cases:
+Pistacho solves three primary use cases:
 
 ### 1. Development & Tooling
 Install cutting-edge development tools, compilers, build systems, and desktop environments on stable/outdated distributions.
@@ -306,7 +306,7 @@ Allow regular users to independently install and manage packages without root/su
 pith-user install vim nano curl
 pith-user install gnome          # Install desktop environment
 
-# User has isolated installation in ~/.local/share/chisel/
+# User has isolated installation in ~/.local/share/pistacho/
 pith-user list
 pith-user upgrade
 pith-user cleanup
@@ -363,7 +363,7 @@ tar czf build-env.tar.gz ~/build-env
 
 MIT License
 
-Copyright (c) 2026 Chisel Contributors
+Copyright (c) 2026 Pistacho Contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

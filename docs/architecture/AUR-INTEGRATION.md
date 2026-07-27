@@ -1,12 +1,12 @@
 # AUR Integration
 
-Complete guide for Arch User Repository (AUR) integration in Chisel, including architecture, usage, and implementation details.
+Complete guide for Arch User Repository (AUR) integration in Pistacho, including architecture, usage, and implementation details.
 
 ---
 
 ## Overview
 
-Chisel supports installing packages from the Arch User Repository (AUR) in addition to official Arch repositories. AUR packages are built from source using `makepkg` and integrated seamlessly with official packages in Chisel's store and registry.
+Pistacho supports installing packages from the Arch User Repository (AUR) in addition to official Arch repositories. AUR packages are built from source using `makepkg` and integrated seamlessly with official packages in Pistacho's store and registry.
 
 ### Key Features
 
@@ -262,11 +262,11 @@ sudo pith install --aur --rebuild vim-plug
 
 ```bash
 # Get AUR package info
-chisel info --aur vim-plug
+pith info --aur vim-plug
 
 # Compare official vs AUR
-chisel info vim       # Official version
-chisel info --aur vim # AUR version (if available)
+pith info vim       # Official version
+pith info --aur vim # AUR version (if available)
 ```
 
 ### Upgrade with AUR
@@ -453,14 +453,14 @@ pith install --aur --rebuild package-name  [Faster with cached sources]
 
 ### Dependency Issues
 
-1. Use `chisel info --aur package` to see dependencies
+1. Use `pith info --aur package` to see dependencies
 2. Check if dependencies are available in official repos
 3. May need to install AUR dependencies first
 
 ### Version Conflicts
 
-1. Check official version: `chisel info package`
-2. Check AUR version: `chisel info --aur package`
+1. Check official version: `pith info package`
+2. Check AUR version: `pith info --aur package`
 3. Resolve manually or use official if available
 
 ---

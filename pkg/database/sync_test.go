@@ -37,7 +37,7 @@ func TestDownloadDatabase(t *testing.T) {
 	defer server.Close()
 
 	// Create temporary directory
-	tmpDir, err := os.MkdirTemp("", "chisel-test-*")
+	tmpDir, err := os.MkdirTemp("", "pistacho-test-*")
 	if err != nil {
 		t.Fatalf("failed to create temp dir: %v", err)
 	}
@@ -74,7 +74,7 @@ func TestDownloadDatabaseNotFound(t *testing.T) {
 	}))
 	defer server.Close()
 
-	tmpDir, err := os.MkdirTemp("", "chisel-test-*")
+	tmpDir, err := os.MkdirTemp("", "pistacho-test-*")
 	if err != nil {
 		t.Fatalf("failed to create temp dir: %v", err)
 	}
@@ -106,7 +106,7 @@ func TestDownloadDatabaseAtomicWrite(t *testing.T) {
 	}))
 	defer server.Close()
 
-	tmpDir, err := os.MkdirTemp("", "chisel-test-*")
+	tmpDir, err := os.MkdirTemp("", "pistacho-test-*")
 	if err != nil {
 		t.Fatalf("failed to create temp dir: %v", err)
 	}
@@ -153,7 +153,7 @@ func TestSync(t *testing.T) {
 	}))
 	defer server.Close()
 
-	tmpDir, err := os.MkdirTemp("", "chisel-test-*")
+	tmpDir, err := os.MkdirTemp("", "pistacho-test-*")
 	if err != nil {
 		t.Fatalf("failed to create temp dir: %v", err)
 	}
@@ -187,7 +187,7 @@ func TestSyncPartialFailure(t *testing.T) {
 	}))
 	defer server.Close()
 
-	tmpDir, err := os.MkdirTemp("", "chisel-test-*")
+	tmpDir, err := os.MkdirTemp("", "pistacho-test-*")
 	if err != nil {
 		t.Fatalf("failed to create temp dir: %v", err)
 	}
@@ -208,7 +208,7 @@ func TestSyncPartialFailure(t *testing.T) {
 }
 
 func TestDatabaseExists(t *testing.T) {
-	tmpDir, err := os.MkdirTemp("", "chisel-test-*")
+	tmpDir, err := os.MkdirTemp("", "pistacho-test-*")
 	if err != nil {
 		t.Fatalf("failed to create temp dir: %v", err)
 	}
@@ -234,7 +234,7 @@ func TestDatabaseExists(t *testing.T) {
 }
 
 func TestLastSyncTime(t *testing.T) {
-	tmpDir, err := os.MkdirTemp("", "chisel-test-*")
+	tmpDir, err := os.MkdirTemp("", "pistacho-test-*")
 	if err != nil {
 		t.Fatalf("failed to create temp dir: %v", err)
 	}
@@ -272,7 +272,7 @@ func TestLastSyncTime(t *testing.T) {
 }
 
 func TestSyncWithInvalidURL(t *testing.T) {
-	tmpDir, err := os.MkdirTemp("", "chisel-test-*")
+	tmpDir, err := os.MkdirTemp("", "pistacho-test-*")
 	if err != nil {
 		t.Fatalf("failed to create temp dir: %v", err)
 	}
@@ -287,7 +287,7 @@ func TestSyncWithInvalidURL(t *testing.T) {
 }
 
 func TestSyncCreatesDBPath(t *testing.T) {
-	tmpDir, err := os.MkdirTemp("", "chisel-test-*")
+	tmpDir, err := os.MkdirTemp("", "pistacho-test-*")
 	if err != nil {
 		t.Fatalf("failed to create temp dir: %v", err)
 	}

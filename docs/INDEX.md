@@ -1,11 +1,11 @@
 # Documentation Index
 
-Welcome to Chisel documentation! This index helps you find what you're looking for.
+Welcome to Pistacho documentation! This index helps you find what you're looking for.
 
 ## For End Users
 
-- **[FEATURES.md](FEATURES.md)** - Overview of Chisel's capabilities and features
-- **[USE-CASES.md](USE-CASES.md)** - Comprehensive guide to Chisel's three main use cases with real-world scenarios
+- **[FEATURES.md](FEATURES.md)** - Overview of Pistacho's capabilities and features
+- **[USE-CASES.md](USE-CASES.md)** - Comprehensive guide to Pistacho's three main use cases with real-world scenarios
 - **[USER-GUIDE.md](user-guides/USER-GUIDE.md)** - Complete user guide for system and user-level package management
 - **[INSTALL-SCRIPTS.md](user-guides/INSTALL-SCRIPTS.md)** - Guide to post-install and post-upgrade scripts
 - **[CONFIGURATION.md](reference/CONFIGURATION.md)** - Configuration file format and options
@@ -66,4 +66,4 @@ docs/
 - **Something not working?** Check [USER-GUIDE.md](user-guides/USER-GUIDE.md) troubleshooting section
 - **Want to contribute?** Read [DEVELOPER-GUIDE.md](developer/DEVELOPER-GUIDE.md)
 - **Need to understand the system?** Start with [ARCHITECTURE.md](architecture/ARCHITECTURE.md)
-- **Configuring Chisel?** See [CONFIGURATION.md](reference/CONFIGURATION.md)
+- **Configuring Pistacho?** See [CONFIGURATION.md](reference/CONFIGURATION.md)

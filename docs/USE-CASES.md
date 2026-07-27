@@ -1,10 +1,10 @@
 # Pistacho Use Cases
 
-This document provides comprehensive coverage of Chisel's three main use cases with real-world scenarios, benefits, and implementation details.
+This document provides comprehensive coverage of Pistacho's three main use cases with real-world scenarios, benefits, and implementation details.
 
 ## Overview
 
-Chisel is a cross-distribution package manager that brings Arch Linux packages to any systemd-based Linux distribution. It solves three primary use cases:
+Pistacho is a cross-distribution package manager that brings Arch Linux packages to any systemd-based Linux distribution. It solves three primary use cases:
 
 1. **Development & Tooling** - Get cutting-edge development tools on stable systems
 2. **Per-User Package Management** - Install packages without sudo access
@@ -28,9 +28,9 @@ Stable Linux distributions (Ubuntu 22.04 LTS, Debian 12) have outdated packages.
 - ❌ Building from source is time-consuming and error-prone
 - ❌ Distribution backports lag behind upstream releases
 
-### Solution: Chisel
+### Solution: Pistacho
 
-Chisel installs Arch packages directly with complete dependency isolation. All dependencies come from Arch, not the host system.
+Pistacho installs Arch packages directly with complete dependency isolation. All dependencies come from Arch, not the host system.
 
 ### Scenarios
 
@@ -151,9 +151,9 @@ System-wide package installation requires root/sudo access. In many scenarios, u
 - ❌ Non-interactive environments (HPC, shared servers) prevent global installation
 - ❌ Development environments need quick provisioning and cleanup
 
-### Solution: Chisel User-Level Management
+### Solution: Pistacho User-Level Management
 
-Chisel provides `pith-user` for per-user package management without requiring root access. Each user has their own isolated installation in `~/.local/share/chisel/`.
+Pistacho provides `pith-user` for per-user package management without requiring root access. Each user has their own isolated installation in `~/.local/share/pistacho/`.
 
 ### Scenarios
 
@@ -188,7 +188,7 @@ pith-user cleanup
 **Result:**
 - User can install packages independently
 - No root access required
-- Packages in `~/.local/share/chisel/` (user owns directory)
+- Packages in `~/.local/share/pistacho/` (user owns directory)
 - Executables in `~/.local/bin/` (in PATH)
 - Complete isolation from other users
 
@@ -232,7 +232,7 @@ source .venv/bin/activate
 
 # When done, cleanup
 pith-user cleanup
-rm -rf ~/.local/share/chisel
+rm -rf ~/.local/share/pistacho
 ```
 
 **Result:**
@@ -271,7 +271,7 @@ gnuplot script.gnuplot
 ### Directory Structure
 
 ```bash
-~/.local/share/chisel/              # Main data directory
+~/.local/share/pistacho/              # Main data directory
 ├── store/                          # Extracted packages
 │   ├── gcc/5.3.0-1/usr/bin/...
 │   ├── vim/9.0.0-1/usr/bin/...
@@ -290,12 +290,12 @@ gnuplot script.gnuplot
 │   └── ...
 └── registry.json                   # Installed packages registry
 
-~/.config/chisel/                   # User configuration
+~/.config/pistacho/                   # User configuration
 └── config.json
 
 ~/.local/bin/                       # User symlinks (in PATH)
-├── gcc -> ~/.local/share/chisel/wrappers/gcc-wrapper.sh
-├── vim -> ~/.local/share/chisel/wrappers/vim-wrapper.sh
+├── gcc -> ~/.local/share/pistacho/wrappers/gcc-wrapper.sh
+├── vim -> ~/.local/share/pistacho/wrappers/vim-wrapper.sh
 └── ...
 ```
 
@@ -307,7 +307,7 @@ gnuplot script.gnuplot
 | **Per-User Isolation** | Each user's packages don't affect others |
 | **XDG Standards** | Follows XDG Base Directory specification |
 | **Easy Setup** | One-time `pith-user-init.sh` |
-| **Easy Cleanup** | Just remove `~/.local/share/chisel/` |
+| **Easy Cleanup** | Just remove `~/.local/share/pistacho/` |
 | **Flexible** | Works on shared servers, HPC clusters, workstations |
 
 ### Who Benefits
@@ -320,10 +320,10 @@ gnuplot script.gnuplot
 
 ### Comparison: System vs User-Level
 
-| Feature | System (`sudo chisel`) | User-Level (`pith-user`) |
+| Feature | System (`sudo pistacho`) | User-Level (`pith-user`) |
 |---------|----------------------|----------------------------|
 | **Permissions** | Requires sudo/root | No root required |
-| **Location** | `/kod/` (global) | `~/.local/share/chisel/` (per-user) |
+| **Location** | `/kod/` (global) | `~/.local/share/pistacho/` (per-user) |
 | **Isolation** | Shared across all users | Per-user isolated |
 | **Use Case** | Servers, shared tools | Personal development |
 | **Setup** | Direct use | `pith-user-init.sh` once |
@@ -347,9 +347,9 @@ Modern development requires:
 - ❌ Chroot environments require careful path management
 - ❌ CI/CD pipelines need reproducible, portable builds
 
-### Solution: Chisel with Symlink Prefix Stripping
+### Solution: Pistacho with Symlink Prefix Stripping
 
-Chisel's `--chroot` feature enables portable package environments by stripping path prefixes from symlinks and wrapper scripts. Packages work identically in containers, chroots, and different mount points.
+Pistacho's `--chroot` feature enables portable package environments by stripping path prefixes from symlinks and wrapper scripts. Packages work identically in containers, chroots, and different mount points.
 
 ### Scenarios
 
@@ -386,7 +386,7 @@ ENV PATH=/kod/wrappers:$PATH
 
 ```bash
 # GitHub Actions workflow
-name: Build with Chisel Packages
+name: Build with Pistacho Packages
 on: [push]
 jobs:
   build:
@@ -394,7 +394,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
-      - name: Install Chisel packages
+      - name: Install Pistacho packages
         run: |
           sudo pith install \
             --chroot=/home/runner/work/build \
@@ -611,7 +611,7 @@ All paths are relative to the prefix directory, making it truly portable across:
 #!/bin/bash
 set -e
 
-# Initialize Chisel packages
+# Initialize Pistacho packages
 pith install --chroot=$PWD/build \
   gcc cmake ninja python3 doxygen
 
@@ -638,7 +638,7 @@ cd docs && doxygen Doxyfile && cd ..
 | Feature | Use Case 1: Development | Use Case 2: Per-User | Use Case 3: Container/CI |
 |---------|------------------------|----------------------|--------------------------|
 | **Requires Sudo** | Yes (system-wide) | No (user-only) | Varies (may be containerized) |
-| **Location** | `/kod/` global | `~/.local/share/chisel/` | Configurable with `--chroot` |
+| **Location** | `/kod/` global | `~/.local/share/pistacho/` | Configurable with `--chroot` |
 | **Isolation** | System-wide | Per-user | Per-environment/container |
 | **Key Feature** | Latest tools | No-root access | Portable paths |
 | **Primary Users** | Developers | Regular users | DevOps/CI/CD |
@@ -652,7 +652,7 @@ cd docs && doxygen Doxyfile && cd ..
 ### For Development & Tooling
 ```bash
 # Quick start
-go build -o pith ./cmd/chisel
+go build -o pith ./cmd/pistacho
 sudo ./pith sync
 sudo ./pith install gcc git vim
 ```
@@ -700,7 +700,7 @@ A: Pick based on your needs:
 A: Yes. You can use system-wide pith for some projects and user-level for others.
 
 **Q: What if my use case doesn't fit these three?**
-A: Chisel is designed for these three primary scenarios. For other needs, consider standard package managers or containers.
+A: Pistacho is designed for these three primary scenarios. For other needs, consider standard package managers or containers.
 
 ---
 

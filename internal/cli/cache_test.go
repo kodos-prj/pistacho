@@ -11,8 +11,8 @@ import (
 // TestCacheCommandCreation tests creating cache command instances
 func TestCacheCommandCreation(t *testing.T) {
 	cfg := &config.Config{
-		BaseDir:   "/tmp/chisel",
-		CachePath: "/tmp/chisel/cache",
+		BaseDir:   "/tmp/pistacho",
+		CachePath: "/tmp/pistacho/cache",
 	}
 
 	cmd := NewCacheCommand(cfg)

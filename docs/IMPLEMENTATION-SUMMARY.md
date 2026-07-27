@@ -16,7 +16,7 @@ All components have been implemented, tested, and documented.
 
 ```
 ┌─────────────────────────────────────────────────┐
-│         CLI Layer (cmd/chisel/main.go)          │
+│         CLI Layer (cmd/pistacho/main.go)          │
 │  - handleInstallScripts() - Flag parsing        │
 │  - --chroot parsing (optional)                  │
 │  - --verbose parsing (optional)                 │
@@ -151,7 +151,7 @@ func (i *InstallScriptsCommand) runInstallScriptChroot(
 
 ### 4. CLI Integration
 
-**File**: `cmd/chisel/main.go`
+**File**: `cmd/pistacho/main.go`
 
 **Changes**:
 - Added `install-scripts` case to command switch
@@ -241,7 +241,7 @@ Both modes capture stdout/stderr identically.
 **Test Results**: All tests passing ✓
 
 ```
-ok  github.com/kodos-prj/chisel/internal/cli  0.015s
+ok  github.com/kodos-prj/pistacho/internal/cli  0.015s
 ```
 
 ---
@@ -347,7 +347,7 @@ Running post_install for grep/3.11-1...
 
 ### Modified Files
 - ✅ `internal/cli/install.go` (85 lines added/modified)
-- ✅ `cmd/chisel/main.go` (65 lines added/modified)
+- ✅ `cmd/pistacho/main.go` (65 lines added/modified)
 - ✅ `docs/CHANGELOG.md` (15 lines added)
 - ✅ `docs/INDEX.md` (8 lines modified)
 
@@ -503,7 +503,7 @@ The `pith install-scripts` command provides:
 ## Next Steps
 
 For users:
-1. Update pith binary: `go build -o pith ./cmd/chisel`
+1. Update pith binary: `go build -o pith ./cmd/pistacho`
 2. Read [INSTALL-SCRIPTS.md](docs/user-guides/INSTALL-SCRIPTS.md)
 3. Try examples: `pith install-scripts --help`
 4. Use in workflows: `pith install bash` or `pith install-scripts bash`

@@ -6,7 +6,7 @@ import (
 	"sort"
 	"sync"
 
-	chiselalpm "github.com/kodos-prj/pistacho/pkg/alpm"
+	pistachoalpm "github.com/kodos-prj/pistacho/pkg/alpm"
 	"github.com/kodos-prj/pistacho/pkg/aur"
 	"github.com/kodos-prj/pistacho/pkg/config"
 	"github.com/kodos-prj/pistacho/pkg/download"
@@ -87,7 +87,7 @@ func (u *UpgradeCommand) Execute(options *UpgradeOptions) (*UpgradeSummary, erro
 	summary := &UpgradeSummary{}
 
 	// Initialize ALPM client using new pure Go wrapper
-	client, err := chiselalpm.NewClient(u.config.AlpmRoot, u.config.DBPath)
+	client, err := pistachoalpm.NewClient(u.config.AlpmRoot, u.config.DBPath)
 	if err != nil {
 		return nil, fmt.Errorf("failed to initialize ALPM: %w", err)
 	}
@@ -170,7 +170,7 @@ func (u *UpgradeCommand) Execute(options *UpgradeOptions) (*UpgradeSummary, erro
 
 // findCandidates identifies packages that have newer versions available.
 func (u *UpgradeCommand) findCandidates(
-	client *chiselalpm.ALPMClient,
+	client *pistachoalpm.ALPMClient,
 	installedPkgs []*registry.Package,
 	selectedPkgs []string,
 ) ([]UpgradeCandidate, error) {
@@ -193,7 +193,7 @@ func (u *UpgradeCommand) findCandidates(
 		repoPkg, err := client.SearchPackage(pkg.Name)
 		if err == nil {
 			// Found in official repo - check for version update
-			if chiselalpm.VerCmp(pkg.Version, repoPkg.Version) < 0 {
+			if pistachoalpm.VerCmp(pkg.Version, repoPkg.Version) < 0 {
 				pkgInfo := &download.PackageInfo{
 					Name:    repoPkg.Name,
 					Version: repoPkg.Version,
@@ -219,7 +219,7 @@ func (u *UpgradeCommand) findCandidates(
 			}
 
 			// Compare versions using our pure Go version comparison
-			if chiselalpm.VerCmp(pkg.Version, aurPkg.Version) < 0 {
+			if pistachoalpm.VerCmp(pkg.Version, aurPkg.Version) < 0 {
 				pkgInfo := &download.PackageInfo{
 					Name:    aurPkg.Name,
 					Version: aurPkg.Version,

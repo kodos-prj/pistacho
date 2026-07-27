@@ -1,9 +1,9 @@
 #!/bin/bash
 #
-# Chisel Workflow Test Script
+# Pistacho Workflow Test Script
 # Tests common package management operations: sync, search, install, and remove
 #
-# This script demonstrates a typical chisel workflow by:
+# This script demonstrates a typical pith workflow by:
 # 1. Syncing Arch Linux package databases
 # 2. Searching for packages
 # 3. Installing a small package with dependencies
@@ -24,8 +24,8 @@ NC='\033[0m' # No Color
 
 # Configuration
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-CHISEL_BIN="${SCRIPT_DIR}/chisel"
-TEST_BASE_DIR="/tmp/chisel-test-$$"
+PISTACHO_BIN="${SCRIPT_DIR}/pith"
+TEST_BASE_DIR="/tmp/pith-test-$$"
 TEST_PACKAGE="nano"  # Small package for testing
 DRY_RUN=false
 SKIP_CLEANUP=false
@@ -92,13 +92,13 @@ log_info() {
 check_prerequisites() {
     log_step "Checking prerequisites..."
     
-    # Check if chisel binary exists
-    if [[ ! -x "$CHISEL_BIN" ]]; then
-        log_error "Chisel binary not found at $CHISEL_BIN"
-        log_info "Run: go build -o chisel ./cmd/chisel"
+    # Check if pith binary exists
+    if [[ ! -x "$PISTACHO_BIN" ]]; then
+        log_error "Pistacho binary not found at $PISTACHO_BIN"
+        log_info "Run: go build -o pith ./cmd/pith"
         exit 1
     fi
-    log_success "Chisel binary found"
+    log_success "Pistacho binary found"
     
     # Check if running as root (needed for actual installation)
     if [[ $EUID -ne 0 ]] && [[ "$DRY_RUN" != true ]]; then
@@ -106,9 +106,9 @@ check_prerequisites() {
         log_info "Consider running with sudo for full testing"
     fi
     
-    # Show chisel version
-    VERSION=$("$CHISEL_BIN" version 2>&1 || echo "unknown")
-    log_info "Chisel version: $VERSION"
+    # Show pith version
+    VERSION=$("$PISTACHO_BIN" version 2>&1 || echo "unknown")
+    log_info "Pistacho version: $VERSION"
     
     echo ""
 }
@@ -151,7 +151,7 @@ test_sync() {
     log_info "Base directory: $TEST_BASE_DIR"
     echo ""
     
-    if ! "$CHISEL_BIN" --base-dir="$TEST_BASE_DIR" sync; then
+    if ! "$PISTACHO_BIN" --base-dir="$TEST_BASE_DIR" sync; then
         log_error "Database sync failed"
         exit 1
     fi
@@ -175,7 +175,7 @@ test_search() {
     log_step "Searching for '$TEST_PACKAGE' package..."
     echo ""
     
-    if ! "$CHISEL_BIN" --base-dir="$TEST_BASE_DIR" search "$TEST_PACKAGE"; then
+    if ! "$PISTACHO_BIN" --base-dir="$TEST_BASE_DIR" search "$TEST_PACKAGE"; then
         log_error "Search failed"
         exit 1
     fi
@@ -192,7 +192,7 @@ test_info() {
     log_step "Getting detailed information about '$TEST_PACKAGE'..."
     echo ""
     
-    if ! "$CHISEL_BIN" --base-dir="$TEST_BASE_DIR" info "$TEST_PACKAGE"; then
+    if ! "$PISTACHO_BIN" --base-dir="$TEST_BASE_DIR" info "$TEST_PACKAGE"; then
         log_error "Info command failed"
         exit 1
     fi
@@ -208,7 +208,7 @@ test_install() {
     
     if [[ "$DRY_RUN" == true ]]; then
         log_warning "DRY RUN: Would install '$TEST_PACKAGE' with dependencies"
-        log_info "Command: $CHISEL_BIN --base-dir=$TEST_BASE_DIR install $TEST_PACKAGE"
+        log_info "Command: $PISTACHO_BIN --base-dir=$TEST_BASE_DIR install $TEST_PACKAGE"
         echo ""
         return
     fi
@@ -217,7 +217,7 @@ test_install() {
     log_info "This will download, extract, and set up the package"
     echo ""
     
-    if ! "$CHISEL_BIN" --base-dir="$TEST_BASE_DIR" install "$TEST_PACKAGE"; then
+    if ! "$PISTACHO_BIN" --base-dir="$TEST_BASE_DIR" install "$TEST_PACKAGE"; then
         log_error "Installation failed"
         exit 1
     fi
@@ -246,7 +246,7 @@ test_list() {
     echo ""
     
     # Use the list command (query is an alias)
-    if ! "$CHISEL_BIN" --base-dir="$TEST_BASE_DIR" list; then
+    if ! "$PISTACHO_BIN" --base-dir="$TEST_BASE_DIR" list; then
         log_error "List command failed"
         exit 1
     fi
@@ -259,7 +259,7 @@ test_list() {
     if [[ -f "$REGISTRY_FILE" ]] && [[ "$DRY_RUN" != true ]]; then
         log_info "Showing verbose output..."
         echo ""
-        "$CHISEL_BIN" --base-dir="$TEST_BASE_DIR" list --verbose
+        "$PISTACHO_BIN" --base-dir="$TEST_BASE_DIR" list --verbose
     fi
     
     echo ""
@@ -278,11 +278,11 @@ test_upgrade() {
     log_step "Attempting to check for package updates..."
     echo ""
     
-    if "$CHISEL_BIN" --base-dir="$TEST_BASE_DIR" upgrade 2>&1 | grep -q "not yet implemented"; then
+    if "$PISTACHO_BIN" --base-dir="$TEST_BASE_DIR" upgrade 2>&1 | grep -q "not yet implemented"; then
         log_warning "Upgrade command not yet implemented"
         log_info "This feature is planned for a future release"
     else
-        "$CHISEL_BIN" --base-dir="$TEST_BASE_DIR" upgrade
+        "$PISTACHO_BIN" --base-dir="$TEST_BASE_DIR" upgrade
         log_success "Upgrade check completed"
     fi
     
@@ -295,7 +295,7 @@ test_remove() {
     
     if [[ "$DRY_RUN" == true ]]; then
         log_info "Skipping actual removal in dry-run mode"
-        log_step "Would run: $CHISEL_BIN --base-dir=\"$TEST_BASE_DIR\" remove \"$TEST_PACKAGE\""
+        log_step "Would run: $PISTACHO_BIN --base-dir=\"$TEST_BASE_DIR\" remove \"$TEST_PACKAGE\""
         echo ""
         return
     fi
@@ -304,7 +304,7 @@ test_remove() {
     log_info "This will clean up symlinks, wrappers, and store files"
     echo ""
     
-    if ! "$CHISEL_BIN" --base-dir="$TEST_BASE_DIR" remove "$TEST_PACKAGE"; then
+    if ! "$PISTACHO_BIN" --base-dir="$TEST_BASE_DIR" remove "$TEST_PACKAGE"; then
         log_error "Removal failed"
         exit 1
     fi
@@ -337,7 +337,7 @@ test_cleanup() {
     
     # First, do a dry-run to show what would be cleaned
     log_info "Preview mode (dry-run):"
-    if ! "$CHISEL_BIN" --base-dir="$TEST_BASE_DIR" cleanup --dry-run --verbose; then
+    if ! "$PISTACHO_BIN" --base-dir="$TEST_BASE_DIR" cleanup --dry-run --verbose; then
         log_warning "Cleanup preview failed (this may be normal if no old versions exist)"
     fi
     
@@ -356,7 +356,7 @@ test_cache_clean() {
     
     # First, list cache contents
     log_info "Cache contents (list):"
-    if ! "$CHISEL_BIN" --base-dir="$TEST_BASE_DIR" cache --list; then
+    if ! "$PISTACHO_BIN" --base-dir="$TEST_BASE_DIR" cache --list; then
         log_warning "Cache list failed (this may be normal if cache is empty)"
     fi
     
@@ -364,7 +364,7 @@ test_cache_clean() {
     
     # Then do a dry-run of cache clean
     log_info "Preview cache clean (dry-run):"
-    if ! "$CHISEL_BIN" --base-dir="$TEST_BASE_DIR" cache --dry-run --verbose; then
+    if ! "$PISTACHO_BIN" --base-dir="$TEST_BASE_DIR" cache --dry-run --verbose; then
         log_warning "Cache clean preview failed (this may be normal if cache is empty)"
     fi
     
@@ -379,7 +379,7 @@ test_cache_clean() {
 
 main() {
     echo "================================================================================"
-    echo "Chisel Workflow Test Script"
+    echo "Pistacho Workflow Test Script"
     echo "================================================================================"
     echo ""
     log_info "Test package: $TEST_PACKAGE"

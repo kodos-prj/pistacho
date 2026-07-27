@@ -1,6 +1,6 @@
 # Pistacho Architecture
 
-Complete architecture documentation for Chisel, a cross-distribution package manager that brings Arch Linux packages to any Linux distribution.
+Complete architecture documentation for Pistacho, a cross-distribution package manager that brings Arch Linux packages to any Linux distribution.
 
 ---
 
@@ -22,7 +22,7 @@ Complete architecture documentation for Chisel, a cross-distribution package man
 
 ## System Overview
 
-Chisel is organized into modular packages that handle specific responsibilities:
+Pistacho is organized into modular packages that handle specific responsibilities:
 
 - **Base Directory**: `/kod` (configurable)
 - **Store**: `/kod/store/{package}/{version}/` - Extracted packages in isolation
@@ -36,9 +36,9 @@ Chisel is organized into modular packages that handle specific responsibilities:
 ## Directory Structure
 
 ```
-chisel/
+pistacho/
 ├── cmd/
-│   └── chisel/
+│   └── pistacho/
 │       └── main.go                    # CLI entry point (542 lines)
 ├── pkg/                               # 11 public packages (~11,200 LOC)
 │   ├── alpm/                          # Pure Go package management (92 KB)
@@ -91,8 +91,8 @@ multilib (3)  - Lowest priority
 JSON-based configuration management supporting both system-level and user-level modes.
 
 **Default Locations**:
-- System: `/etc/chisel/config.json`
-- User: `~/.config/chisel/config.json`
+- System: `/etc/pistacho/config.json`
+- User: `~/.config/pistacho/config.json`
 
 **Key Configuration**:
 ```json
@@ -407,7 +407,7 @@ For each file to symlink:
 
 ### Main Router
 
-**File**: `cmd/chisel/main.go`
+**File**: `cmd/pistacho/main.go`
 
 **Commands**:
 ```
@@ -438,8 +438,8 @@ Each command handler:
 
 **Priority Order**:
 1. Command-line flags
-2. Environment variables (CHISEL_CONFIG, CHISEL_BASE_DIR, etc.)
-3. Config file (/etc/chisel/config.json)
+2. Environment variables (PISTACHO_CONFIG, PISTACHO_BASE_DIR, etc.)
+3. Config file (/etc/pistacho/config.json)
 4. Built-in defaults
 
 ---
@@ -605,7 +605,7 @@ Prevents attacks like `../../../../etc/passwd` in archives.
 
 | Component | Files | Key Lines |
 |-----------|-------|-----------|
-| **CLI Router** | cmd/chisel/main.go | 22-87, 152-202 |
+| **CLI Router** | cmd/pistacho/main.go | 22-87, 152-202 |
 | **Dependency Resolution** | pkg/alpm/db.go | 126-207 |
 | **Version Comparison** | pkg/alpm/version.go | 9-34 |
 | **ALPM Public API** | pkg/alpm/alpm.go | 38-206 |

@@ -66,7 +66,7 @@ package main
 
 import (
     "fmt"
-    "github.com/kodos-prj/chisel/pkg/alpm"
+    "github.com/kodos-prj/pistacho/pkg/alpm"
 )
 
 func main() {
@@ -150,7 +150,7 @@ BenchmarkCacheGetPackage-8    ~1M ops  (nanoseconds per op)
 
 ### With Existing Code
 
-The pure Go implementation is the primary ALPM client used throughout chisel.
+The pure Go implementation is the primary ALPM client used throughout pistacho.
 
 ## Future Improvements
 

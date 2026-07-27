@@ -11,9 +11,9 @@ import (
 // TestInstallScriptsCommandCreation tests creating install-scripts command instances
 func TestInstallScriptsCommandCreation(t *testing.T) {
 	cfg := &config.Config{
-		BaseDir:      "/tmp/chisel",
-		PoolRoot:    "/tmp/chisel/pool",
-		RegistryPath: "/tmp/chisel/registry.json",
+		BaseDir:      "/tmp/pistacho",
+		PoolRoot:    "/tmp/pistacho/pool",
+		RegistryPath: "/tmp/pistacho/registry.json",
 	}
 
 	cmd := NewInstallScriptsCommand(cfg)

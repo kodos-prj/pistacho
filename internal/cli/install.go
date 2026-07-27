@@ -115,10 +115,10 @@ type InstallOptions struct {
 //
 // Examples:
 //
-//	chisel install yay                     # Auto-detect (official first, then AUR)
-//	chisel install --source=aur yay        # AUR only
-//	chisel install --source=official firefox  # Official only
-//	chisel install --chroot=/tmp/chroot vim  # Install into self-contained chroot
+//	pistacho install yay                     # Auto-detect (official first, then AUR)
+//	pistacho install --source=aur yay        # AUR only
+//	pistacho install --source=official firefox  # Official only
+//	pistacho install --chroot=/tmp/chroot vim  # Install into self-contained chroot
 func (i *InstallCommand) Run(args []string) error {
 	// Parse options and package names
 	opts := InstallOptions{Source: ""}
@@ -480,7 +480,7 @@ func (i *InstallCommand) Run(args []string) error {
 	}
 
 	// Execute install scripts for non-chroot installations
-	// For chroot, scripts must be executed separately via `chisel install-scripts`
+	// For chroot, scripts must be executed separately via `pistacho install-scripts`
 	if opts.Chroot == "" {
 		fmt.Println("\nExecuting install scripts...")
 		if err := i.executeInstallScriptsLocal(toInstall, extractedFilesMap); err != nil {
@@ -489,7 +489,7 @@ func (i *InstallCommand) Run(args []string) error {
 	} else {
 		fmt.Printf("\nNote: Install scripts must be executed in chroot context.\n")
 		fmt.Printf("Run the following command to execute install scripts:\n")
-		fmt.Printf("  chisel install-scripts --chroot %s\n\n", opts.Chroot)
+		fmt.Printf("  pistacho install-scripts --chroot %s\n\n", opts.Chroot)
 	}
 
 	// Generate wrapper scripts (skip when using --chroot, as symlinks point directly to files)
@@ -606,7 +606,7 @@ func (i *InstallCommand) Run(args []string) error {
 // expandPackageGroups expands package group names to individual package names.
 // If a name matches a known group, all packages in that group are returned.
 // Otherwise, the name is assumed to be a package name and returned as-is.
-// This allows users to install entire groups with: chisel install gnome
+// This allows users to install entire groups with: pistacho install gnome
 func (i *InstallCommand) expandPackageGroups(client *alpm.ALPMClient, names []string) ([]string, error) {
 	var expanded []string
 	seenPackages := make(map[string]bool) // Track to avoid duplicates
