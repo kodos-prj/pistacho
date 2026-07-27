@@ -26,13 +26,13 @@ func TestGetUserConfigPath(t *testing.T) {
 			name:     "XDG_CONFIG_HOME set",
 			xdgHome:  "/custom/config",
 			home:     "/home/user",
-			contains: "/custom/config/chisel/config.json",
+			contains: "/custom/config/pith/config.json",
 		},
 		{
 			name:     "XDG_CONFIG_HOME not set",
 			xdgHome:  "",
 			home:     "/home/user",
-			contains: "/home/user/.config/chisel/config.json",
+			contains: "/home/user/.config/pith/config.json",
 		},
 	}
 
@@ -56,11 +56,11 @@ func TestGetUserConfigPath(t *testing.T) {
 // TestGetUserBaseDir tests user base directory detection
 func TestGetUserBaseDir(t *testing.T) {
 	// Save original env
-	originalUserBase := os.Getenv("CHISEL_USER_BASE_DIR")
+	originalUserBase := os.Getenv("PITH_USER_BASE_DIR")
 	originalXDG := os.Getenv("XDG_DATA_HOME")
 	originalHome := os.Getenv("HOME")
 	defer func() {
-		os.Setenv("CHISEL_USER_BASE_DIR", originalUserBase)
+		os.Setenv("PITH_USER_BASE_DIR", originalUserBase)
 		os.Setenv("XDG_DATA_HOME", originalXDG)
 		os.Setenv("HOME", originalHome)
 	}()
@@ -73,7 +73,7 @@ func TestGetUserBaseDir(t *testing.T) {
 		contains    string
 	}{
 		{
-			name:        "CHISEL_USER_BASE_DIR set",
+			name:        "PITH_USER_BASE_DIR set",
 			userBaseDir: "/custom/data",
 			xdgDataHome: "",
 			home:        "/home/user",
@@ -84,20 +84,20 @@ func TestGetUserBaseDir(t *testing.T) {
 			userBaseDir: "",
 			xdgDataHome: "/custom/data",
 			home:        "/home/user",
-			contains:    "/custom/data/chisel",
+			contains:    "/custom/data/pith",
 		},
 		{
 			name:        "Default XDG path",
 			userBaseDir: "",
 			xdgDataHome: "",
 			home:        "/home/user",
-			contains:    "/home/user/.local/share/chisel",
+			contains:    "/home/user/.local/share/pith",
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			os.Setenv("CHISEL_USER_BASE_DIR", tt.userBaseDir)
+			os.Setenv("PITH_USER_BASE_DIR", tt.userBaseDir)
 			os.Setenv("XDG_DATA_HOME", tt.xdgDataHome)
 			os.Setenv("HOME", tt.home)
 
@@ -118,12 +118,12 @@ func TestLoadUserConfig(t *testing.T) {
 	tmpDir := t.TempDir()
 
 	// Create user config directory and file
-	userConfigDir := filepath.Join(tmpDir, ".config", "chisel")
+	userConfigDir := filepath.Join(tmpDir, ".config", "pith")
 	os.MkdirAll(userConfigDir, 0755)
 
 	userConfigFile := filepath.Join(userConfigDir, "config.json")
 	userConfig := `{
-  "base_dir": "` + filepath.Join(tmpDir, ".local", "share", "chisel") + `",
+  "base_dir": "` + filepath.Join(tmpDir, ".local", "share", "pith") + `",
   "mirror_url": "https://custom-mirror.example.com/archlinux"
 }`
 	os.WriteFile(userConfigFile, []byte(userConfig), 0644)
@@ -169,7 +169,7 @@ func TestDefaultUserConfig(t *testing.T) {
 		t.Errorf("unexpected error: %v", err)
 	}
 
-	expectedBase := filepath.Join(tmpDir, ".local", "share", "chisel")
+	expectedBase := filepath.Join(tmpDir, ".local", "share", "pith")
 	if cfg.BaseDir != expectedBase {
 		t.Errorf("expected base dir %s, got %s", expectedBase, cfg.BaseDir)
 	}
@@ -180,8 +180,8 @@ func TestDefaultUserConfig(t *testing.T) {
 	}
 
 	// Verify derived paths are set
-	if cfg.PoolRoot != filepath.Join(cfg.BaseDir, "store") {
-		t.Error("store root not properly derived from base dir")
+	if cfg.PoolRoot != filepath.Join(cfg.BaseDir, "pool") {
+		t.Error("pool root not properly derived from base dir")
 	}
 
 	if cfg.WrapperDir != filepath.Join(cfg.BaseDir, "wrappers") {
@@ -195,14 +195,14 @@ func TestUserConfigWithEnvironmentOverride(t *testing.T) {
 	customBaseDir := filepath.Join(tmpDir, "custom", "packages")
 
 	// Set environment
-	originalUserBase := os.Getenv("CHISEL_USER_BASE_DIR")
+	originalUserBase := os.Getenv("PITH_USER_BASE_DIR")
 	originalHome := os.Getenv("HOME")
 	defer func() {
-		os.Setenv("CHISEL_USER_BASE_DIR", originalUserBase)
+		os.Setenv("PITH_USER_BASE_DIR", originalUserBase)
 		os.Setenv("HOME", originalHome)
 	}()
 
-	os.Setenv("CHISEL_USER_BASE_DIR", customBaseDir)
+	os.Setenv("PITH_USER_BASE_DIR", customBaseDir)
 	os.Setenv("HOME", tmpDir)
 
 	baseDir, err := GetUserBaseDir()
@@ -238,7 +238,7 @@ func TestUserConfigPaths(t *testing.T) {
 
 	// Check all derived paths
 	checks := map[string]string{
-		"StoreRoot":    filepath.Join(baseDir, "store"),
+		"PoolRoot":     filepath.Join(baseDir, "pool"),
 		"RegistryPath": filepath.Join(baseDir, "registry.json"),
 		"DBPath":       filepath.Join(baseDir, "db", "sync"),
 		"WrapperDir":   filepath.Join(baseDir, "wrappers"),
@@ -248,7 +248,7 @@ func TestUserConfigPaths(t *testing.T) {
 	for name, expected := range checks {
 		actual := ""
 		switch name {
-		case "StoreRoot":
+		case "PoolRoot":
 			actual = cfg.PoolRoot
 		case "RegistryPath":
 			actual = cfg.RegistryPath
@@ -269,7 +269,7 @@ func TestUserConfigPaths(t *testing.T) {
 // TestUserConfigCreation tests that user config can be created and loaded
 func TestUserConfigCreation(t *testing.T) {
 	tmpDir := t.TempDir()
-	configDir := filepath.Join(tmpDir, ".config", "chisel")
+	configDir := filepath.Join(tmpDir, ".config", "pith")
 	os.MkdirAll(configDir, 0755)
 
 	configFile := filepath.Join(configDir, "config.json")
@@ -280,7 +280,7 @@ func TestUserConfigCreation(t *testing.T) {
 	}
 
 	// Update base dir for testing
-	cfg.BaseDir = filepath.Join(tmpDir, ".local", "share", "chisel")
+	cfg.BaseDir = filepath.Join(tmpDir, ".local", "share", "pith")
 	cfg.UpdateDerivedPaths()
 
 	// Save config

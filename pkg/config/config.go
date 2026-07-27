@@ -297,7 +297,7 @@ func (c *Config) Normalize() {
 // UpdateDerivedPaths updates all paths that are derived from BaseDir.
 // Call this after changing BaseDir to ensure all derived paths are updated.
 func (c *Config) UpdateDerivedPaths() {
-	c.PoolRoot = filepath.Join(c.BaseDir, "store")
+	c.PoolRoot = filepath.Join(c.BaseDir, "pool")
 	c.RegistryPath = filepath.Join(c.BaseDir, "registry.json")
 	c.AlpmRoot = c.BaseDir
 	c.AlpmDBPath = filepath.Join(c.BaseDir, "db")
