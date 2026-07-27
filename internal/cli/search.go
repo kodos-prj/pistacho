@@ -1,4 +1,4 @@
-// Package cli implements command-line interface commands for chisel.
+// Package cli implements command-line interface commands for pith.
 package cli
 
 import (
@@ -12,7 +12,7 @@ import (
 	"github.com/kodos-prj/pistacho/pkg/config"
 )
 
-// SearchCommand implements the 'chisel search' command.
+// SearchCommand implements the 'pith search' command.
 // It searches for packages in the synced databases and AUR.
 type SearchCommand struct {
 	config   *config.Config

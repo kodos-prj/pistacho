@@ -1,4 +1,4 @@
-// Package cli implements command-line interface commands for chisel.
+// Package cli implements command-line interface commands for pith.
 package cli
 
 import (
@@ -11,7 +11,7 @@ import (
 	"github.com/kodos-prj/pistacho/pkg/config"
 )
 
-// CacheCommand implements the 'chisel cache-clean' command.
+// CacheCommand implements the 'pith cache-clean' command.
 // It manages and cleans the package download cache.
 type CacheCommand struct {
 	config *config.Config

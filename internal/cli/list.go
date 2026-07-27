@@ -1,4 +1,4 @@
-// Package cli implements command-line interface commands for chisel.
+// Package cli implements command-line interface commands for pith.
 package cli
 
 import (
@@ -10,7 +10,7 @@ import (
 	"github.com/kodos-prj/pistacho/pkg/registry"
 )
 
-// ListCommand implements the 'chisel list' command.
+// ListCommand implements the 'pith list' command.
 // It lists all installed packages from the registry.
 type ListCommand struct {
 	config *config.Config

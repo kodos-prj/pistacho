@@ -1,4 +1,4 @@
-// Package cli implements command-line interface commands for chisel.
+// Package cli implements command-line interface commands for pith.
 package cli
 
 import (
@@ -14,7 +14,7 @@ import (
 	"github.com/kodos-prj/pistacho/pkg/store"
 )
 
-// UpgradeCommand implements the 'chisel upgrade' command.
+// UpgradeCommand implements the 'pith upgrade' command.
 // It upgrades installed packages to their latest versions from repositories (official and AUR).
 type UpgradeCommand struct {
 	config     *config.Config

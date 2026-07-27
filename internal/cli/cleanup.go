@@ -1,4 +1,4 @@
-// Package cli implements command-line interface commands for chisel.
+// Package cli implements command-line interface commands for pith.
 package cli
 
 import (
@@ -21,7 +21,7 @@ import (
 // Ensure build package is imported for BuildManager usage
 var _ = (*build.BuildManager)(nil)
 
-// CleanupCommand implements the 'chisel cleanup' command.
+// CleanupCommand implements the 'pith cleanup' command.
 // It removes old package versions from store after verifying no symlinks or wrappers point to them.
 type CleanupCommand struct {
 	config     *config.Config

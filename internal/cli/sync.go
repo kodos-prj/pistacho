@@ -1,4 +1,4 @@
-// Package cli implements command-line interface commands for chisel.
+// Package cli implements command-line interface commands for pith.
 package cli
 
 import (
@@ -9,7 +9,7 @@ import (
 	"github.com/kodos-prj/pistacho/pkg/database"
 )
 
-// SyncCommand implements the 'chisel sync' command.
+// SyncCommand implements the 'pith sync' command.
 // It downloads package databases from configured Arch mirrors.
 type SyncCommand struct {
 	config *config.Config

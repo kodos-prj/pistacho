@@ -955,9 +955,9 @@ func (i *InstallCommand) resolveMixedDependencies(resolver *build.MixedResolver,
 		if err != nil {
 			// Provide helpful error message if source constraint was used
 			if sourceConstraint == "aur" {
-				return nil, fmt.Errorf("package '%s' not found in AUR\nHint: Use 'chisel install %s' to search both sources", pkgName, pkgName)
+				return nil, fmt.Errorf("package '%s' not found in AUR\nHint: Use 'pith install %s' to search both sources", pkgName, pkgName)
 			} else if sourceConstraint == "official" {
-				return nil, fmt.Errorf("package '%s' not found in official repositories\nHint: Use 'chisel install %s' to search both sources", pkgName, pkgName)
+				return nil, fmt.Errorf("package '%s' not found in official repositories\nHint: Use 'pith install %s' to search both sources", pkgName, pkgName)
 			}
 			return nil, fmt.Errorf("failed to resolve %s: %w", pkgName, err)
 		}

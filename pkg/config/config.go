@@ -1,4 +1,4 @@
-// Package config manages chisel configuration.
+// Package config manages pith configuration.
 package config
 
 import (
@@ -12,16 +12,16 @@ const (
 	// DefaultConfigPath is the default location for the config file
 	DefaultConfigPath = "/etc/pith/config.json"
 
-	// DefaultBaseDir is the default base directory for all chisel data
+	// DefaultBaseDir is the default base directory for all pith data
 	DefaultBaseDir = "/kod"
 
 	// DefaultSymlinkRoot is the default root for symlinks (system root)
 	DefaultSymlinkRoot = "/"
 )
 
-// Config represents the chisel configuration.
+// Config represents the pith configuration.
 type Config struct {
-	// BaseDir is the base directory for all chisel data (/kod by default)
+	// BaseDir is the base directory for all pith data (/kod by default)
 	// All paths below are relative to this unless they're absolute
 	BaseDir string `json:"base_dir"`
 
@@ -127,27 +127,27 @@ func Load(path string) (*Config, error) {
 }
 
 // GetUserConfigPath returns the user-level config path following XDG spec.
-// Priority: $XDG_CONFIG_HOME/chisel/config.json -> ~/.config/chisel/config.json
+// Priority: $XDG_CONFIG_HOME/pith/config.json -> ~/.config/pith/config.json
 func GetUserConfigPath() (string, error) {
 	// Check XDG_CONFIG_HOME first
 	if xdgConfig := os.Getenv("XDG_CONFIG_HOME"); xdgConfig != "" {
-		return filepath.Join(xdgConfig, "chisel", "config.json"), nil
+		return filepath.Join(xdgConfig, "pith", "config.json"), nil
 	}
 
-	// Fall back to ~/.config/chisel/config.json
+	// Fall back to ~/.config/pith/config.json
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
 		return "", fmt.Errorf("failed to determine home directory: %w", err)
 	}
 
-	return filepath.Join(homeDir, ".config", "chisel", "config.json"), nil
+	return filepath.Join(homeDir, ".config", "pith", "config.json"), nil
 }
 
-// GetUserBaseDir returns the user-level base directory for chisel data.
-// Priority: $CHISEL_USER_BASE_DIR -> ~/.local/share/chisel
+// GetUserBaseDir returns the user-level base directory for pith data.
+// Priority: $PITH_USER_BASE_DIR -> ~/.local/share/pith
 func GetUserBaseDir() (string, error) {
 	// Check environment variable first
-	if userBase := os.Getenv("CHISEL_USER_BASE_DIR"); userBase != "" {
+	if userBase := os.Getenv("PITH_USER_BASE_DIR"); userBase != "" {
 		return userBase, nil
 	}
 
@@ -162,16 +162,16 @@ func GetUserBaseDir() (string, error) {
 
 	// Check XDG_DATA_HOME
 	if xdgData := os.Getenv("XDG_DATA_HOME"); xdgData != "" {
-		return filepath.Join(xdgData, "chisel"), nil
+		return filepath.Join(xdgData, "pith"), nil
 	}
 
-	// Fall back to ~/.local/share/chisel
+	// Fall back to ~/.local/share/pith
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
 		return "", fmt.Errorf("failed to determine home directory: %w", err)
 	}
 
-	return filepath.Join(homeDir, ".local", "share", "chisel"), nil
+	return filepath.Join(homeDir, ".local", "share", "pith"), nil
 }
 
 // LoadUserConfig loads configuration with user-level support.

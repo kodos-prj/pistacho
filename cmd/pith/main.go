@@ -94,7 +94,7 @@ func main() {
 }
 
 func showUsage() {
-	fmt.Println("chisel - Cross-Distribution Package Manager")
+	fmt.Println("pith - Cross-Distribution Package Manager")
 	fmt.Println("Brings Arch Linux packages to any Linux distribution")
 	fmt.Println("")
 	fmt.Println("Usage: pith [global-options] <command> [options]")
@@ -143,26 +143,26 @@ func showUsage() {
 	fmt.Println("")
 	fmt.Println("Examples:")
 	fmt.Println("  # Use custom config file")
-	fmt.Println("  chisel -c /home/user/.chisel.json sync")
+	fmt.Println("  pith -c /home/user/.pith.json sync")
 	fmt.Println("")
 	fmt.Println("  # Use custom base directory for testing")
-	fmt.Println("  chisel --base-dir /tmp/pith-test sync")
+	fmt.Println("  pith --base-dir /tmp/pith-test sync")
 	fmt.Println("")
 	fmt.Println("  # Use different mirror")
-	fmt.Println("  chisel --mirror https://mirrors.kernel.org/archlinux sync")
+	fmt.Println("  pith --mirror https://mirrors.kernel.org/archlinux sync")
 	fmt.Println("")
 	fmt.Println("  # Combine options")
-	fmt.Println("  chisel -c myconfig.json --base-dir /tmp/test search vim")
+	fmt.Println("  pith -c myconfig.json --base-dir /tmp/test search vim")
 	fmt.Println("")
 	fmt.Println("Configuration: /etc/pith/config.json (or specify with --config)")
-	fmt.Println("Environment variables: CHISEL_CONFIG, CHISEL_BASE_DIR")
+	fmt.Println("Environment variables: PITH_CONFIG, PITH_BASE_DIR")
 	fmt.Println("See documentation at: https://github.com/kodos-prj/pistacho")
 }
 
 func loadConfig() *config.Config {
 	// Priority order:
 	// 1. Command line flags (--config, --base-dir, --mirror, --generation)
-	// 2. Environment variables (CHISEL_CONFIG, CHISEL_BASE_DIR, CHISEL_GENERATION)
+	// 2. Environment variables (PITH_CONFIG, PITH_BASE_DIR, PITH_GENERATION)
 	// 3. Default config file (/etc/pith/config.json)
 	// 4. Built-in defaults
 
@@ -170,7 +170,7 @@ func loadConfig() *config.Config {
 	cfgPath := configPath
 	if cfgPath == "" {
 		// Check environment variable
-		if envConfig := os.Getenv("CHISEL_CONFIG"); envConfig != "" {
+		if envConfig := os.Getenv("PITH_CONFIG"); envConfig != "" {
 			cfgPath = envConfig
 		} else {
 			cfgPath = config.DefaultConfigPath
@@ -207,7 +207,7 @@ func loadConfig() *config.Config {
 		cfg.BaseDir = baseDir
 		// Update all derived paths to use the new base directory
 		cfg.UpdateDerivedPaths()
-	} else if envBaseDir := os.Getenv("CHISEL_BASE_DIR"); envBaseDir != "" {
+	} else if envBaseDir := os.Getenv("PITH_BASE_DIR"); envBaseDir != "" {
 		cfg.BaseDir = envBaseDir
 		cfg.UpdateDerivedPaths()
 	}
@@ -218,7 +218,7 @@ func loadConfig() *config.Config {
 
 	// Handle symlink directory from environment variable if not set via flag
 	if symlinkDir == "" {
-		if envSymlink := os.Getenv("CHISEL_SYMLINK_DIR"); envSymlink != "" {
+		if envSymlink := os.Getenv("PITH_SYMLINK_DIR"); envSymlink != "" {
 			symlinkDir = envSymlink
 		}
 	}
@@ -263,8 +263,8 @@ func handleSearch(args []string) {
 	if len(args) < 1 {
 		fmt.Fprintln(os.Stderr, "Error: search pattern or --group <name> required")
 		fmt.Fprintln(os.Stderr, "Usage: pith search <pattern>")
-		fmt.Fprintln(os.Stderr, "       chisel search --group <group-name>")
-		fmt.Fprintln(os.Stderr, "       chisel search --groups (list all groups)")
+		fmt.Fprintln(os.Stderr, "       pith search --group <group-name>")
+		fmt.Fprintln(os.Stderr, "       pith search --groups (list all groups)")
 		os.Exit(1)
 	}
 
@@ -305,7 +305,7 @@ func handleInfo(args []string) {
 	if len(args) < 1 {
 		fmt.Fprintln(os.Stderr, "Error: package name required")
 		fmt.Fprintln(os.Stderr, "Usage: pith info <package>")
-		fmt.Fprintln(os.Stderr, "       chisel info --deps <package>")
+		fmt.Fprintln(os.Stderr, "       pith info --deps <package>")
 		os.Exit(1)
 	}
 
@@ -400,13 +400,13 @@ func handleInstallScripts(args []string) {
 			fmt.Fprintln(os.Stderr, "")
 			fmt.Fprintln(os.Stderr, "Examples:")
 			fmt.Fprintln(os.Stderr, "  # Execute scripts directly in current system context")
-			fmt.Fprintln(os.Stderr, "  chisel install-scripts bash")
-			fmt.Fprintln(os.Stderr, "  chisel install-scripts bash glibc")
-			fmt.Fprintln(os.Stderr, "  chisel install-scripts  # Run all packages with scripts")
+			fmt.Fprintln(os.Stderr, "  pith install-scripts bash")
+			fmt.Fprintln(os.Stderr, "  pith install-scripts bash glibc")
+			fmt.Fprintln(os.Stderr, "  pith install-scripts  # Run all packages with scripts")
 			fmt.Fprintln(os.Stderr, "")
 			fmt.Fprintln(os.Stderr, "  # Execute scripts in chroot context")
-			fmt.Fprintln(os.Stderr, "  chisel install-scripts --chroot /tmp/chroot bash")
-			fmt.Fprintln(os.Stderr, "  chisel install-scripts --chroot /tmp/chroot bash glibc")
+			fmt.Fprintln(os.Stderr, "  pith install-scripts --chroot /tmp/chroot bash")
+			fmt.Fprintln(os.Stderr, "  pith install-scripts --chroot /tmp/chroot bash glibc")
 			os.Exit(0)
 		}
 	}
