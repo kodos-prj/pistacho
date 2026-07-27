@@ -1,4 +1,4 @@
-# Chisel Architecture
+# Pistacho Architecture
 
 Complete architecture documentation for Chisel, a cross-distribution package manager that brings Arch Linux packages to any Linux distribution.
 

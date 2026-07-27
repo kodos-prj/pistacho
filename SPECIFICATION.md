@@ -1,4 +1,4 @@
-# Chisel Specification
+# Pistacho Specification
 
 ## Overview
 
@@ -276,14 +276,14 @@ exec "/kod/store/vim/9.0.000/usr/bin/vim" "$@"
 
 ## CLI Commands
 
-### `chisel sync`
+### `pith sync`
 Sync Arch Linux package databases from mirrors.
 
 **Options**:
 - No options required
 - Downloads core, extra, community databases
 
-### `chisel install <package> [package2] ...`
+### `pith install <package> [package2] ...`
 Install one or more packages with all dependencies.
 
 **Options**:
@@ -298,7 +298,7 @@ Install one or more packages with all dependencies.
 5. Create symlinks
 6. Update registry
 
-### `chisel remove <package> [package2] ...`
+### `pith remove <package> [package2] ...`
 Remove installed packages.
 
 **Options**:
@@ -311,12 +311,12 @@ Remove installed packages.
 4. Remove package from store
 5. Update registry
 
-### `chisel list`
+### `pith list`
 List all installed packages.
 
 **Output**: Table format with name, version, size, install date
 
-### `chisel search <pattern>`
+### `pith search <pattern>`
 Search for packages in repositories.
 
 **Output**: List of matching packages with version and description
@@ -326,7 +326,7 @@ Show detailed information about a package.
 
 **Output**: All PackageInfo fields in formatted output
 
-### `chisel upgrade`
+### `pith upgrade`
 Upgrade all installed packages to latest versions.
 
 **Steps**:
@@ -336,7 +336,7 @@ Upgrade all installed packages to latest versions.
 4. Replace in store
 5. Update registry
 
-### `chisel cleanup`
+### `pith cleanup`
 Remove old package versions and unused libraries.
 
 **Operations**:

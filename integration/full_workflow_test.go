@@ -6,10 +6,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/kodos-prj/chisel/pkg/alpm"
-	"github.com/kodos-prj/chisel/pkg/config"
-	"github.com/kodos-prj/chisel/pkg/database"
-	"github.com/kodos-prj/chisel/pkg/registry"
+	"github.com/kodos-prj/pistacho/pkg/alpm"
+	"github.com/kodos-prj/pistacho/pkg/config"
+	"github.com/kodos-prj/pistacho/pkg/database"
+	"github.com/kodos-prj/pistacho/pkg/registry"
 )
 
 // TestFullWorkflowIntegration tests the complete chisel workflow

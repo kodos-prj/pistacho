@@ -5,7 +5,7 @@ package build
 import (
 	"testing"
 
-	"github.com/kodos-prj/chisel/pkg/aur"
+	"github.com/kodos-prj/pistacho/pkg/aur"
 )
 
 // TestNewMixedResolver tests resolver initialization

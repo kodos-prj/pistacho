@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/kodos-prj/chisel/pkg/alpm"
-	"github.com/kodos-prj/chisel/pkg/config"
-	"github.com/kodos-prj/chisel/pkg/download"
+	"github.com/kodos-prj/pistacho/pkg/alpm"
+	"github.com/kodos-prj/pistacho/pkg/config"
+	"github.com/kodos-prj/pistacho/pkg/download"
 )
 
 // DownloadCommand handles downloading packages.
@@ -22,7 +22,7 @@ func NewDownloadCommand(cfg *config.Config) *DownloadCommand {
 }
 
 // Run executes the download command.
-// Usage: chisel download [options] <package> [package2] ...
+// Usage: pith download [options] <package> [package2] ...
 func (d *DownloadCommand) Run(args []string) error {
 	if len(args) == 0 {
 		return fmt.Errorf("package name required")

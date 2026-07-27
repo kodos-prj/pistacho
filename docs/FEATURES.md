@@ -1,4 +1,4 @@
-# Chisel Features
+# Pistacho Features
 
 This document provides an overview of Chisel's key features.
 
@@ -8,7 +8,7 @@ This document provides an overview of Chisel's key features.
 - ✅ **Complete Arch package support** - All 12,000+ packages from Arch repositories
 - ✅ **Dependency resolution** - Automatically installs all required dependencies
 - ✅ **Package groups** - Install entire collections like GNOME, KDE, or development tools
-- ✅ **Package upgrades** - Keep packages up-to-date with `chisel upgrade`
+- ✅ **Package upgrades** - Keep packages up-to-date with `pith upgrade`
 - ✅ **Package removal** - Clean uninstallation with dependency checking
 - ✅ **Package cleanup** - Remove old versions to save disk space
 
@@ -47,14 +47,14 @@ Automatically execute post-install and post-upgrade scripts for packages that ne
 **Example usage:**
 ```bash
 # Auto-execution during install
-chisel install bash
+pith install bash
 
 # Manual execution later
-chisel install-scripts bash
+pith install-scripts bash
 
 # Chroot-based execution
-chisel install --chroot /tmp/chroot bash
-chisel install-scripts --chroot /tmp/chroot bash
+pith install --chroot /tmp/chroot bash
+pith install-scripts --chroot /tmp/chroot bash
 ```
 
 **Why it matters:**
@@ -72,7 +72,7 @@ Automatically generate wrapper scripts for executables that set up the runtime e
 
 ```bash
 # When you install vim:
-chisel install vim
+pith install vim
 
 # A wrapper script is created that:
 # 1. Sets LD_LIBRARY_PATH to Arch libraries

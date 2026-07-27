@@ -1,4 +1,4 @@
-# Chisel Workflow Test Script
+# Pistacho Workflow Test Script
 
 This script (`test-workflow.sh`) demonstrates and tests a complete Chisel package management workflow.
 
@@ -67,7 +67,7 @@ Chisel Workflow Test Script
 
 ==> Checking prerequisites...
 ✓ Chisel binary found
-   Chisel version: chisel version 0.1.0-dev
+   Chisel version: pith version 0.1.0-dev
 
 ================================================================================
 STEP 1: Sync Package Databases
@@ -98,7 +98,7 @@ Found 8 package(s) matching 'nano':
 
 ## Requirements
 
-- **Go 1.21+** - To build chisel
+- **Go 1.21+** - To build pith
 - **Root access** - For actual package installation (not needed for --dry-run)
 - **jq** (optional) - For pretty-printing registry contents
 
@@ -107,7 +107,7 @@ Found 8 package(s) matching 'nano':
 Before running the test script, build chisel:
 
 ```bash
-go build -o chisel ./cmd/chisel
+go build -o pith ./cmd/chisel
 ```
 
 ## Test Environment
@@ -124,7 +124,7 @@ Everything is cleaned up automatically unless `--skip-cleanup` is specified.
 ## Use Cases
 
 ### Quick Validation
-Test that chisel works correctly after changes:
+Test that pith works correctly after changes:
 ```bash
 ./test-workflow.sh --dry-run
 ```
@@ -162,7 +162,7 @@ The test workflow also validates Phase 5 functionality:
 ### Step 8: Cleanup Old Versions
 After install/upgrade operations, the workflow tests the cleanup command:
 ```bash
-chisel cleanup --verbose --dry-run
+pith cleanup --verbose --dry-run
 ```
 
 This validates:
@@ -208,7 +208,7 @@ Both operations include:
 
 **"Chisel binary not found"**
 ```bash
-go build -o chisel ./cmd/chisel
+go build -o pith ./cmd/chisel
 ```
 
 **"Not running as root"**
@@ -218,7 +218,7 @@ sudo ./test-workflow.sh
 
 **Database sync fails**
 - Check internet connection
-- Try a different mirror with `--mirror` flag in chisel
+- Try a different mirror with `--mirror` flag in pith
 
 **Package installation fails**
 - Ensure you have write permissions to the test directory
@@ -231,7 +231,7 @@ This script can be used in automated testing:
 
 ```bash
 # In CI pipeline
-go build -o chisel ./cmd/chisel
+go build -o pith ./cmd/chisel
 ./test-workflow.sh --dry-run || exit 1
 ```
 

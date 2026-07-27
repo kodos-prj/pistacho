@@ -6,9 +6,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/kodos-prj/chisel/pkg/config"
-	"github.com/kodos-prj/chisel/pkg/download"
-	"github.com/kodos-prj/chisel/pkg/registry"
+	"github.com/kodos-prj/pistacho/pkg/config"
+	"github.com/kodos-prj/pistacho/pkg/download"
+	"github.com/kodos-prj/pistacho/pkg/registry"
 )
 
 func TestUpgradeCommand_NoInstalledPackages(t *testing.T) {

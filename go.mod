@@ -1,4 +1,4 @@
-module github.com/kodos-prj/chisel
+module github.com/kodos-prj/pistacho
 
 go 1.25.6
 

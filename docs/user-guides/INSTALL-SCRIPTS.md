@@ -1,6 +1,6 @@
 # Install Scripts Guide
 
-This guide explains how to use the `chisel install-scripts` command to execute post-install and post-upgrade scripts for packages.
+This guide explains how to use the `pith install-scripts` command to execute post-install and post-upgrade scripts for packages.
 
 ## Overview
 
@@ -11,7 +11,7 @@ Many packages require post-installation scripts to properly configure the system
 - **systemd**: Installs system units and triggers dbus reloads
 - **kernel packages**: Updates bootloader configuration
 
-The `chisel install-scripts` command provides a way to run these scripts after packages are extracted and symlinks are created.
+The `pith install-scripts` command provides a way to run these scripts after packages are extracted and symlinks are created.
 
 ## Quick Start
 
@@ -21,16 +21,16 @@ Execute scripts directly in your current system context:
 
 ```bash
 # Install package and auto-run scripts (in single command)
-chisel install bash
+pith install bash
 
 # Later, re-run scripts if needed
-chisel install-scripts bash
+pith install-scripts bash
 
 # Run scripts for multiple packages
-chisel install-scripts bash glibc
+pith install-scripts bash glibc
 
 # Run scripts for all packages that have them
-chisel install-scripts
+pith install-scripts
 ```
 
 ### Chroot Mode
@@ -39,13 +39,13 @@ Execute scripts in a chroot environment (for containerized or isolated installat
 
 ```bash
 # Install package in chroot (scripts deferred)
-chisel install --chroot /tmp/chroot bash
+pith install --chroot /tmp/chroot bash
 
 # Later, execute scripts in chroot
-chisel install-scripts --chroot /tmp/chroot bash
+pith install-scripts --chroot /tmp/chroot bash
 
 # Run all scripts in chroot
-chisel install-scripts --chroot /tmp/chroot
+pith install-scripts --chroot /tmp/chroot
 ```
 
 ## Command Reference
@@ -53,7 +53,7 @@ chisel install-scripts --chroot /tmp/chroot
 ### Basic Usage
 
 ```bash
-chisel install-scripts [options] [package ...]
+pith install-scripts [options] [package ...]
 ```
 
 ### Options
@@ -70,10 +70,10 @@ If no packages are specified, the command runs scripts for **all installed packa
 
 ```bash
 # Specific packages
-chisel install-scripts bash glibc
+pith install-scripts bash glibc
 
 # All packages with install scripts
-chisel install-scripts
+pith install-scripts
 ```
 
 ## Execution Modes
@@ -86,7 +86,7 @@ chisel install-scripts
 
 **Command format**:
 ```bash
-chisel install-scripts bash
+pith install-scripts bash
 ```
 
 **What happens internally**:
@@ -110,7 +110,7 @@ Running post_install for bash/5.3.9-1...
 
 **Command format**:
 ```bash
-chisel install-scripts --chroot /tmp/chroot bash
+pith install-scripts --chroot /tmp/chroot bash
 ```
 
 **What happens internally**:
@@ -126,14 +126,14 @@ Running post_install for bash/5.3.9-1...
 ✓ 1 install script(s) executed
 ```
 
-## Integration with `chisel install`
+## Integration with `pith install`
 
 ### Non-Chroot Installation
 
-When you use `chisel install` without `--chroot`, scripts **automatically execute** after symlinks are created:
+When you use `pith install` without `--chroot`, scripts **automatically execute** after symlinks are created:
 
 ```bash
-chisel install bash
+pith install bash
 ```
 
 **What happens**:
@@ -146,22 +146,22 @@ chisel install bash
 
 ### Chroot Installation
 
-When you use `chisel install --chroot /tmp/chroot`, scripts are **deferred** for manual execution:
+When you use `pith install --chroot /tmp/chroot`, scripts are **deferred** for manual execution:
 
 ```bash
-chisel install --chroot /tmp/chroot bash
+pith install --chroot /tmp/chroot bash
 ```
 
 **Output**:
 ```
 Note: Install scripts must be executed in chroot context.
 Run the following command to execute install scripts:
-  chisel install-scripts --chroot /tmp/chroot
+  pith install-scripts --chroot /tmp/chroot
 ```
 
 **What you need to do next**:
 ```bash
-chisel install-scripts --chroot /tmp/chroot bash
+pith install-scripts --chroot /tmp/chroot bash
 ```
 
 ## Operation Detection
@@ -184,8 +184,8 @@ The command automatically determines whether to run `post_install` or `post_upgr
 
 If you run the same script twice:
 ```bash
-chisel install-scripts bash
-chisel install-scripts bash  # Safe to run again
+pith install-scripts bash
+pith install-scripts bash  # Safe to run again
 ```
 
 Both executions should succeed or produce the same result.
@@ -196,10 +196,10 @@ Both executions should succeed or produce the same result.
 
 ```bash
 # Install package with automatic script execution
-chisel install bash
+pith install bash
 
 # Verification
-chisel list --verbose bash
+pith list --verbose bash
 ```
 
 **Result**: Package installed, scripts executed, ready to use.
@@ -210,10 +210,10 @@ chisel list --verbose bash
 
 ```bash
 # Install in chroot (scripts skipped)
-chisel install --chroot /tmp/chroot bash glibc
+pith install --chroot /tmp/chroot bash glibc
 
 # Later, execute scripts
-chisel install-scripts --chroot /tmp/chroot bash glibc
+pith install-scripts --chroot /tmp/chroot bash glibc
 ```
 
 **Result**: Packages installed with scripts executed in chroot context.
@@ -224,10 +224,10 @@ chisel install-scripts --chroot /tmp/chroot bash glibc
 
 ```bash
 # Install package (scripts auto-run)
-chisel install vim
+pith install vim
 
 # Later, re-run scripts if configuration changed
-chisel install-scripts vim
+pith install-scripts vim
 ```
 
 **Result**: Script runs again in non-chroot context.
@@ -238,10 +238,10 @@ chisel install-scripts vim
 
 ```bash
 # Install many packages at once
-chisel install bash glibc grep sed awk
+pith install bash glibc grep sed awk
 
 # Later, execute all scripts
-chisel install-scripts
+pith install-scripts
 ```
 
 **Result**: All packages with scripts have scripts executed.
@@ -252,10 +252,10 @@ chisel install-scripts
 
 ```bash
 # Run scripts with detailed output
-chisel install-scripts bash --verbose
+pith install-scripts bash --verbose
 
 # In chroot with verbose
-chisel install-scripts --chroot /tmp/chroot bash --verbose
+pith install-scripts --chroot /tmp/chroot bash --verbose
 ```
 
 **Result**: Detailed execution information for debugging.
@@ -274,10 +274,10 @@ chisel install-scripts --chroot /tmp/chroot bash --verbose
 **Solution**:
 ```bash
 # First install the package
-chisel install bash
+pith install bash
 
 # Then run scripts
-chisel install-scripts bash
+pith install-scripts bash
 ```
 
 ---
@@ -309,7 +309,7 @@ chisel install-scripts bash
 2. Verify the chroot/system is in correct state
 3. Re-run the script:
    ```bash
-   chisel install-scripts bash --verbose
+   pith install-scripts bash --verbose
    ```
 
 ---
@@ -328,10 +328,10 @@ script not found at /kod/store/bash/5.3.9-1/.INSTALL
 **Solution**:
 ```bash
 # Re-install the package
-chisel install --no-symlink bash
+pith install --no-symlink bash
 
 # Then run scripts
-chisel install-scripts bash
+pith install-scripts bash
 ```
 
 ---
@@ -348,8 +348,8 @@ chisel install-scripts bash
 mkdir -p /tmp/chroot
 
 # Then run chroot installation
-chisel install --chroot /tmp/chroot bash
-chisel install-scripts --chroot /tmp/chroot bash
+pith install --chroot /tmp/chroot bash
+pith install-scripts --chroot /tmp/chroot bash
 ```
 
 ---
@@ -363,7 +363,7 @@ chisel install-scripts --chroot /tmp/chroot bash
 2. Check script execution context and paths
 3. Use `--verbose` to see full error messages:
    ```bash
-   chisel install-scripts --chroot /tmp/chroot bash --verbose
+   pith install-scripts --chroot /tmp/chroot bash --verbose
    ```
 
 ## Script Format
@@ -401,7 +401,7 @@ post_upgrade() {
 Scripts execute **sequentially**, one package at a time:
 
 ```bash
-chisel install-scripts bash glibc grep sed
+pith install-scripts bash glibc grep sed
 # Runs: bash → glibc → grep → sed (not in parallel)
 ```
 
@@ -416,7 +416,7 @@ If a script hangs or times out:
 
 Script output appears in real-time:
 ```bash
-chisel install-scripts bash
+pith install-scripts bash
 # Output from post_install script appears immediately
 ```
 
@@ -442,7 +442,7 @@ Some packages have conditional logic in scripts:
 
 ```bash
 # Run only if specific conditions are met
-chisel install-scripts glibc --verbose
+pith install-scripts glibc --verbose
 
 # The script handles conditions internally
 ```
@@ -454,7 +454,7 @@ Scripts run with your current environment:
 ```bash
 # To set environment variables for scripts
 export MY_VAR=value
-chisel install-scripts bash
+pith install-scripts bash
 ```
 
 ## See Also
@@ -462,8 +462,8 @@ chisel install-scripts bash
 - [USER-GUIDE.md](USER-GUIDE.md) - General user guide
 - [REGISTRY.md](../reference/REGISTRY.md) - How package registry works
 - [SPECIFICATION.md](../reference/SPECIFICATION.md) - Technical specification
-- `chisel install --help` - Install command help
-- `chisel install-scripts --help` - Install-scripts help
+- `pith install --help` - Install command help
+- `pith install-scripts --help` - Install-scripts help
 
 ## Questions?
 
@@ -471,11 +471,11 @@ For more help:
 
 ```bash
 # Show help
-chisel install-scripts --help
+pith install-scripts --help
 
 # Verbose output for debugging
-chisel install-scripts bash --verbose
+pith install-scripts bash --verbose
 
 # Check installed packages
-chisel list --verbose
+pith list --verbose
 ```

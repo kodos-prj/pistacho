@@ -1,4 +1,4 @@
-# Chisel - Cross-Distribution Package Manager
+# Pistacho - Cross-Distribution Package Manager
 
 Bring **Arch Linux packages to any Linux distribution**. Chisel runs Arch packages natively on Ubuntu, Fedora, Debian, and other systemd-based distributions with complete dependency isolation and zero host contamination.
 
@@ -23,21 +23,21 @@ Chisel brings Arch packages to any distribution by:
 
 ```bash
 # Build the project (pure Go, no system dependencies)
-go build -o chisel ./cmd/chisel
+go build -o pith ./cmd/chisel
 
 # Sync Arch databases
-sudo ./chisel sync
+sudo ./pith sync
 
 # Install a package (with ALL dependencies from Arch)
-sudo ./chisel install vim
+sudo ./pith install vim
 
 # Install an entire package group
-sudo ./chisel install gnome
+sudo ./pith install gnome
 
 # Search for packages
-sudo ./chisel search --groups          # List all 100+ available groups
-sudo ./chisel search --group pro-audio # Show packages in pro-audio group
-sudo ./chisel search vim               # Search for specific package
+sudo ./pith search --groups          # List all 100+ available groups
+sudo ./pith search --group pro-audio # Show packages in pro-audio group
+sudo ./pith search vim               # Search for specific package
 
 # Run tests
 go test ./...
@@ -49,20 +49,20 @@ Want to install packages **without sudo**? Chisel supports user-level package ma
 
 ```bash
 # One-time setup (creates ~/.local/share/chisel and ~/.config/chisel)
-./chisel-user-init.sh
+./pith-user-init.sh
 
 # Reload your shell
 source ~/.bashrc
 
 # Now install packages without sudo!
-chisel-user sync
-chisel-user install vim
-chisel-user install nano
-chisel-user install gnome          # Install entire group
-chisel-user search --groups        # Discover groups
-chisel-user list
-chisel-user upgrade
-chisel-user cleanup
+pith-user sync
+pith-user install vim
+pith-user install nano
+pith-user install gnome          # Install entire group
+pith-user search --groups        # Discover groups
+pith-user list
+pith-user upgrade
+pith-user cleanup
 ```
 
 **Key Benefits:**
@@ -79,23 +79,23 @@ See [USER-GUIDE.md](USER-GUIDE.md) for comprehensive documentation.
 
 | Feature | System (sudo) | User-Level |
 |---------|--------------|-----------|
-| Installation | `sudo chisel install vim` | `chisel-user install vim` |
+| Installation | `sudo pith install vim` | `pith-user install vim` |
 | Location | `/kod/` (global) | `~/.local/share/chisel/` (per-user) |
 | Permissions | Root required | No sudo needed |
 | Isolation | Shared across users | Per-user |
 | Usage | Server/CI environments | Development, personal use |
-| Setup | Direct use | `chisel-user-init.sh` once |
+| Setup | Direct use | `pith-user-init.sh` once |
 
 ## Features
 
 ### Package Management
-- **Sync** Arch databases from mirrors (`chisel sync`)
+- **Sync** Arch databases from mirrors (`pith sync`)
 - **Install** packages with complete dependency isolation (ALL deps from Arch)
-- **Install package groups** (`chisel install gnome` installs 50+ packages)
+- **Install package groups** (`pith install gnome` installs 50+ packages)
 - **Search packages** with multiple options:
-  - By name: `chisel search vim`
-  - By group: `chisel search --group kde-applications`
-  - List all groups: `chisel search --groups`
+  - By name: `pith search vim`
+  - By group: `pith search --group kde-applications`
+  - List all groups: `pith search --groups`
 - **Query** installed packages and search repositories
 - **Remove** packages with orphan cleanup
 - **Upgrade** packages safely
@@ -173,9 +173,9 @@ A **cross-distribution package manager** that:
 
 ### v0.3.0 (Current) - April 2026
 - ✨ **Package Groups**: Install entire collections with one command
-  - `chisel install gnome` (installs 50+ packages)
-  - `chisel search --groups` (lists 100+ groups)
-  - `chisel search --group <name>` (find packages in group)
+  - `pith install gnome` (installs 50+ packages)
+  - `pith search --groups` (lists 100+ groups)
+  - `pith search --group <name>` (find packages in group)
 - 🐛 **Dependency Resolution Improvements**:
   - Parse version constraints in dependencies
   - Resolve virtual packages from Provides field
@@ -203,7 +203,7 @@ A **cross-distribution package manager** that:
 ### Building
 ```bash
 # Build the project (pure Go, no system dependencies)
-go build -o chisel ./cmd/chisel
+go build -o pith ./cmd/chisel
 
 # Run tests
 go test ./...
@@ -279,15 +279,15 @@ Install cutting-edge development tools, compilers, build systems, and desktop en
 **Examples:**
 ```bash
 # Development tools
-chisel install gcc git vim neovim base-devel
+pith install gcc git vim neovim base-devel
 
 # Desktop environments
-chisel install gnome              # Complete GNOME (50+ packages)
-chisel install kde-applications   # Complete KDE Plasma
+pith install gnome              # Complete GNOME (50+ packages)
+pith install kde-applications   # Complete KDE Plasma
 
 # Specialized tools
-chisel install pro-audio          # Pro-audio production suite
-chisel install nodejs             # Latest Node.js (automatic official/AUR selection)
+pith install pro-audio          # Pro-audio production suite
+pith install nodejs             # Latest Node.js (automatic official/AUR selection)
 ```
 
 **Who it's for:** Software developers, engineers, power users
@@ -300,16 +300,16 @@ Allow regular users to independently install and manage packages without root/su
 **Examples:**
 ```bash
 # One-time setup (no sudo needed)
-./chisel-user-init.sh
+./pith-user-init.sh
 
 # User-level installation (no sudo required)
-chisel-user install vim nano curl
-chisel-user install gnome          # Install desktop environment
+pith-user install vim nano curl
+pith-user install gnome          # Install desktop environment
 
 # User has isolated installation in ~/.local/share/chisel/
-chisel-user list
-chisel-user upgrade
-chisel-user cleanup
+pith-user list
+pith-user upgrade
+pith-user cleanup
 ```
 
 **Who it's for:** Regular users, developers without sudo access, multi-user systems
@@ -326,7 +326,7 @@ Prepare and deploy portable, reproducible package environments for containerizat
 ```bash
 # Development chroot with packages inside /tmp/dev-chroot
 mkdir /tmp/dev-chroot
-sudo chisel install --chroot=/tmp/dev-chroot gcc vim git
+sudo pith install --chroot=/tmp/dev-chroot gcc vim git
 
 # Verify symlinks are in the chroot
 ls -la /tmp/dev-chroot/usr/bin/gcc  # ✓ Exists
@@ -336,11 +336,11 @@ sudo chroot /tmp/dev-chroot /bin/bash
 gcc --version  # ✓ Works inside chroot!
 
 # CI/CD pipeline with consistent packages
-sudo chisel install --chroot=/mnt/build base-devel cmake ninja
+sudo pith install --chroot=/mnt/build base-devel cmake ninja
 
 # Portable workspace
 mkdir ~/build-env
-chisel install --chroot=~/build-env gcc git make
+pith install --chroot=~/build-env gcc git make
 
 # Export for reproducibility
 tar czf build-env.tar.gz ~/build-env

@@ -7,8 +7,8 @@ import (
 	"regexp"
 	"sync"
 
-	"github.com/kodos-prj/chisel/pkg/alpm"
-	"github.com/kodos-prj/chisel/pkg/aur"
+	"github.com/kodos-prj/pistacho/pkg/alpm"
+	"github.com/kodos-prj/pistacho/pkg/aur"
 )
 
 // parsePackageName extracts the package name from a dependency string.

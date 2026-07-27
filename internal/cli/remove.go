@@ -5,9 +5,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/kodos-prj/chisel/pkg/config"
-	"github.com/kodos-prj/chisel/pkg/registry"
-	"github.com/kodos-prj/chisel/pkg/wrapper"
+	"github.com/kodos-prj/pistacho/pkg/config"
+	"github.com/kodos-prj/pistacho/pkg/registry"
+	"github.com/kodos-prj/pistacho/pkg/wrapper"
 )
 
 // RemoveCommand handles removing packages and cleaning up symlinks.
@@ -39,7 +39,7 @@ type RemoveOptions struct {
 }
 
 // Run executes the remove command.
-// Usage: chisel remove [options] <package> [package2] ...
+// Usage: pith remove [options] <package> [package2] ...
 func (r *RemoveCommand) Run(args []string) error {
 	opts := &RemoveOptions{}
 
@@ -61,7 +61,7 @@ func (r *RemoveCommand) Run(args []string) error {
 
 	if len(packageNames) == 0 {
 		fmt.Fprintln(os.Stderr, "Error: package name required")
-		fmt.Fprintln(os.Stderr, "Usage: chisel remove [options] <package> [package2] ...")
+		fmt.Fprintln(os.Stderr, "Usage: pith remove [options] <package> [package2] ...")
 		fmt.Fprintln(os.Stderr, "Options:")
 		fmt.Fprintln(os.Stderr, "  --force     Force removal even if symlinks don't exist")
 		fmt.Fprintln(os.Stderr, "  --no-deps   Skip checking for dependent packages")
@@ -236,7 +236,7 @@ func (r *RemoveCommand) removeEmptyDirectories(symlinkDir string) {
 func (r *RemoveCommand) showHelp() {
 	fmt.Println("Remove packages and clean up symlinks")
 	fmt.Println("")
-	fmt.Println("Usage: chisel remove [options] <package> [package2] ...")
+	fmt.Println("Usage: pith remove [options] <package> [package2] ...")
 	fmt.Println("")
 	fmt.Println("Options:")
 	fmt.Println("  --force     Force removal even if symlinks are missing or in unexpected state")

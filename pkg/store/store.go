@@ -9,7 +9,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/kodos-prj/chisel/pkg/extract"
+	"github.com/kodos-prj/pistacho/pkg/extract"
 )
 
 const (

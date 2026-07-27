@@ -1,4 +1,4 @@
-# Chisel Use Cases
+# Pistacho Use Cases
 
 This document provides comprehensive coverage of Chisel's three main use cases with real-world scenarios, benefits, and implementation details.
 
@@ -39,13 +39,13 @@ Chisel installs Arch packages directly with complete dependency isolation. All d
 
 ```bash
 # Install essential development tools
-sudo chisel install gcc git vim neovim make cmake
+sudo pith install gcc git vim neovim make cmake
 
 # Install language runtimes
-sudo chisel install python nodejs golang rust
+sudo pith install python nodejs golang rust
 
 # Install development libraries
-sudo chisel install libssl-dev libcurl4-openssl-dev libxml2-dev
+sudo pith install libssl-dev libcurl4-openssl-dev libxml2-dev
 ```
 
 **Result:**
@@ -59,13 +59,13 @@ sudo chisel install libssl-dev libcurl4-openssl-dev libxml2-dev
 
 ```bash
 # Install complete GNOME desktop (50+ packages)
-sudo chisel install gnome
+sudo pith install gnome
 
 # Or KDE Plasma
-sudo chisel install kde-applications
+sudo pith install kde-applications
 
 # Or lightweight XFCE
-sudo chisel install xfce
+sudo pith install xfce
 ```
 
 **Result:**
@@ -79,10 +79,10 @@ sudo chisel install xfce
 
 ```bash
 # Install pro-audio production suite
-sudo chisel install pro-audio
+sudo pith install pro-audio
 
 # Or specific audio tools
-sudo chisel install audacity ardour jack pulseaudio
+sudo pith install audacity ardour jack pulseaudio
 ```
 
 **Result:**
@@ -96,16 +96,16 @@ sudo chisel install audacity ardour jack pulseaudio
 
 ```bash
 # Install Rust with multiple toolchains
-sudo chisel install rust rustup
+sudo pith install rust rustup
 
 # Install Go development
-sudo chisel install golang
+sudo pith install golang
 
 # Install Python with pip and virtualenv
-sudo chisel install python python-pip python-virtualenv
+sudo pith install python python-pip python-virtualenv
 
 # Install Node.js LTS and latest
-sudo chisel install nodejs nodejs-lts
+sudo pith install nodejs nodejs-lts
 ```
 
 **Result:**
@@ -153,7 +153,7 @@ System-wide package installation requires root/sudo access. In many scenarios, u
 
 ### Solution: Chisel User-Level Management
 
-Chisel provides `chisel-user` for per-user package management without requiring root access. Each user has their own isolated installation in `~/.local/share/chisel/`.
+Chisel provides `pith-user` for per-user package management without requiring root access. Each user has their own isolated installation in `~/.local/share/chisel/`.
 
 ### Scenarios
 
@@ -162,27 +162,27 @@ Chisel provides `chisel-user` for per-user package management without requiring 
 
 ```bash
 # One-time setup
-./chisel-user-init.sh
+./pith-user-init.sh
 
 # Reload shell
 source ~/.bashrc
 
 # Install packages without sudo
-chisel-user sync
-chisel-user install gcc git vim neovim
+pith-user sync
+pith-user install gcc git vim neovim
 
 # Use installed tools
 vim --version    # Works directly
 gcc --version    # Works directly
 
 # List installed packages
-chisel-user list
+pith-user list
 
 # Upgrade packages
-chisel-user upgrade
+pith-user upgrade
 
 # Clean old versions
-chisel-user cleanup
+pith-user cleanup
 ```
 
 **Result:**
@@ -197,15 +197,15 @@ chisel-user cleanup
 
 ```bash
 # User 1 setup
-user1@server:~$ ./chisel-user-init.sh
-user1@server:~$ chisel-user install rust golang nodejs
-user1@server:~$ chisel-user list
+user1@server:~$ ./pith-user-init.sh
+user1@server:~$ pith-user install rust golang nodejs
+user1@server:~$ pith-user list
 # rust, golang, nodejs installed for user1
 
 # User 2 setup (independent)
-user2@server:~$ ./chisel-user-init.sh
-user2@server:~$ chisel-user install python java ruby
-user2@server:~$ chisel-user list
+user2@server:~$ ./pith-user-init.sh
+user2@server:~$ pith-user install python java ruby
+user2@server:~$ pith-user list
 # python, java, ruby installed for user2 (different from user1)
 ```
 
@@ -220,10 +220,10 @@ user2@server:~$ chisel-user list
 
 ```bash
 # Setup for project
-./chisel-user-init.sh
+./pith-user-init.sh
 
 # Install project-specific tools
-chisel-user install nodejs npm python pip
+pith-user install nodejs npm python pip
 
 # Develop the project
 npm install
@@ -231,7 +231,7 @@ python -m venv .venv
 source .venv/bin/activate
 
 # When done, cleanup
-chisel-user cleanup
+pith-user cleanup
 rm -rf ~/.local/share/chisel
 ```
 
@@ -246,17 +246,17 @@ rm -rf ~/.local/share/chisel
 
 ```bash
 # Load module (if available)
-module load chisel
+module load pith
 
 # Personal setup
-./chisel-user-init.sh
+./pith-user-init.sh
 
 # Install scientific tools
-chisel-user install gcc gfortran openmpi hdf5
+pith-user install gcc gfortran openmpi hdf5
 
 # Run computations with personal tools
-chisel-user search gnuplot
-chisel-user install gnuplot
+pith-user search gnuplot
+pith-user install gnuplot
 
 # Visualize results
 gnuplot script.gnuplot
@@ -306,7 +306,7 @@ gnuplot script.gnuplot
 | **No Root Required** | Users install packages independently |
 | **Per-User Isolation** | Each user's packages don't affect others |
 | **XDG Standards** | Follows XDG Base Directory specification |
-| **Easy Setup** | One-time `chisel-user-init.sh` |
+| **Easy Setup** | One-time `pith-user-init.sh` |
 | **Easy Cleanup** | Just remove `~/.local/share/chisel/` |
 | **Flexible** | Works on shared servers, HPC clusters, workstations |
 
@@ -320,13 +320,13 @@ gnuplot script.gnuplot
 
 ### Comparison: System vs User-Level
 
-| Feature | System (`sudo chisel`) | User-Level (`chisel-user`) |
+| Feature | System (`sudo chisel`) | User-Level (`pith-user`) |
 |---------|----------------------|----------------------------|
 | **Permissions** | Requires sudo/root | No root required |
 | **Location** | `/kod/` (global) | `~/.local/share/chisel/` (per-user) |
 | **Isolation** | Shared across all users | Per-user isolated |
 | **Use Case** | Servers, shared tools | Personal development |
-| **Setup** | Direct use | `chisel-user-init.sh` once |
+| **Setup** | Direct use | `pith-user-init.sh` once |
 | **Number of Users** | Single administrator | Multiple independent users |
 
 ---
@@ -362,7 +362,7 @@ mkdir /tmp/buildroot
 cd /tmp/buildroot
 
 # Install packages with symlink prefix stripping
-chisel install \
+pith install \
   --chroot=/tmp/buildroot \
   gcc git vim curl base-devel
 
@@ -396,7 +396,7 @@ jobs:
       
       - name: Install Chisel packages
         run: |
-          sudo chisel install \
+          sudo pith install \
             --chroot=/home/runner/work/build \
             gcc cmake ninja make
       
@@ -422,7 +422,7 @@ mkdir /tmp/dev-chroot
 cd /tmp/dev-chroot
 
 # Install development tools with symlink prefix
-chisel install \
+pith install \
   --chroot=/tmp/dev-chroot \
   gcc git make cmake python
 
@@ -459,8 +459,8 @@ matrix:
     - name: Setup
       run: |
         if [ "$RUNNER_OS" == "Linux" ]; then
-          sudo chisel sync
-          sudo chisel install --chroot=/tmp/build \
+          sudo pith sync
+          sudo pith install --chroot=/tmp/build \
             gcc cmake nodejs
         fi
     
@@ -485,7 +485,7 @@ matrix:
 mkdir ~/workspace && cd ~/workspace
 
 # Install workspace tools
-chisel install \
+pith install \
   --chroot=~/workspace \
   gcc git vim docker docker-compose
 
@@ -547,7 +547,7 @@ Symlink target: /kod/store/vim/9.0.0-1/usr/bin/vim  # Prefix stripped!
 
 ```bash
 # Command
-sudo chisel install --chroot=/tmp/chroot gcc
+sudo pith install --chroot=/tmp/chroot gcc
 
 # What gets created
 Step 1: Extract package
@@ -612,7 +612,7 @@ All paths are relative to the prefix directory, making it truly portable across:
 set -e
 
 # Initialize Chisel packages
-chisel install --chroot=$PWD/build \
+pith install --chroot=$PWD/build \
   gcc cmake ninja python3 doxygen
 
 export PATH=$PWD/build/kod/wrappers:$PATH
@@ -652,9 +652,9 @@ cd docs && doxygen Doxyfile && cd ..
 ### For Development & Tooling
 ```bash
 # Quick start
-go build -o chisel ./cmd/chisel
-sudo ./chisel sync
-sudo ./chisel install gcc git vim
+go build -o pith ./cmd/chisel
+sudo ./pith sync
+sudo ./pith install gcc git vim
 ```
 
 **See:** [README.md](../README.md#quick-start)
@@ -662,12 +662,12 @@ sudo ./chisel install gcc git vim
 ### For Per-User Management
 ```bash
 # One-time setup
-./chisel-user-init.sh
+./pith-user-init.sh
 source ~/.bashrc
 
 # Start using
-chisel-user install vim
-chisel-user list
+pith-user install vim
+pith-user list
 ```
 
 **See:** [USER-GUIDE.md](./user-guides/USER-GUIDE.md)
@@ -675,7 +675,7 @@ chisel-user list
 ### For Container/CI/CD
 ```bash
 # Install with prefix stripping
-sudo chisel install --chroot=/tmp/build gcc cmake
+sudo pith install --chroot=/tmp/build gcc cmake
 
 # Use in CI pipeline
 export PATH=/tmp/build/kod/wrappers:$PATH
@@ -697,7 +697,7 @@ A: Pick based on your needs:
 - Building containers/CI pipelines? → Use Case 3
 
 **Q: Can I switch between use cases?**
-A: Yes. You can use system-wide chisel for some projects and user-level for others.
+A: Yes. You can use system-wide pith for some projects and user-level for others.
 
 **Q: What if my use case doesn't fit these three?**
 A: Chisel is designed for these three primary scenarios. For other needs, consider standard package managers or containers.

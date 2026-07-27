@@ -4,7 +4,7 @@ Chisel supports multiple ways to specify configuration, giving you flexibility f
 
 ## Configuration Priority
 
-When chisel loads configuration, it uses the following priority order (highest to lowest):
+When pith loads configuration, it uses the following priority order (highest to lowest):
 
 1. **Command-line flags** - Highest priority, overrides everything
 2. **Environment variables** - Second priority  
@@ -34,7 +34,7 @@ chisel -c myconfig.json --base-dir /tmp/test --mirror https://example.com/archli
 
 **Available global flags:**
 - `-c, --config <path>` - Path to configuration file
-- `--base-dir <path>` - Base directory for all chisel data (overrides config)
+- `--base-dir <path>` - Base directory for all pith data (overrides config)
 - `--mirror <url>` - Arch mirror URL (overrides config)
 
 ### 2. Environment Variables
@@ -44,19 +44,19 @@ Set configuration via environment variables:
 ```bash
 # Set custom config file path
 export CHISEL_CONFIG=/home/user/.chisel.json
-chisel sync
+pith sync
 
 # Set custom base directory
 export CHISEL_BASE_DIR=/opt/chisel
-chisel sync
+pith sync
 
 # Use for single command
-CHISEL_BASE_DIR=/tmp/test chisel sync --status
+CHISEL_BASE_DIR=/tmp/test pith sync --status
 ```
 
 **Available environment variables:**
 - `CHISEL_CONFIG` - Path to configuration file
-- `CHISEL_BASE_DIR` - Base directory for chisel data
+- `CHISEL_BASE_DIR` - Base directory for pith data
 
 ### 3. Configuration File
 
@@ -86,7 +86,7 @@ Create a JSON configuration file with your settings.
 
 #### `base_dir` (string)
 - **Default:** `/kod`
-- **Description:** Base directory for all chisel data
+- **Description:** Base directory for all pith data
 - **Example:** `/kod`, `/opt/chisel`, `/home/user/.local/chisel`
 
 When you set `base_dir`, all the following paths are automatically derived:
@@ -233,8 +233,8 @@ System-wide installation with default paths:
 
 **Usage:**
 ```bash
-sudo chisel sync
-sudo chisel install vim
+sudo pith sync
+sudo pith install vim
 ```
 
 ### Temporary Testing
@@ -259,8 +259,8 @@ Use environment variables for containerized environments:
 export CHISEL_BASE_DIR=/opt/chisel
 export CHISEL_CONFIG=/etc/chisel/prod.json
 
-chisel sync
-chisel install package-name
+pith sync
+pith install package-name
 ```
 
 ## Configuration File Locations
@@ -328,7 +328,7 @@ Chisel automatically validates configuration on load:
 - Validates repository names
 - Checks numeric ranges
 
-If configuration is invalid, chisel will:
+If configuration is invalid, pith will:
 1. Print an error message
 2. Fall back to built-in defaults
 3. Continue execution (graceful degradation)
@@ -363,12 +363,12 @@ Remember priority order:
 
 If using `/kod` or `/etc/chisel`, you need root access:
 ```bash
-sudo chisel sync
+sudo pith sync
 ```
 
 Or use a user-writable location:
 ```bash
-chisel --base-dir ~/.local/chisel sync
+chisel --base-dir ~/.local/pith sync
 ```
 
 ## See Also

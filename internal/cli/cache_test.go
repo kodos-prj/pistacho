@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/kodos-prj/chisel/pkg/config"
+	"github.com/kodos-prj/pistacho/pkg/config"
 )
 
 // TestCacheCommandCreation tests creating cache command instances
