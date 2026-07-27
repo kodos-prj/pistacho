@@ -10,7 +10,7 @@ import (
 	"github.com/kodos-prj/chisel/pkg/config"
 )
 
-const version = "0.3.1"
+const version = "0.3.2"
 
 var (
 	configPath      string

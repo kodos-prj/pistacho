@@ -50,13 +50,13 @@ func TestRemoveCommandWithSymlinks(t *testing.T) {
 	tmpDir := t.TempDir()
 	registryPath := filepath.Join(tmpDir, "registry.json")
 	symlinkDir := filepath.Join(tmpDir, "symlink")
-	storeDir := filepath.Join(tmpDir, "store")
+	poolDir := filepath.Join(tmpDir, "pool")
 	wrapperDir := filepath.Join(tmpDir, "wrappers")
 
 	if err := os.MkdirAll(symlinkDir, 0755); err != nil {
 		t.Fatalf("failed to create symlink dir: %v", err)
 	}
-	if err := os.MkdirAll(storeDir, 0755); err != nil {
+	if err := os.MkdirAll(poolDir, 0755); err != nil {
 		t.Fatalf("failed to create store dir: %v", err)
 	}
 	if err := os.MkdirAll(wrapperDir, 0755); err != nil {
@@ -90,7 +90,7 @@ func TestRemoveCommandWithSymlinks(t *testing.T) {
 	if err := os.MkdirAll(filepath.Dir(testBinPath), 0755); err != nil {
 		t.Fatalf("failed to create test dir: %v", err)
 	}
-	if err := os.Symlink(filepath.Join(storeDir, "test-pkg/1.0.0-1/usr/bin/test"), testBinPath); err != nil {
+	if err := os.Symlink(filepath.Join(poolDir, "test-pkg/1.0.0-1/usr/bin/test"), testBinPath); err != nil {
 		t.Fatalf("failed to create symlink: %v", err)
 	}
 
@@ -98,7 +98,7 @@ func TestRemoveCommandWithSymlinks(t *testing.T) {
 	if err := os.MkdirAll(filepath.Dir(libPath), 0755); err != nil {
 		t.Fatalf("failed to create lib dir: %v", err)
 	}
-	if err := os.Symlink(filepath.Join(storeDir, "test-pkg/1.0.0-1/usr/lib/libtest.so"), libPath); err != nil {
+	if err := os.Symlink(filepath.Join(poolDir, "test-pkg/1.0.0-1/usr/lib/libtest.so"), libPath); err != nil {
 		t.Fatalf("failed to create lib symlink: %v", err)
 	}
 
@@ -116,9 +116,9 @@ func TestRemoveCommandWithSymlinks(t *testing.T) {
 	// Perform removal
 	cfg := &config.Config{
 		RegistryPath: registryPath,
-		StoreRoot:    storeDir,
+		PoolRoot:    poolDir,
 		WrapperDir:   wrapperDir,
-		SymlinkRoot:  storeDir,
+		SymlinkRoot:  poolDir,
 	}
 
 	cmd := NewRemoveCommandWithSymlinkDir(cfg, symlinkDir)
@@ -171,13 +171,13 @@ func TestRemoveCommandForceFlag(t *testing.T) {
 	tmpDir := t.TempDir()
 	registryPath := filepath.Join(tmpDir, "registry.json")
 	symlinkDir := filepath.Join(tmpDir, "symlink")
-	storeDir := filepath.Join(tmpDir, "store")
+	poolDir := filepath.Join(tmpDir, "pool")
 	wrapperDir := filepath.Join(tmpDir, "wrappers")
 
 	if err := os.MkdirAll(symlinkDir, 0755); err != nil {
 		t.Fatalf("failed to create symlink dir: %v", err)
 	}
-	if err := os.MkdirAll(storeDir, 0755); err != nil {
+	if err := os.MkdirAll(poolDir, 0755); err != nil {
 		t.Fatalf("failed to create store dir: %v", err)
 	}
 	if err := os.MkdirAll(wrapperDir, 0755); err != nil {
@@ -209,9 +209,9 @@ func TestRemoveCommandForceFlag(t *testing.T) {
 
 	cfg := &config.Config{
 		RegistryPath: registryPath,
-		StoreRoot:    storeDir,
+		PoolRoot:    poolDir,
 		WrapperDir:   wrapperDir,
-		SymlinkRoot:  storeDir,
+		SymlinkRoot:  poolDir,
 	}
 
 	// With --force, should succeed even if symlinks are missing
@@ -237,13 +237,13 @@ func TestRemoveCommandMultiplePackages(t *testing.T) {
 	tmpDir := t.TempDir()
 	registryPath := filepath.Join(tmpDir, "registry.json")
 	symlinkDir := filepath.Join(tmpDir, "symlink")
-	storeDir := filepath.Join(tmpDir, "store")
+	poolDir := filepath.Join(tmpDir, "pool")
 	wrapperDir := filepath.Join(tmpDir, "wrappers")
 
 	if err := os.MkdirAll(symlinkDir, 0755); err != nil {
 		t.Fatalf("failed to create symlink dir: %v", err)
 	}
-	if err := os.MkdirAll(storeDir, 0755); err != nil {
+	if err := os.MkdirAll(poolDir, 0755); err != nil {
 		t.Fatalf("failed to create store dir: %v", err)
 	}
 	if err := os.MkdirAll(wrapperDir, 0755); err != nil {
@@ -274,9 +274,9 @@ func TestRemoveCommandMultiplePackages(t *testing.T) {
 
 	cfg := &config.Config{
 		RegistryPath: registryPath,
-		StoreRoot:    storeDir,
+		PoolRoot:    poolDir,
 		WrapperDir:   wrapperDir,
-		SymlinkRoot:  storeDir,
+		SymlinkRoot:  poolDir,
 	}
 
 	cmd := NewRemoveCommandWithSymlinkDir(cfg, symlinkDir)
@@ -308,21 +308,21 @@ func TestRemoveCommandMultiplePackages(t *testing.T) {
 func TestInstallCreatesSymlinksForExtractedSymlinks(t *testing.T) {
 	tmpDir := t.TempDir()
 	baseDir := filepath.Join(tmpDir, "base")
-	storeDir := filepath.Join(baseDir, "store")
+	poolDir := filepath.Join(baseDir, "store")
 	cacheDir := filepath.Join(baseDir, "cache")
 	symlinkDir := filepath.Join(tmpDir, "app")
 	registryPath := filepath.Join(baseDir, "registry.json")
 	wrapperDir := filepath.Join(baseDir, "wrappers")
 
 	// Create directories
-	for _, dir := range []string{storeDir, cacheDir, wrapperDir, symlinkDir} {
+	for _, dir := range []string{poolDir, cacheDir, wrapperDir, symlinkDir} {
 		if err := os.MkdirAll(dir, 0755); err != nil {
 			t.Fatalf("Failed to create dir: %v", err)
 		}
 	}
 
 	// Create mock extracted files with symlinks
-	pkgStoreDir := filepath.Join(storeDir, "libtest", "1.0.0")
+	pkgStoreDir := filepath.Join(poolDir, "libtest", "1.0.0")
 	libDir := filepath.Join(pkgStoreDir, "usr", "lib")
 	if err := os.MkdirAll(libDir, 0755); err != nil {
 		t.Fatalf("Failed to create lib dir: %v", err)
@@ -403,11 +403,11 @@ func TestInstallCreatesSymlinksForExtractedSymlinks(t *testing.T) {
 
 		if originalTarget, isSymlink := extractedSymlinksMap[filePath]; isSymlink {
 			// This is a symlink from the package
-			symlinkTargetDir := filepath.Join(storeDir, "libtest", "1.0.0", filepath.Dir(filePath))
+			symlinkTargetDir := filepath.Join(poolDir, "libtest", "1.0.0", filepath.Dir(filePath))
 			targetPath = filepath.Join(symlinkTargetDir, originalTarget)
 		} else {
 			// Regular file
-			targetPath = filepath.Join(storeDir, "libtest", "1.0.0", filePath)
+			targetPath = filepath.Join(poolDir, "libtest", "1.0.0", filePath)
 		}
 
 		// Create symlink
@@ -418,8 +418,8 @@ func TestInstallCreatesSymlinksForExtractedSymlinks(t *testing.T) {
 
 	// Verify symlinks were created in symlink directory
 	expectedLinks := map[string]string{
-		"usr/lib/libtest.so.1": filepath.Join(storeDir, "libtest", "1.0.0", "usr/lib/libtest.so.1.0.0"),
-		"usr/lib/libtest.so":   filepath.Join(storeDir, "libtest", "1.0.0", "usr/lib/libtest.so.1"),
+		"usr/lib/libtest.so.1": filepath.Join(poolDir, "libtest", "1.0.0", "usr/lib/libtest.so.1.0.0"),
+		"usr/lib/libtest.so":   filepath.Join(poolDir, "libtest", "1.0.0", "usr/lib/libtest.so.1"),
 	}
 
 	for linkName, expectedTarget := range expectedLinks {
@@ -449,7 +449,7 @@ func TestInstallCreatesSymlinksForExtractedSymlinks(t *testing.T) {
 	}
 
 	// This should point to libtest.so.1 in storage
-	expectedFinal := filepath.Join(storeDir, "libtest", "1.0.0", "usr/lib/libtest.so.1")
+	expectedFinal := filepath.Join(poolDir, "libtest", "1.0.0", "usr/lib/libtest.so.1")
 	if finalTarget != expectedFinal {
 		t.Errorf("Final symlink points to %s, expected %s", finalTarget, expectedFinal)
 	}

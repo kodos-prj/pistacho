@@ -17,9 +17,9 @@ func TestDefaultConfig(t *testing.T) {
 		t.Errorf("Expected SymlinkRoot %s, got %s", DefaultSymlinkRoot, cfg.SymlinkRoot)
 	}
 
-	expectedStore := filepath.Join(DefaultBaseDir, "store")
-	if cfg.StoreRoot != expectedStore {
-		t.Errorf("Expected StoreRoot %s, got %s", expectedStore, cfg.StoreRoot)
+	expectedPool := filepath.Join(DefaultBaseDir, "pool")
+	if cfg.PoolRoot != expectedPool {
+		t.Errorf("Expected PoolRoot %s, got %s", expectedPool, cfg.PoolRoot)
 	}
 
 	expectedRegistry := filepath.Join(DefaultBaseDir, "registry.json")
@@ -61,9 +61,9 @@ func TestConfigNormalizeCustomBaseDir(t *testing.T) {
 		t.Errorf("Expected BaseDir /custom/base, got %s", cfg.BaseDir)
 	}
 
-	expectedStore := "/custom/base/store"
-	if cfg.StoreRoot != expectedStore {
-		t.Errorf("Expected StoreRoot %s, got %s", expectedStore, cfg.StoreRoot)
+	expectedStore := "/custom/base/pool"
+	if cfg.PoolRoot != expectedStore {
+		t.Errorf("Expected StoreRoot %s, got %s", expectedStore, cfg.PoolRoot)
 	}
 
 	expectedRegistry := "/custom/base/registry.json"
@@ -80,7 +80,7 @@ func TestConfigSaveAndLoad(t *testing.T) {
 	cfg1 := &Config{
 		BaseDir:      "/custom/kod",
 		SymlinkRoot:  "/custom/root",
-		StoreRoot:    "/custom/kod/store",
+		PoolRoot:    "/custom/kod/pool",
 		RegistryPath: "/custom/kod/registry.json",
 		AlpmRoot:     "/",
 		AlpmDBPath:   "/var/lib/pacman",
@@ -159,9 +159,9 @@ func TestLoadPartialConfig(t *testing.T) {
 	}
 
 	// Other fields should be normalized to defaults based on base_dir
-	expectedStore := "/opt/chisel/store"
-	if cfg.StoreRoot != expectedStore {
-		t.Errorf("Expected StoreRoot %s, got %s", expectedStore, cfg.StoreRoot)
+	expectedStore := "/opt/chisel/pool"
+	if cfg.PoolRoot != expectedStore {
+		t.Errorf("Expected StoreRoot %s, got %s", expectedStore, cfg.PoolRoot)
 	}
 
 	expectedRegistry := "/opt/chisel/registry.json"

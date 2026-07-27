@@ -40,7 +40,7 @@ func (l *ListCommand) Execute(verbose bool) error {
 			fmt.Println("Configuration:")
 			fmt.Printf("  Base Directory: %s\n", l.config.BaseDir)
 			fmt.Printf("  Registry Path:  %s\n", l.config.RegistryPath)
-			fmt.Printf("  Store Root:     %s\n", l.config.StoreRoot)
+			fmt.Printf("  Store Root:     %s\n", l.config.PoolRoot)
 			fmt.Println()
 		}
 		fmt.Println("No packages installed.")
@@ -114,7 +114,7 @@ func (l *ListCommand) displayVerbose(packages []*registry.Package) {
 	fmt.Println("Configuration:")
 	fmt.Printf("  Base Directory: %s\n", l.config.BaseDir)
 	fmt.Printf("  Registry Path:  %s\n", l.config.RegistryPath)
-	fmt.Printf("  Store Root:     %s\n", l.config.StoreRoot)
+	fmt.Printf("  Store Root:     %s\n", l.config.PoolRoot)
 	fmt.Println()
 
 	fmt.Printf("Installed packages (%d total):\n\n", len(packages))

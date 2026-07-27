@@ -341,7 +341,7 @@ func (u *UpgradeCommand) executeUpgrades(
 
 // cleanupOldVersions removes old versions of upgraded packages.
 func (u *UpgradeCommand) cleanupOldVersions() (int, int64, error) {
-	storeManager := store.NewStore(u.config.StoreRoot)
+	storeManager := store.NewStore(u.config.PoolRoot)
 	var totalCleaned int
 	var totalSpaceFreed int64
 

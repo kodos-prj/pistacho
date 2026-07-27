@@ -8,16 +8,16 @@ import (
 
 func TestNewManager(t *testing.T) {
 	// Test with explicit symlink root
-	m := NewManager("/kod/store", "/usr")
-	if m.storeRoot != "/kod/store" {
-		t.Errorf("Expected storeRoot /kod/store, got %s", m.storeRoot)
+	m := NewManager("/kod/pool", "/usr")
+	if m.storeRoot != "/kod/pool" {
+		t.Errorf("Expected storeRoot /kod/pool, got %s", m.storeRoot)
 	}
 	if m.symlinkRoot != "/usr" {
 		t.Errorf("Expected symlinkRoot /usr, got %s", m.symlinkRoot)
 	}
 
 	// Test with empty symlink root (should default to /)
-	m2 := NewManager("/kod/store", "")
+	m2 := NewManager("/kod/pool", "")
 	if m2.symlinkRoot != "/" {
 		t.Errorf("Expected default symlinkRoot /, got %s", m2.symlinkRoot)
 	}
@@ -25,7 +25,7 @@ func TestNewManager(t *testing.T) {
 
 func TestCreateSymlinks(t *testing.T) {
 	tmpDir := t.TempDir()
-	storeRoot := filepath.Join(tmpDir, "store")
+	storeRoot := filepath.Join(tmpDir, "pool")
 	symlinkRoot := filepath.Join(tmpDir, "root")
 
 	// Create test directories
@@ -60,7 +60,7 @@ func TestCreateSymlinks(t *testing.T) {
 
 func TestCreateSymlinksWithExistingSymlink(t *testing.T) {
 	tmpDir := t.TempDir()
-	storeRoot := filepath.Join(tmpDir, "store")
+	storeRoot := filepath.Join(tmpDir, "pool")
 	symlinkRoot := filepath.Join(tmpDir, "root")
 
 	// Create test directories
@@ -89,7 +89,7 @@ func TestCreateSymlinksWithExistingSymlink(t *testing.T) {
 
 func TestCreateSymlinksWithExistingFile(t *testing.T) {
 	tmpDir := t.TempDir()
-	storeRoot := filepath.Join(tmpDir, "store")
+	storeRoot := filepath.Join(tmpDir, "pool")
 	symlinkRoot := filepath.Join(tmpDir, "root")
 
 	// Create test directories
@@ -123,7 +123,7 @@ func TestCreateSymlinksWithExistingFile(t *testing.T) {
 
 func TestRemoveSymlinks(t *testing.T) {
 	tmpDir := t.TempDir()
-	storeRoot := filepath.Join(tmpDir, "store")
+	storeRoot := filepath.Join(tmpDir, "pool")
 	symlinkRoot := filepath.Join(tmpDir, "root")
 
 	// Create test directories
@@ -156,7 +156,7 @@ func TestRemoveSymlinks(t *testing.T) {
 
 func TestRemoveSymlinksWithRegularFile(t *testing.T) {
 	tmpDir := t.TempDir()
-	storeRoot := filepath.Join(tmpDir, "store")
+	storeRoot := filepath.Join(tmpDir, "pool")
 	symlinkRoot := filepath.Join(tmpDir, "root")
 
 	os.MkdirAll(filepath.Join(symlinkRoot, "usr", "bin"), 0755)
@@ -183,7 +183,7 @@ func TestRemoveSymlinksWithRegularFile(t *testing.T) {
 
 func TestRemoveSymlinksNonExistent(t *testing.T) {
 	tmpDir := t.TempDir()
-	m := NewManager(filepath.Join(tmpDir, "store"), filepath.Join(tmpDir, "root"))
+	m := NewManager(filepath.Join(tmpDir, "pool"), filepath.Join(tmpDir, "root"))
 
 	// Try to remove non-existent symlinks - should succeed (skip)
 	files := []string{"usr/bin/nonexistent"}
@@ -195,7 +195,7 @@ func TestRemoveSymlinksNonExistent(t *testing.T) {
 
 func TestVerifySymlinks(t *testing.T) {
 	tmpDir := t.TempDir()
-	storeRoot := filepath.Join(tmpDir, "store")
+	storeRoot := filepath.Join(tmpDir, "pool")
 	symlinkRoot := filepath.Join(tmpDir, "root")
 
 	// Create test directories
@@ -221,7 +221,7 @@ func TestVerifySymlinks(t *testing.T) {
 
 func TestVerifySymlinksPointingWrong(t *testing.T) {
 	tmpDir := t.TempDir()
-	storeRoot := filepath.Join(tmpDir, "store")
+	storeRoot := filepath.Join(tmpDir, "pool")
 	symlinkRoot := filepath.Join(tmpDir, "root")
 
 	// Create test directories
@@ -250,7 +250,7 @@ func TestVerifySymlinksPointingWrong(t *testing.T) {
 
 func TestVerifySymlinksNotExist(t *testing.T) {
 	tmpDir := t.TempDir()
-	m := NewManager(filepath.Join(tmpDir, "store"), filepath.Join(tmpDir, "root"))
+	m := NewManager(filepath.Join(tmpDir, "pool"), filepath.Join(tmpDir, "root"))
 
 	// Verify non-existent symlinks should fail
 	files := []string{"usr/bin/nonexistent"}
@@ -261,7 +261,7 @@ func TestVerifySymlinksNotExist(t *testing.T) {
 }
 
 func TestGetSymlinkPath(t *testing.T) {
-	m := NewManager("/kod/store", "/usr")
+	m := NewManager("/kod/pool", "/usr")
 	path := m.GetSymlinkPath("bin/bash")
 	expected := "/usr/bin/bash"
 	if path != expected {
@@ -270,9 +270,9 @@ func TestGetSymlinkPath(t *testing.T) {
 }
 
 func TestGetStorePath(t *testing.T) {
-	m := NewManager("/kod/store", "/usr")
+	m := NewManager("/kod/pool", "/usr")
 	path := m.GetStorePath("bash", "5.3.9-1", "bin/bash")
-	expected := "/kod/store/bash/5.3.9-1/bin/bash"
+	expected := "/kod/pool/bash/5.3.9-1/bin/bash"
 	if path != expected {
 		t.Errorf("Expected %s, got %s", expected, path)
 	}
@@ -280,7 +280,7 @@ func TestGetStorePath(t *testing.T) {
 
 func TestCreateSymlinksMultipleFiles(t *testing.T) {
 	tmpDir := t.TempDir()
-	storeRoot := filepath.Join(tmpDir, "store")
+	storeRoot := filepath.Join(tmpDir, "pool")
 	symlinkRoot := filepath.Join(tmpDir, "root")
 
 	// Create test directories and files
@@ -315,7 +315,7 @@ func TestCreateSymlinksMultipleFiles(t *testing.T) {
 
 func TestEmptyFileList(t *testing.T) {
 	tmpDir := t.TempDir()
-	m := NewManager(filepath.Join(tmpDir, "store"), filepath.Join(tmpDir, "root"))
+	m := NewManager(filepath.Join(tmpDir, "pool"), filepath.Join(tmpDir, "root"))
 
 	// Empty list should not error
 	err := m.CreateSymlinks("bash", "5.3.9-1", []string{})

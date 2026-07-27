@@ -64,7 +64,7 @@ func TestInstallCommandWithAUR(t *testing.T) {
 	cfg := &config.Config{
 		AlpmRoot:               "/tmp/test",
 		AlpmDBPath:             "/tmp/test/db",
-		StoreRoot:              tmpDir + "/store",
+		PoolRoot:              tmpDir + "/store",
 		WrapperDir:             tmpDir + "/wrappers",
 		SymlinkRoot:            tmpDir + "/symlinks",
 		CachePath:              tmpDir + "/cache",
@@ -98,7 +98,7 @@ func TestInstallCommandWithSymlinkDir(t *testing.T) {
 	cfg := &config.Config{
 		AlpmRoot:               "/tmp/test",
 		AlpmDBPath:             "/tmp/test/db",
-		StoreRoot:              tmpDir + "/store",
+		PoolRoot:              tmpDir + "/store",
 		WrapperDir:             tmpDir + "/wrappers",
 		SymlinkRoot:            tmpDir + "/symlinks",
 		CachePath:              tmpDir + "/cache",
@@ -542,9 +542,9 @@ func TestChrootStripCorrectly(t *testing.T) {
 	}{
 		{
 			name:        "strip absolute prefix",
-			path:        "/tmp/chroot/kod/store/vim/9.0.0-1/usr/bin/vim",
+			path:        "/tmp/chroot/kod/pool/vim/9.0.0-1/usr/bin/vim",
 			prefix:      "/tmp/chroot",
-			expected:    "/kod/store/vim/9.0.0-1/usr/bin/vim",
+			expected:    "/kod/pool/vim/9.0.0-1/usr/bin/vim",
 			shouldError: false,
 		},
 		{
@@ -556,23 +556,23 @@ func TestChrootStripCorrectly(t *testing.T) {
 		},
 		{
 			name:        "path doesn't start with prefix",
-			path:        "/home/user/kod/store/vim",
+			path:        "/home/user/kod/pool/vim",
 			prefix:      "/tmp/chroot",
 			expected:    "",
 			shouldError: true,
 		},
 		{
 			name:        "empty prefix (no-op)",
-			path:        "/kod/store/vim/9.0.0-1/usr/bin/vim",
+			path:        "/kod/pool/vim/9.0.0-1/usr/bin/vim",
 			prefix:      "",
-			expected:    "/kod/store/vim/9.0.0-1/usr/bin/vim",
+			expected:    "/kod/pool/vim/9.0.0-1/usr/bin/vim",
 			shouldError: false,
 		},
 		{
 			name:        "root prefix (no-op)",
-			path:        "/kod/store/vim/9.0.0-1/usr/bin/vim",
+			path:        "/kod/pool/vim/9.0.0-1/usr/bin/vim",
 			prefix:      "/",
-			expected:    "/kod/store/vim/9.0.0-1/usr/bin/vim",
+			expected:    "/kod/pool/vim/9.0.0-1/usr/bin/vim",
 			shouldError: false,
 		},
 	}
@@ -602,8 +602,8 @@ func TestSymlinkTargetsAreRelativePaths(t *testing.T) {
 	// This test verifies the behavior of symlink target stripping
 	// When --chroot=/tmp/chroot is used:
 	// - Symlink location: /tmp/chroot/usr/bin/vim
-	// - Symlink target (should be): /kod/store/vim/.../usr/bin/vim (relative path)
-	// - NOT: /tmp/chroot/kod/store/vim/.../usr/bin/vim (absolute within prefix)
+	// - Symlink target (should be): /kod/pool/vim/.../usr/bin/vim (relative path)
+	// - NOT: /tmp/chroot/kod/pool/vim/.../usr/bin/vim (absolute within prefix)
 
 	testCases := []struct {
 		name            string
@@ -613,21 +613,21 @@ func TestSymlinkTargetsAreRelativePaths(t *testing.T) {
 	}{
 		{
 			name:            "executable symlink",
-			originalTarget:  "/tmp/chroot/kod/store/vim/9.0.0-1/usr/bin/vim",
+			originalTarget:  "/tmp/chroot/kod/pool/vim/9.0.0-1/usr/bin/vim",
 			prefix:          "/tmp/chroot",
-			expectedTarget:  "/kod/store/vim/9.0.0-1/usr/bin/vim",
+			expectedTarget:  "/kod/pool/vim/9.0.0-1/usr/bin/vim",
 		},
 		{
 			name:            "library symlink",
-			originalTarget:  "/tmp/chroot/kod/store/gcc-libs/13.1.0-1/usr/lib/libstdc++.so.6",
+			originalTarget:  "/tmp/chroot/kod/pool/gcc-libs/13.1.0-1/usr/lib/libstdc++.so.6",
 			prefix:          "/tmp/chroot",
-			expectedTarget:  "/kod/store/gcc-libs/13.1.0-1/usr/lib/libstdc++.so.6",
+			expectedTarget:  "/kod/pool/gcc-libs/13.1.0-1/usr/lib/libstdc++.so.6",
 		},
 		{
 			name:            "no prefix stripping needed",
-			originalTarget:  "/kod/store/vim/9.0.0-1/usr/bin/vim",
+			originalTarget:  "/kod/pool/vim/9.0.0-1/usr/bin/vim",
 			prefix:          "",
-			expectedTarget:  "/kod/store/vim/9.0.0-1/usr/bin/vim",
+			expectedTarget:  "/kod/pool/vim/9.0.0-1/usr/bin/vim",
 		},
 	}
 
@@ -748,14 +748,14 @@ func TestInstallSymlinkTargetsWithAndWithoutChroot(t *testing.T) {
 			name:              "with prefix points to package file",
 			usePrefix:         true,
 			prefix:            "/tmp/chroot",
-			expectedTargetHas: "/kod/store/",
-			description:       "Prefix mode: /usr/bin/vim → /kod/store/vim/.../usr/bin/vim",
+			expectedTargetHas: "/kod/pool/",
+			description:       "Prefix mode: /usr/bin/vim → /kod/pool/vim/.../usr/bin/vim",
 		},
 		{
 			name:              "with different prefix still points to package",
 			usePrefix:         true,
 			prefix:            "/home/user/build",
-			expectedTargetHas: "/kod/store/",
+			expectedTargetHas: "/kod/pool/",
 			description:       "Prefix mode with different path: symlink still points to store",
 		},
 	}
@@ -769,7 +769,7 @@ func TestInstallSymlinkTargetsWithAndWithoutChroot(t *testing.T) {
 			// Simulate the symlink target logic from install.go lines 377-384
 			filePath := "usr/bin/vim"
 			fileName := "vim"
-			storeRoot := "/kod/store"
+			storeRoot := "/kod/pool"
 			wrapperDir := "/kod/wrappers"
 			version := "9.0.0-1"
 			pkgName := "vim"
@@ -830,14 +830,14 @@ func TestExecutableSymlinkBehaviorWithChroot(t *testing.T) {
 			name:           "usr/bin executable with prefix",
 			filePath:       "usr/bin/vim",
 			usePrefix:      true,
-			expectedPrefix: "/kod/store/",
+			expectedPrefix: "/kod/pool/",
 			description:    "usr/bin files should point to store with prefix",
 		},
 		{
 			name:           "usr/sbin executable with prefix",
 			filePath:       "usr/sbin/useradd",
 			usePrefix:      true,
-			expectedPrefix: "/kod/store/",
+			expectedPrefix: "/kod/pool/",
 			description:    "usr/sbin files should point to store with prefix",
 		},
 		{
@@ -858,14 +858,14 @@ func TestExecutableSymlinkBehaviorWithChroot(t *testing.T) {
 			name:           "library file with prefix",
 			filePath:       "usr/lib/libvim.so",
 			usePrefix:      true,
-			expectedPrefix: "/kod/store/",
+			expectedPrefix: "/kod/pool/",
 			description:    "non-executable files should point to store regardless",
 		},
 		{
 			name:           "library file without prefix",
 			filePath:       "usr/lib/libvim.so",
 			usePrefix:      false,
-			expectedPrefix: "/kod/store/",
+			expectedPrefix: "/kod/pool/",
 			description:    "non-executable files should point to store regardless",
 		},
 	}
@@ -881,7 +881,7 @@ func TestExecutableSymlinkBehaviorWithChroot(t *testing.T) {
 
 			// Simulate the logic from install.go
 			fileName := filepath.Base(tt.filePath)
-			storeRoot := "/kod/store"
+			storeRoot := "/kod/pool"
 			wrapperDir := "/kod/wrappers"
 			pkgName := "vim"
 			version := "9.0.0-1"
@@ -910,7 +910,7 @@ func TestExecutableSymlinkBehaviorWithChroot(t *testing.T) {
 func TestAutoSetBaseDirWithChroot(t *testing.T) {
 	cfg := &config.Config{
 		BaseDir:    "/kod",
-		StoreRoot:  "/kod/store",
+		PoolRoot:  "/kod/pool",
 		WrapperDir: "/kod/wrappers",
 	}
 
@@ -944,7 +944,7 @@ func TestAutoSetBaseDirWithChroot(t *testing.T) {
 func TestBaseDirNotAutoSetWhenExplicit(t *testing.T) {
 	cfg := &config.Config{
 		BaseDir:    "/custom/path",
-		StoreRoot:  "/custom/path/store",
+		PoolRoot:  "/custom/path/store",
 		WrapperDir: "/custom/path/wrappers",
 	}
 
@@ -979,7 +979,7 @@ func TestBaseDirNotAutoSetWhenExplicit(t *testing.T) {
 func TestBaseDirNotAutoSetWithoutChroot(t *testing.T) {
 	cfg := &config.Config{
 		BaseDir:    "/kod",
-		StoreRoot:  "/kod/store",
+		PoolRoot:  "/kod/pool",
 		WrapperDir: "/kod/wrappers",
 	}
 

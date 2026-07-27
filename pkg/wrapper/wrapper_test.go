@@ -30,7 +30,7 @@ func TestNewGenerator(t *testing.T) {
 // TestDiscoverLibraries tests discovering shared libraries in a package.
 func TestDiscoverLibraries(t *testing.T) {
 	tmpDir := t.TempDir()
-	storeDir := filepath.Join(tmpDir, "store")
+	storeDir := filepath.Join(tmpDir, "pool")
 	pkgDir := filepath.Join(storeDir, "bash", "5.3.9-1")
 
 	// Create package structure with libraries
@@ -112,7 +112,7 @@ func TestDiscoverLibraries(t *testing.T) {
 // TestDiscoverLibrariesNotFound tests discovering libraries in non-existent package.
 func TestDiscoverLibrariesNotFound(t *testing.T) {
 	tmpDir := t.TempDir()
-	storeDir := filepath.Join(tmpDir, "store")
+	storeDir := filepath.Join(tmpDir, "pool")
 
 	gen := NewGenerator(storeDir, filepath.Join(tmpDir, "wrappers"), "/")
 	_, err := gen.DiscoverLibraries("nonexistent", "1.0.0")
@@ -125,7 +125,7 @@ func TestDiscoverLibrariesNotFound(t *testing.T) {
 // TestGenerateWrapper tests wrapper script generation.
 func TestGenerateWrapper(t *testing.T) {
 	tmpDir := t.TempDir()
-	storeDir := filepath.Join(tmpDir, "store")
+	storeDir := filepath.Join(tmpDir, "pool")
 	wrapperDir := filepath.Join(tmpDir, "wrappers")
 
 	gen := NewGenerator(storeDir, wrapperDir, "/")
@@ -181,7 +181,7 @@ func TestGenerateWrapper(t *testing.T) {
 // TestGenerateWrapperCreatesDirectory tests that wrapper directory is created.
 func TestGenerateWrapperCreatesDirectory(t *testing.T) {
 	tmpDir := t.TempDir()
-	storeDir := filepath.Join(tmpDir, "store")
+	storeDir := filepath.Join(tmpDir, "pool")
 	wrapperDir := filepath.Join(tmpDir, "nonexistent", "wrappers")
 
 	gen := NewGenerator(storeDir, wrapperDir, "/")
@@ -250,9 +250,9 @@ func TestGetWrapperPath(t *testing.T) {
 
 // TestBuildWrapperScript tests wrapper script content generation.
 func TestBuildWrapperScript(t *testing.T) {
-	gen := NewGenerator("/kod/store", "/kod/wrappers", "/")
+	gen := NewGenerator("/kod/pool", "/kod/wrappers", "/")
 
-	libDirs := []string{"/kod/store/vim/9.0.1/lib", "/kod/store/vim/9.0.1/lib64"}
+	libDirs := []string{"/kod/pool/vim/9.0.1/lib", "/kod/pool/vim/9.0.1/lib64"}
 	script := gen.buildWrapperScript("vim", "vim", "9.0.1", libDirs)
 
 	// Verify script structure
@@ -278,24 +278,24 @@ func TestBuildWrapperScript(t *testing.T) {
 	}
 
 	// Verify library paths are included
-	if !strings.Contains(script, "/kod/store/vim/9.0.1/lib") {
+	if !strings.Contains(script, "/kod/pool/vim/9.0.1/lib") {
 		t.Error("Missing lib path")
 	}
 
-	if !strings.Contains(script, "/kod/store/vim/9.0.1/lib64") {
+	if !strings.Contains(script, "/kod/pool/vim/9.0.1/lib64") {
 		t.Error("Missing lib64 path")
 	}
 }
 
 // TestBuildWrapperScriptBashShebang tests that bash wrappers use the bash from store.
 func TestBuildWrapperScriptBashShebang(t *testing.T) {
-	gen := NewGenerator("/kod/store", "/kod/wrappers", "/")
+	gen := NewGenerator("/kod/pool", "/kod/wrappers", "/")
 
-	libDirs := []string{"/kod/store/bash/5.3.9-1/lib"}
+	libDirs := []string{"/kod/pool/bash/5.3.9-1/lib"}
 	script := gen.buildWrapperScript("bash", "bash", "5.3.9-1", libDirs)
 
 	// Verify shebang uses store bash with "current" symlink
-	expectedShebang := "#!/kod/store/bash/current/usr/bin/bash"
+	expectedShebang := "#!/kod/pool/bash/current/usr/bin/bash"
 	if !strings.Contains(script, expectedShebang) {
 		t.Errorf("Expected shebang %q in bash wrapper, got:\n%s", expectedShebang, script)
 	}
@@ -316,13 +316,13 @@ func TestBuildWrapperScriptBashShebang(t *testing.T) {
 
 // TestBuildWrapperScriptBashWithPrefixStripping tests bash shebang with prefix stripping.
 func TestBuildWrapperScriptBashWithPrefixStripping(t *testing.T) {
-	gen := NewGeneratorWithPrefix("/kod/store", "/kod/wrappers", "/", "/tmp/demo")
+	gen := NewGeneratorWithPrefix("/kod/pool", "/kod/wrappers", "/", "/tmp/demo")
 
-	libDirs := []string{"/tmp/demo/kod/store/bash/5.3.9-1/lib"}
+	libDirs := []string{"/tmp/demo/kod/pool/bash/5.3.9-1/lib"}
 	script := gen.buildWrapperScript("bash", "bash", "5.3.9-1", libDirs)
 
 	// Verify shebang is stripped (no /tmp/demo prefix)
-	expectedShebang := "#!/kod/store/bash/current/usr/bin/bash"
+	expectedShebang := "#!/kod/pool/bash/current/usr/bin/bash"
 	if !strings.Contains(script, expectedShebang) {
 		t.Errorf("Expected stripped shebang %q in bash wrapper, got:\n%s", expectedShebang, script)
 	}
@@ -345,7 +345,7 @@ func TestBuildWrapperScriptBashWithPrefixStripping(t *testing.T) {
 // TestGenerateWrapperMultipleLibDirs tests wrapper with multiple library directories.
 func TestGenerateWrapperMultipleLibDirs(t *testing.T) {
 	tmpDir := t.TempDir()
-	storeDir := filepath.Join(tmpDir, "store")
+	storeDir := filepath.Join(tmpDir, "pool")
 	wrapperDir := filepath.Join(tmpDir, "wrappers")
 
 	gen := NewGenerator(storeDir, wrapperDir, "/")
@@ -379,7 +379,7 @@ func TestGenerateWrapperMultipleLibDirs(t *testing.T) {
 // TestDiscoverLibrariesEmpty tests discovering libraries in package with no .so files.
 func TestDiscoverLibrariesEmpty(t *testing.T) {
 	tmpDir := t.TempDir()
-	storeDir := filepath.Join(tmpDir, "store")
+	storeDir := filepath.Join(tmpDir, "pool")
 	pkgDir := filepath.Join(storeDir, "bash", "5.3.9-1")
 
 	// Create package structure without .so files
