@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# Chisel Wrapper Script (chisel-user)
-# Handles user-level chisel operations transparently
+# Pistacho Wrapper Script (pith-user)
+# Handles user-level pith operations transparently
 #
 # This wrapper:
 # - Automatically uses user-level configuration if available
@@ -11,27 +11,27 @@
 
 # Get the directory where this script is located
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-CHISEL_BIN="${SCRIPT_DIR}/chisel"
+PITH_BIN="${SCRIPT_DIR}/chisel"
 
 # Determine user-level configuration
 XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
-CHISEL_USER_CONFIG="${XDG_CONFIG_HOME}/chisel/config.json"
-CHISEL_USER_BASE_DIR="${CHISEL_USER_BASE_DIR:-${XDG_DATA_HOME}/chisel}"
+PITH_USER_CONFIG="${XDG_CONFIG_HOME}/chisel/config.json"
+PITH_USER_BASE_DIR="${PITH_USER_BASE_DIR:-${XDG_DATA_HOME}/chisel}"
 
 # Helper function to check if user config exists
 has_user_config() {
-    [[ -f "$CHISEL_USER_CONFIG" ]] && [[ -d "$CHISEL_USER_BASE_DIR" ]]
+    [[ -f "$PITH_USER_CONFIG" ]] && [[ -d "$PITH_USER_BASE_DIR" ]]
 }
 
-# Helper function to show help for chisel-user
+# Helper function to show help for pith-user
 show_help() {
-    echo "chisel-user - User-level package manager"
+    echo "pith-user - User-level package manager"
     echo ""
-    echo "Usage: chisel-user [global-options] <command> [options]"
+    echo "Usage: pith-user [global-options] <command> [options]"
     echo ""
     echo "Global Options:"
-    echo "  --setup              Initialize user-level chisel environment"
+    echo "  --setup              Initialize user-level pith environment"
     echo "  --base-dir <path>    Override user base directory"
     echo "  --config <path>      Override user config file"
     echo ""
@@ -48,19 +48,19 @@ show_help() {
     echo "  help                 Show this help message"
     echo ""
     echo "Examples:"
-    echo "  chisel-user --setup               # Initialize user environment"
-    echo "  chisel-user search vim             # Search for vim package"
-    echo "  chisel-user install nano          # Install nano package"
-    echo "  chisel-user list --verbose         # List all packages with details"
-    echo "  chisel-user upgrade               # Upgrade all packages"
-    echo "  chisel-user cleanup --dry-run     # Preview cleanup"
-    echo "  chisel-user cache --list          # Show cache contents"
+    echo "  pith-user --setup               # Initialize user environment"
+    echo "  pith-user search vim             # Search for vim package"
+    echo "  pith-user install nano          # Install nano package"
+    echo "  pith-user list --verbose         # List all packages with details"
+    echo "  pith-user upgrade               # Upgrade all packages"
+    echo "  pith-user cleanup --dry-run     # Preview cleanup"
+    echo "  pith-user cache --list          # Show cache contents"
     echo ""
 }
 
 # Check prerequisites
-if [[ ! -x "$CHISEL_BIN" ]]; then
-    echo "Error: chisel binary not found at $CHISEL_BIN"
+if [[ ! -x "$PITH_BIN" ]]; then
+    echo "Error: pith binary not found at $PITH_BIN"
     exit 1
 fi
 
@@ -96,7 +96,7 @@ done
 # Handle setup mode
 if [[ "$SETUP_MODE" == true ]]; then
     # Run the setup script
-    SETUP_SCRIPT="${SCRIPT_DIR}/chisel-user-init.sh"
+    SETUP_SCRIPT="${SCRIPT_DIR}/pith-user-init.sh"
     if [[ -x "$SETUP_SCRIPT" ]]; then
         exec "$SETUP_SCRIPT" "$@"
     else
@@ -105,22 +105,22 @@ if [[ "$SETUP_MODE" == true ]]; then
     fi
 fi
 
-# Prepare chisel arguments
+# Prepare pith arguments
 CHISEL_ARGS=()
 
 # Add user base directory if available or specified
 if [[ -n "$USER_BASE_DIR" ]]; then
     CHISEL_ARGS+=(--base-dir "$USER_BASE_DIR")
 elif has_user_config; then
-    CHISEL_ARGS+=(--base-dir "$CHISEL_USER_BASE_DIR")
+    CHISEL_ARGS+=(--base-dir "$PITH_USER_BASE_DIR")
 fi
 
 # Add user config if available or specified
 if [[ -n "$USER_CONFIG" ]]; then
     CHISEL_ARGS+=(--config "$USER_CONFIG")
 elif has_user_config; then
-    CHISEL_ARGS+=(--config "$CHISEL_USER_CONFIG")
+    CHISEL_ARGS+=(--config "$PITH_USER_CONFIG")
 fi
 
-# Pass remaining arguments to chisel
-exec "$CHISEL_BIN" "${CHISEL_ARGS[@]}" "$@"
+# Pass remaining arguments to pith
+exec "$PITH_BIN" "${CHISEL_ARGS[@]}" "$@"

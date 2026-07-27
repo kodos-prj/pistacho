@@ -1,11 +1,11 @@
 #!/bin/bash
 #
-# Chisel User-Level Setup Script
-# Initializes chisel for user-level package management
+# Pistacho User-Level Setup Script
+# Initializes pith for user-level package management
 #
 # This script sets up:
-# - User-level chisel directories (~/.local/share/chisel/)
-# - User configuration file (~/.config/chisel/config.json)
+# - User-level pith directories (~/.local/share/pith/)
+# - User configuration file (~/.config/pith/config.json)
 # - User symlink directory (~/.local/bin/)
 # - Shell configuration for PATH and LD_LIBRARY_PATH
 #
@@ -21,15 +21,15 @@ NC='\033[0m' # No Color
 
 # Configuration
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-CHISEL_BIN="${SCRIPT_DIR}/chisel"
+PITH_BIN="${SCRIPT_DIR}/chisel"
 
 # Determine user directories following XDG spec
 XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
-CHISEL_CONFIG_DIR="${XDG_CONFIG_HOME}/chisel"
-CHISEL_DATA_DIR="${XDG_DATA_HOME}/chisel"
-CHISEL_BIN_DIR="${HOME}/.local/bin"
-CHISEL_CONFIG_FILE="${CHISEL_CONFIG_DIR}/config.json"
+PITH_CONFIG_DIR="${XDG_CONFIG_HOME}/chisel"
+PITH_DATA_DIR="${XDG_DATA_HOME}/chisel"
+PITH_BIN_DIR="${HOME}/.local/bin"
+PITH_CONFIG_FILE="${PITH_CONFIG_DIR}/config.json"
 
 # Parse arguments
 FORCE=false
@@ -52,11 +52,11 @@ while [[ $# -gt 0 ]]; do
     echo "  --shell-config-only     Only update shell configuration (don't create dirs)"
     echo "  --help                  Show this help message"
     echo ""
-    echo "This script initializes chisel for user-level package management."
+    echo "This script initializes pith for user-level package management."
     echo "It creates:"
-    echo "  - ${CHISEL_DATA_DIR}"
-    echo "  - ${CHISEL_CONFIG_FILE}"
-    echo "  - ${CHISEL_BIN_DIR}"
+    echo "  - ${PITH_DATA_DIR}"
+    echo "  - ${PITH_CONFIG_FILE}"
+    echo "  - ${PITH_BIN_DIR}"
     exit 0
     ;;
   *)
@@ -91,17 +91,17 @@ log_info() {
 check_prerequisites() {
   log_step "Checking prerequisites..."
 
-  if [[ ! -x "$CHISEL_BIN" ]]; then
-    log_error "Chisel binary not found at $CHISEL_BIN"
-    log_info "Run: go build -o chisel ./cmd/chisel"
+  if [[ ! -x "$PITH_BIN" ]]; then
+    log_error "Pistacho binary not found at $PITH_BIN"
+    log_info "Run: go build -o pith ./cmd/chisel"
     exit 1
   fi
 
-  log_success "Chisel binary found"
+  log_success "Pistacho binary found"
 
-  # Check if chisel supports user-level config
-  if ! "$CHISEL_BIN" --help 2>&1 | grep -q "Phase 5"; then
-    log_warning "Chisel might not have latest user-level support"
+  # Check if pith supports user-level config
+  if ! "$PITH_BIN" --help 2>&1 | grep -q "Phase 5"; then
+    log_warning "Pistacho might not have latest user-level support"
   fi
 
   echo ""
@@ -112,34 +112,34 @@ create_directories() {
   log_step "Creating user-level directories..."
 
   # Create config directory
-  if [[ ! -d "$CHISEL_CONFIG_DIR" ]]; then
-    mkdir -p "$CHISEL_CONFIG_DIR"
-    log_info "Created $CHISEL_CONFIG_DIR"
+  if [[ ! -d "$PITH_CONFIG_DIR" ]]; then
+    mkdir -p "$PITH_CONFIG_DIR"
+    log_info "Created $PITH_CONFIG_DIR"
   else
-    log_info "$CHISEL_CONFIG_DIR already exists"
+    log_info "$PITH_CONFIG_DIR already exists"
   fi
 
   # Create data directory
-  if [[ ! -d "$CHISEL_DATA_DIR" ]]; then
-    mkdir -p "$CHISEL_DATA_DIR"
-    log_info "Created $CHISEL_DATA_DIR"
+  if [[ ! -d "$PITH_DATA_DIR" ]]; then
+    mkdir -p "$PITH_DATA_DIR"
+    log_info "Created $PITH_DATA_DIR"
   else
-    log_info "$CHISEL_DATA_DIR already exists"
+    log_info "$PITH_DATA_DIR already exists"
   fi
 
   # Create bin directory
-  if [[ ! -d "$CHISEL_BIN_DIR" ]]; then
-    mkdir -p "$CHISEL_BIN_DIR"
-    log_info "Created $CHISEL_BIN_DIR"
+  if [[ ! -d "$PITH_BIN_DIR" ]]; then
+    mkdir -p "$PITH_BIN_DIR"
+    log_info "Created $PITH_BIN_DIR"
   else
-    log_info "$CHISEL_BIN_DIR already exists"
+    log_info "$PITH_BIN_DIR already exists"
   fi
 
-  # Create subdirectories in CHISEL_DATA_DIR
+  # Create subdirectories in PITH_DATA_DIR
   for dir in store db wrappers cache; do
-    if [[ ! -d "$CHISEL_DATA_DIR/$dir" ]]; then
-      mkdir -p "$CHISEL_DATA_DIR/$dir"
-      log_info "Created $CHISEL_DATA_DIR/$dir"
+    if [[ ! -d "$PITH_DATA_DIR/$dir" ]]; then
+      mkdir -p "$PITH_DATA_DIR/$dir"
+      log_info "Created $PITH_DATA_DIR/$dir"
     fi
   done
 
@@ -150,18 +150,18 @@ create_directories() {
 create_config() {
   log_step "Creating user-level configuration..."
 
-  if [[ -f "$CHISEL_CONFIG_FILE" ]] && [[ "$FORCE" != true ]]; then
-    log_warning "Configuration already exists at $CHISEL_CONFIG_FILE"
+  if [[ -f "$PITH_CONFIG_FILE" ]] && [[ "$FORCE" != true ]]; then
+    log_warning "Configuration already exists at $PITH_CONFIG_FILE"
     log_info "Use --force to overwrite"
     echo ""
     return
   fi
 
   # Create config JSON
-  cat >"$CHISEL_CONFIG_FILE" <<EOF
+  cat >"$PITH_CONFIG_FILE" <<EOF
 {
-  "base_dir": "$CHISEL_DATA_DIR",
-  "symlink_root": "$CHISEL_BIN_DIR",
+  "base_dir": "$PITH_DATA_DIR",
+  "symlink_root": "$PITH_BIN_DIR",
   "mirror_url": "https://mirror.rackspace.com/archlinux",
   "architecture": "x86_64",
   "repositories": ["core", "extra", "community"],
@@ -173,7 +173,7 @@ create_config() {
 EOF
 
   log_success "Created configuration file"
-  log_info "Location: $CHISEL_CONFIG_FILE"
+  log_info "Location: $PITH_CONFIG_FILE"
   log_info "Note: base_dir and symlink_root are automatically configured"
   echo ""
 }
@@ -204,7 +204,7 @@ update_shell_config() {
   esac
 
   # Check if already configured
-  if grep -q "CHISEL_USER_BASE_DIR" "$SHELL_RC" 2>/dev/null; then
+  if grep -q "PITH_USER_BASE_DIR" "$SHELL_RC" 2>/dev/null; then
     log_warning "Shell already configured for chisel"
     log_info "Skipping shell configuration update"
     echo ""
@@ -214,14 +214,14 @@ update_shell_config() {
   # Add configuration to shell rc
   cat >>"$SHELL_RC" <<EOF
 
-# Chisel user-level configuration
-export CHISEL_USER_BASE_DIR="$CHISEL_DATA_DIR"
+# Pistacho user-level configuration
+export PITH_USER_BASE_DIR="$PITH_DATA_DIR"
 export PATH="\$PATH:\$HOME/.local/bin"
 export LD_LIBRARY_PATH="\$HOME/.local/lib:\$LD_LIBRARY_PATH"
 EOF
 
   log_success "Updated $SHELL_RC"
-  log_info "Added CHISEL_USER_BASE_DIR, PATH, and LD_LIBRARY_PATH"
+  log_info "Added PITH_USER_BASE_DIR, PATH, and LD_LIBRARY_PATH"
   echo ""
 }
 
@@ -230,8 +230,8 @@ print_shell_config() {
   echo ""
   echo "Add the following to your shell configuration file (~/.bashrc, ~/.zshrc, etc.):"
   echo ""
-  echo "# Chisel user-level configuration"
-  echo "export CHISEL_USER_BASE_DIR=\"$CHISEL_DATA_DIR\""
+  echo "# Pistacho user-level configuration"
+  echo "export PITH_USER_BASE_DIR=\"$PITH_DATA_DIR\""
   echo "export PATH=\"\$PATH:\$HOME/.local/bin\""
   echo "export LD_LIBRARY_PATH=\"\$HOME/.local/lib:\$LD_LIBRARY_PATH\""
   echo ""
@@ -240,7 +240,7 @@ print_shell_config() {
 # Main execution
 main() {
   echo "================================================================================"
-  echo "Chisel User-Level Setup"
+  echo "Pistacho User-Level Setup"
   echo "================================================================================"
   echo ""
 
@@ -260,18 +260,18 @@ main() {
   echo "================================================================================"
   echo ""
   log_info "User-level configuration:"
-  echo "  Config:   $CHISEL_CONFIG_FILE"
-  echo "  Data:     $CHISEL_DATA_DIR"
-  echo "  Symlinks: $CHISEL_BIN_DIR"
+  echo "  Config:   $PITH_CONFIG_FILE"
+  echo "  Data:     $PITH_DATA_DIR"
+  echo "  Symlinks: $PITH_BIN_DIR"
   echo ""
   log_info "Next steps:"
   echo "  1. Reload your shell: source $SHELL_RC"
-  echo "  2. Install packages: chisel install <package>"
-  echo "  3. List packages:    chisel list"
-  echo "  4. Remove packages:  chisel remove <package>"
+  echo "  2. Install packages: pith install <package>"
+  echo "  3. List packages:    pith list"
+  echo "  4. Remove packages:  pith remove <package>"
   echo ""
   log_info "To use chisel:"
-  echo "  chisel --help"
+  echo "  pith --help"
   echo ""
 }
 
