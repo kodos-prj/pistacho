@@ -14,14 +14,14 @@ import (
 
 // Generator handles wrapper script creation for packages.
 type Generator struct {
-	storeRoot   string // Root of the package store (e.g., /kod/store)
+	storeRoot   string // Root of the package pool (e.g., /kod/pool)
 	wrapperRoot string // Root where wrapper scripts are created (e.g., /kod/wrappers)
 	symlinkRoot string // Root where symlinks are created (e.g., /)
 	stripPrefix string // Prefix to strip from paths for chroot support (e.g., /tmp)
 }
 
 // NewGenerator creates a new wrapper script generator.
-// storeRoot is where packages are stored (e.g., /kod/store)
+// storeRoot is where packages are stored (e.g., /kod/pool)
 // wrapperRoot is where wrapper scripts are created (e.g., /kod/wrappers)
 // symlinkRoot is where symlinks are created (e.g., /)
 func NewGenerator(storeRoot, wrapperRoot, symlinkRoot string) *Generator {

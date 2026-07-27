@@ -294,7 +294,7 @@ func (i *InstallCommand) Run(args []string) error {
 
 		// Extract packages
 		fmt.Println("\nExtracting packages...")
-		storeManager := store.NewStore(i.config.StoreRoot)
+		storeManager := store.NewStore(i.config.PoolRoot)
 
 		for _, pkgInfo := range toInstall {
 			// Construct cache file path
@@ -414,19 +414,19 @@ func (i *InstallCommand) Run(args []string) error {
 				if originalTarget, isSymlink := extractedSymlinksMap[filePath]; isSymlink {
 					// This is a symlink from the package
 					// Point it to the storage location: /stor/pkg/version/path
-					symlinkTargetDir := filepath.Join(i.config.StoreRoot, pkg.Name, pkg.Version, filepath.Dir(filePath))
+					symlinkTargetDir := filepath.Join(i.config.PoolRoot, pkg.Name, pkg.Version, filepath.Dir(filePath))
 					targetPath = filepath.Join(symlinkTargetDir, originalTarget)
 			} else if strings.HasPrefix(filePath, "usr/bin/") || strings.HasPrefix(filePath, "usr/sbin/") {
 				if opts.Chroot != "" {
 					// With --chroot, point directly to package files (no wrapper needed)
-					targetPath = filepath.Join(i.config.StoreRoot, pkg.Name, pkg.Version, filePath)
+					targetPath = filepath.Join(i.config.PoolRoot, pkg.Name, pkg.Version, filePath)
 				} else {
 					// Normal mode: point to wrapper for library isolation
 					targetPath = filepath.Join(i.config.WrapperDir, fileName)
 				}
 			} else {
 				// Regular file: point to storage
-				targetPath = filepath.Join(i.config.StoreRoot, pkg.Name, pkg.Version, filePath)
+				targetPath = filepath.Join(i.config.PoolRoot, pkg.Name, pkg.Version, filePath)
 			}
 
 			// Apply symlink target transformation if --chroot is configured
@@ -495,7 +495,7 @@ func (i *InstallCommand) Run(args []string) error {
 	// Generate wrapper scripts (skip when using --chroot, as symlinks point directly to files)
 	if opts.Chroot == "" {
 		fmt.Println("\nGenerating wrapper scripts...")
-		wrapperGen := wrapper.NewGenerator(i.config.StoreRoot, i.config.WrapperDir, i.config.SymlinkRoot)
+		wrapperGen := wrapper.NewGenerator(i.config.PoolRoot, i.config.WrapperDir, i.config.SymlinkRoot)
 
 		// Build a map of package versions for dependency resolution
 		depVersionMap := make(map[string]string)
@@ -523,7 +523,7 @@ func (i *InstallCommand) Run(args []string) error {
 			// Generate wrappers only for standard executable locations (usr/bin, usr/sbin)
 			standardExecDirs := []string{"usr/bin", "usr/sbin"}
 			for _, dir := range standardExecDirs {
-				pkgExecDir := filepath.Join(i.config.StoreRoot, pkg.Name, pkg.Version, dir)
+				pkgExecDir := filepath.Join(i.config.PoolRoot, pkg.Name, pkg.Version, dir)
 				if _, err := os.Stat(pkgExecDir); err != nil {
 					continue
 				}
@@ -660,7 +660,7 @@ func (i *InstallCommand) executeInstallScriptsLocal(packages []download.PackageI
 		}
 
 		// Run the install script
-		extractDir := filepath.Join(i.config.StoreRoot, pkg.Name, pkg.Version)
+		extractDir := filepath.Join(i.config.PoolRoot, pkg.Name, pkg.Version)
 		if err := i.runInstallScriptLocal(pkg.Name, operation, extractDir); err != nil {
 			fmt.Fprintf(os.Stderr, "  ⚠ %s: Install script failed (%s): %v\n", pkg.Name, operation, err)
 			// Continue with next package even if this one fails
@@ -753,7 +753,7 @@ func (i *InstallCommand) resolveDependencies(client *alpm.ALPMClient, pkgNames [
 	return toInstall, nil
 }
 
-// isPackageInstalled checks if a package is already installed in the store/registry
+// isPackageInstalled checks if a package is already installed in the pool/registry
 func (i *InstallCommand) isPackageInstalled(pkgName string) bool {
 	// Try to open registry
 	reg, err := registry.NewRegistry(i.config.RegistryPath)

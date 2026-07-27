@@ -1,4 +1,4 @@
-// Package store manages the central package store at /kod/store.
+// Package store manages the central package pool at /kod/pool.
 // It handles package extraction, storage, and cleanup operations.
 package store
 
@@ -13,8 +13,8 @@ import (
 )
 
 const (
-	// DefaultStoreRoot is the default location for the package store
-	DefaultStoreRoot = "/kod/store"
+	// DefaultPoolRoot is the default location for the package pool
+	DefaultPoolRoot = "/kod/pool"
 )
 
 // Store manages package storage operations.
@@ -26,7 +26,7 @@ type Store struct {
 // NewStore creates a new package store manager.
 func NewStore(root string) *Store {
 	if root == "" {
-		root = DefaultStoreRoot
+		root = DefaultPoolRoot
 	}
 	return &Store{
 		root:      root,
@@ -46,7 +46,7 @@ func (s *Store) GetLatestPath(pkgName string) string {
 }
 
 // ExtractPackage extracts a package archive to the store.
-// Creates directory structure: /kod/store/{package}/{version}/
+// Creates directory structure: /kod/pool/{package}/{version}/
 func (s *Store) ExtractPackage(pkgPath, pkgName, version string) ([]extract.ExtractedFile, error) {
 	// Create target directory for this version
 	destDir := s.GetPackagePath(pkgName, version)

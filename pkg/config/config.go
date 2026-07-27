@@ -29,9 +29,9 @@ type Config struct {
 	// This is the system root where package files are symlinked to
 	SymlinkRoot string `json:"symlink_root"`
 
-	// StoreRoot is the root directory for the package store
-	// Defaults to {BaseDir}/store
-	StoreRoot string `json:"store_root"`
+	// PoolRoot is the root directory for the package pool
+	// Defaults to {BaseDir}/pool
+	PoolRoot string `json:"pool_root"`
 
 	// RegistryPath is the path to the registry file
 	// Defaults to {BaseDir}/registry.json
@@ -83,7 +83,7 @@ func DefaultConfig() *Config {
 	return &Config{
 		BaseDir:                baseDir,
 		SymlinkRoot:            DefaultSymlinkRoot,
-		StoreRoot:              filepath.Join(baseDir, "store"),
+		PoolRoot:              filepath.Join(baseDir, "pool"),
 		RegistryPath:           filepath.Join(baseDir, "registry.json"),
 		AlpmRoot:               baseDir,                              // Use /kod as ALPM root for cross-distribution
 		AlpmDBPath:             filepath.Join(baseDir, "db"),         // Directory containing sync/ subdirectory
@@ -228,9 +228,9 @@ func (c *Config) Normalize() {
 		c.SymlinkRoot = DefaultSymlinkRoot
 	}
 
-	// Set StoreRoot default if empty
-	if c.StoreRoot == "" {
-		c.StoreRoot = filepath.Join(c.BaseDir, "store")
+	// Set PoolRoot default if empty
+	if c.PoolRoot == "" {
+		c.PoolRoot = filepath.Join(c.BaseDir, "pool")
 	}
 
 	// Set RegistryPath default if empty
@@ -297,7 +297,7 @@ func (c *Config) Normalize() {
 // UpdateDerivedPaths updates all paths that are derived from BaseDir.
 // Call this after changing BaseDir to ensure all derived paths are updated.
 func (c *Config) UpdateDerivedPaths() {
-	c.StoreRoot = filepath.Join(c.BaseDir, "store")
+	c.PoolRoot = filepath.Join(c.BaseDir, "store")
 	c.RegistryPath = filepath.Join(c.BaseDir, "registry.json")
 	c.AlpmRoot = c.BaseDir
 	c.AlpmDBPath = filepath.Join(c.BaseDir, "db")

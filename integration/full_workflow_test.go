@@ -56,7 +56,7 @@ func TestFullWorkflowIntegration(t *testing.T) {
 	cfg := &config.Config{
 		BaseDir:                baseDir,
 		SymlinkRoot:            "/",
-		StoreRoot:              storeDir,
+		PoolRoot:              storeDir,
 		RegistryPath:           registryPath,
 		AlpmRoot:               baseDir,
 		AlpmDBPath:             alpmDBPath,
@@ -263,7 +263,7 @@ func TestRealDatabaseParsing(t *testing.T) {
 	cfg := &config.Config{
 		BaseDir:                baseDir,
 		SymlinkRoot:            "/",
-		StoreRoot:              storeDir,
+		PoolRoot:              storeDir,
 		RegistryPath:           registryPath,
 		AlpmRoot:               baseDir,
 		AlpmDBPath:             alpmDBPath,
