@@ -111,15 +111,15 @@ func (e *ExtractCommand) Help() string {
 	return `Extract packages to the store.
 
 Usage:
-  chisel extract <package.pkg.tar.zst> [package2.pkg.tar.zst] ...
+  pistacho extract <package.pkg.tar.zst> [package2.pkg.tar.zst] ...
 
 Options:
   --no-symlink     Don't create symlinks after extraction
   --skip-current   Don't set as current version
   
 Examples:
-  chisel extract bash-5.3.9-1-x86_64.pkg.tar.zst
-  chisel extract /tmp/bash-5.3.9-1-x86_64.pkg.tar.zst
-  chisel extract *.pkg.tar.zst
+  pistacho extract bash-5.3.9-1-x86_64.pkg.tar.zst
+  pistacho extract /tmp/bash-5.3.9-1-x86_64.pkg.tar.zst
+  pistacho extract *.pkg.tar.zst
 `
 }

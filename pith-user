@@ -11,13 +11,13 @@
 
 # Get the directory where this script is located
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PITH_BIN="${SCRIPT_DIR}/chisel"
+PITH_BIN="${SCRIPT_DIR}/pith"
 
 # Determine user-level configuration
 XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
-PITH_USER_CONFIG="${XDG_CONFIG_HOME}/chisel/config.json"
-PITH_USER_BASE_DIR="${PITH_USER_BASE_DIR:-${XDG_DATA_HOME}/chisel}"
+PITH_USER_CONFIG="${XDG_CONFIG_HOME}/pith/config.json"
+PITH_USER_BASE_DIR="${PITH_USER_BASE_DIR:-${XDG_DATA_HOME}/pith}"
 
 # Helper function to check if user config exists
 has_user_config() {
@@ -106,21 +106,21 @@ if [[ "$SETUP_MODE" == true ]]; then
 fi
 
 # Prepare pith arguments
-CHISEL_ARGS=()
+PISTACHO_ARGS=()
 
 # Add user base directory if available or specified
 if [[ -n "$USER_BASE_DIR" ]]; then
-    CHISEL_ARGS+=(--base-dir "$USER_BASE_DIR")
+    PISTACHO_ARGS+=(--base-dir "$USER_BASE_DIR")
 elif has_user_config; then
-    CHISEL_ARGS+=(--base-dir "$PITH_USER_BASE_DIR")
+    PISTACHO_ARGS+=(--base-dir "$PITH_USER_BASE_DIR")
 fi
 
 # Add user config if available or specified
 if [[ -n "$USER_CONFIG" ]]; then
-    CHISEL_ARGS+=(--config "$USER_CONFIG")
+    PISTACHO_ARGS+=(--config "$USER_CONFIG")
 elif has_user_config; then
-    CHISEL_ARGS+=(--config "$PITH_USER_CONFIG")
+    PISTACHO_ARGS+=(--config "$PITH_USER_CONFIG")
 fi
 
 # Pass remaining arguments to pith
-exec "$PITH_BIN" "${CHISEL_ARGS[@]}" "$@"
+exec "$PITH_BIN" "${PISTACHO_ARGS[@]}" "$@"

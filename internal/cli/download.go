@@ -98,15 +98,15 @@ func (d *DownloadCommand) Help() string {
 	return `Download packages from Arch mirrors.
 
 Usage:
-  chisel download [options] <package> [package2] ...
+  pistacho download [options] <package> [package2] ...
 
 Options:
   --no-deps        Don't download dependencies
   --only-cache     Only download, don't extract
   
 Examples:
-  chisel download bash
-  chisel download bash vim git
-  chisel download --no-deps curl
+  pistacho download bash
+  pistacho download bash vim git
+  pistacho download --no-deps curl
 `
 }

@@ -13,7 +13,7 @@ import (
 
 func TestUpgradeCommand_NoInstalledPackages(t *testing.T) {
 	// Create temporary directory for test
-	tmpDir, err := os.MkdirTemp("", "chisel-upgrade-test-*")
+	tmpDir, err := os.MkdirTemp("", "pistacho-upgrade-test-*")
 	if err != nil {
 		t.Fatalf("failed to create temp dir: %v", err)
 	}
@@ -55,7 +55,7 @@ func TestUpgradeCommand_NoInstalledPackages(t *testing.T) {
 
 func TestUpgradeCommand_DryRun(t *testing.T) {
 	// Create temporary directory for test
-	tmpDir, err := os.MkdirTemp("", "chisel-upgrade-dryrun-*")
+	tmpDir, err := os.MkdirTemp("", "pistacho-upgrade-dryrun-*")
 	if err != nil {
 		t.Fatalf("failed to create temp dir: %v", err)
 	}
@@ -116,7 +116,7 @@ func TestUpgradeCommand_DryRun(t *testing.T) {
 
 func TestUpgradeCommand_VerboseMode(t *testing.T) {
 	// Create temporary directory for test
-	tmpDir, err := os.MkdirTemp("", "chisel-upgrade-verbose-*")
+	tmpDir, err := os.MkdirTemp("", "pistacho-upgrade-verbose-*")
 	if err != nil {
 		t.Fatalf("failed to create temp dir: %v", err)
 	}
@@ -178,7 +178,7 @@ func TestUpgradeCommand_VerboseMode(t *testing.T) {
 
 func TestUpgradeCommand_SelectiveUpgrade(t *testing.T) {
 	// Create temporary directory for test
-	tmpDir, err := os.MkdirTemp("", "chisel-upgrade-selective-*")
+	tmpDir, err := os.MkdirTemp("", "pistacho-upgrade-selective-*")
 	if err != nil {
 		t.Fatalf("failed to create temp dir: %v", err)
 	}

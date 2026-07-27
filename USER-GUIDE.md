@@ -24,13 +24,13 @@ Run the setup script to automatically configure pith for user-level use:
 ```
 
 This script:
-- Creates user directories (~/.local/share/chisel, ~/.config/chisel, etc.)
+- Creates user directories (~/.local/share/pistacho, ~/.config/pistacho, etc.)
 - Creates a user configuration file
 - Updates your shell configuration (PATH, LD_LIBRARY_PATH, environment variables)
 
 **Output:**
 ```
-✓ Chisel binary found
+✓ Pistacho binary found
 ✓ Creating user-level directories...
 ✓ Creating user-level configuration...
 ✓ Updating shell configuration...
@@ -49,7 +49,7 @@ source ~/.zshrc
 source ~/.config/fish/config.fish
 ```
 
-### 3. Start Using Chisel
+### 3. Start Using Pistacho
 
 ```bash
 # Sync package databases
@@ -73,14 +73,14 @@ pith-user remove nano
 When you run the setup script, pith creates this directory structure:
 
 ```
-~/.local/share/chisel/              # Main data directory (CHISEL_USER_BASE_DIR)
+~/.local/share/pistacho/              # Main data directory (PISTACHO_USER_BASE_DIR)
 ├── store/                          # Extracted packages
 ├── db/                             # Synced package databases
 ├── wrappers/                       # Package wrapper scripts
 ├── cache/                          # Downloaded packages
 └── registry.json                   # Installed packages registry
 
-~/.config/chisel/                   # Configuration directory
+~/.config/pistacho/                   # Configuration directory
 └── config.json                     # User configuration
 
 ~/.local/bin/                       # User symlinks (in PATH)
@@ -90,13 +90,13 @@ When you run the setup script, pith creates this directory structure:
 
 ### Configuration Priority
 
-Chisel uses this priority order for configuration:
+Pistacho uses this priority order for configuration:
 
 1. **Command-line flags** (`--base-dir`, `--config`)
-2. **Environment variables** (`CHISEL_USER_BASE_DIR`, `CHISEL_CONFIG`, `CHISEL_BASE_DIR`)
-3. **User config file** (`~/.config/chisel/config.json`)
-4. **System config file** (`/etc/chisel/config.json`)
-5. **Built-in defaults** (`/kod`, `/etc/chisel/config.json`)
+2. **Environment variables** (`PISTACHO_USER_BASE_DIR`, `PISTACHO_CONFIG`, `PISTACHO_BASE_DIR`)
+3. **User config file** (`~/.config/pistacho/config.json`)
+4. **System config file** (`/etc/pistacho/config.json`)
+5. **Built-in defaults** (`/kod`, `/etc/pistacho/config.json`)
 
 ### Using pith-user vs pith
 
@@ -109,21 +109,21 @@ Chisel uses this priority order for configuration:
 pith-user install nano
 ```
 
-**chisel** (with environment variables):
+**pistacho** (with environment variables):
 - Full control
 - Flexible for different use cases
 
 ```bash
-export CHISEL_USER_BASE_DIR=~/.local/share/chisel
-export CHISEL_CONFIG=~/.config/chisel/config.json
+export PISTACHO_USER_BASE_DIR=~/.local/share/pistacho
+export PISTACHO_CONFIG=~/.config/pistacho/config.json
 pith install nano
 ```
 
 **Direct flag usage:**
 ```bash
-chisel \
-  --base-dir ~/.local/share/chisel \
-  --config ~/.config/chisel/config.json \
+pistacho \
+  --base-dir ~/.local/share/pistacho \
+  --config ~/.config/pistacho/config.json \
   install nano
 ```
 
@@ -133,7 +133,7 @@ After setup, your shell will have:
 
 ```bash
 # User-level base directory
-export CHISEL_USER_BASE_DIR="$HOME/.local/share/chisel"
+export PISTACHO_USER_BASE_DIR="$HOME/.local/share/pistacho"
 
 # Add user bin to PATH (for package executables)
 export PATH="$PATH:$HOME/.local/bin"
@@ -146,10 +146,10 @@ You can override these:
 
 ```bash
 # Use a different base directory
-export CHISEL_USER_BASE_DIR=/path/to/packages
+export PISTACHO_USER_BASE_DIR=/path/to/packages
 
 # Use a different symlink location
-export CHISEL_SYMLINK_DIR=$HOME/custom/bin
+export PISTACHO_SYMLINK_DIR=$HOME/custom/bin
 ```
 
 ## Common Operations
@@ -172,7 +172,7 @@ pith-user install vim --no-extract
 
 ### Installing Package Groups
 
-Chisel supports package groups, which are collections of related packages that you can install together. For example, the `gnome` group contains all GNOME desktop packages, `kde` contains KDE Plasma packages, and `base-devel` contains essential development tools.
+Pistacho supports package groups, which are collections of related packages that you can install together. For example, the `gnome` group contains all GNOME desktop packages, `kde` contains KDE Plasma packages, and `base-devel` contains essential development tools.
 
 #### List Available Groups
 
@@ -385,8 +385,8 @@ ls -la ~/.local/bin/pith-user
 The setup script must be in the same directory as the pith binary:
 
 ```bash
-ls -la chisel*
-# Should show: chisel, pith-user, pith-user-init.sh
+ls -la pistacho*
+# Should show: pistacho, pith-user, pith-user-init.sh
 ```
 
 ### Packages not in PATH
@@ -424,13 +424,13 @@ User-level pith should not require sudo. If you get permission errors:
 
 1. Check directory permissions:
 ```bash
-ls -la ~/.local/share/chisel/
+ls -la ~/.local/share/pistacho/
 ```
 
 2. Ensure user owns the directories:
 ```bash
-chown -R $USER ~/.local/share/chisel
-chown -R $USER ~/.config/chisel
+chown -R $USER ~/.local/share/pistacho
+chown -R $USER ~/.config/pistacho
 ```
 
 3. Check disk space:
@@ -443,8 +443,8 @@ df -h ~/.local/share/
 If you have both user and system configs:
 
 1. User config takes priority (good for customization)
-2. To force system config: `chisel --base-dir /kod install vim`
-3. To use specific config: `chisel --config /path/to/config.json install vim`
+2. To force system config: `pith --base-dir /kod install vim`
+3. To use specific config: `pith --config /path/to/config.json install vim`
 
 ### Symlink prefix stripping issues
 
@@ -465,7 +465,7 @@ ls -la ~/.local/bin/
 3. Verify wrapper scripts have stripped paths:
 ```bash
 # Check the wrapper script for a package
-cat ~/.local/share/chisel/wrappers/vim-wrapper.sh
+cat ~/.local/share/pistacho/wrappers/vim-wrapper.sh
 
 # Look for stripped paths (should not contain the prefix)
 ```
@@ -501,7 +501,7 @@ Override the user base directory:
 
 ```bash
 # Use a different location
-export CHISEL_USER_BASE_DIR=/tmp/my-packages
+export PISTACHO_USER_BASE_DIR=/tmp/my-packages
 pith-user sync
 
 # Or use the wrapper with explicit path
@@ -514,15 +514,15 @@ Test packages without affecting your main installation:
 
 ```bash
 # Create temporary directory
-mkdir /tmp/chisel-test
-export CHISEL_USER_BASE_DIR=/tmp/chisel-test
+mkdir /tmp/pistacho-test
+export PISTACHO_USER_BASE_DIR=/tmp/pistacho-test
 
 # Install and test
 pith-user sync
 pith-user install test-package
 
 # Clean up
-rm -rf /tmp/chisel-test
+rm -rf /tmp/pistacho-test
 ```
 
 ### Integration with Other Tools
@@ -576,8 +576,8 @@ pith-user remove package-name
 
 ```bash
 # Remove all pith user data
-rm -rf ~/.local/share/chisel
-rm -rf ~/.config/chisel
+rm -rf ~/.local/share/pistacho
+rm -rf ~/.config/pistacho
 
 # Remove symlinks
 rm -rf ~/.local/bin/*
@@ -615,7 +615,7 @@ pith-user sync                # Sync databases regularly
 
 ```bash
 # Check disk usage
-du -sh ~/.local/share/chisel/
+du -sh ~/.local/share/pistacho/
 
 # List packages and sizes
 pith-user list --verbose
@@ -624,13 +624,13 @@ pith-user list --verbose
 ## FAQ
 
 **Q: Can multiple users share packages?**
-A: By default, each user has isolated packages. To share, set the same CHISEL_USER_BASE_DIR and ensure read permissions.
+A: By default, each user has isolated packages. To share, set the same PISTACHO_USER_BASE_DIR and ensure read permissions.
 
 **Q: Do I need sudo for anything?**
 A: No. User-level pith is completely sudo-free. All packages go to user-owned directories.
 
 **Q: Can I use the system pith and pith-user together?**
-A: Yes. System pith uses /kod, user-level uses ~/.local/share/chisel. They don't conflict.
+A: Yes. System pith uses /kod, user-level uses ~/.local/share/pistacho. They don't conflict.
 
 **Q: What if ~/.local/bin is not in my PATH?**
 A: The setup script adds it. If not, manually add to your ~/.bashrc:
@@ -639,7 +639,7 @@ export PATH="$PATH:$HOME/.local/bin"
 ```
 
 **Q: Can I move packages after installation?**
-A: You can move the entire ~/.local/share/chisel directory. Symlinks will need to be recreated.
+A: You can move the entire ~/.local/share/pistacho directory. Symlinks will need to be recreated.
 
 **Q: What about LD_LIBRARY_PATH?**
 A: Some packages need libraries from their own store. Set LD_LIBRARY_PATH to enable this:
@@ -649,7 +649,7 @@ export LD_LIBRARY_PATH="$HOME/.local/lib:$LD_LIBRARY_PATH"
 
 ## See Also
 
-- [Chisel Main Documentation](./README.md)
+- [Pistacho Main Documentation](./README.md)
 - [Test Workflow Guide](./TEST-WORKFLOW.md)
 - [Quick Test Guide](./QUICK-TEST.md)
 - [XDG Base Directory Specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html)
@@ -664,5 +664,5 @@ pith-user --help
 ./pith-user-init.sh --help
 
 # Show pith help
-chisel help
+pistacho help
 ```

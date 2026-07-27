@@ -1,6 +1,6 @@
 # Pistacho Features
 
-This document provides an overview of Chisel's key features.
+This document provides an overview of Pistacho's key features.
 
 ## Core Features
 
@@ -98,10 +98,10 @@ vim myfile.txt
 ## Configuration
 
 ### Environment Variables
-- `CHISEL_BASE_DIR` - Override base directory
-- `CHISEL_CONFIG` - Override config file path
-- `CHISEL_SYMLINK_DIR` - Override symlink directory
-- `CHISEL_USER_BASE_DIR` - User-level installation directory
+- `PISTACHO_BASE_DIR` - Override base directory
+- `PISTACHO_CONFIG` - Override config file path
+- `PISTACHO_SYMLINK_DIR` - Override symlink directory
+- `PISTACHO_USER_BASE_DIR` - User-level installation directory
 
 ### Configuration File
 ```json
@@ -181,7 +181,7 @@ vim myfile.txt
 
 ## Summary
 
-Chisel provides a complete package management solution for installing Arch Linux packages on any Linux distribution with:
+Pistacho provides a complete package management solution for installing Arch Linux packages on any Linux distribution with:
 
 1. **Complete dependency isolation** - No host contamination
 2. **Flexible installation modes** - System, user, or chroot-based

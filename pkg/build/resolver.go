@@ -1,4 +1,4 @@
-// Package build provides build system integration for Chisel.
+// Package build provides build system integration for Pistacho.
 // resolver.go implements unified dependency resolution for official and AUR packages.
 package build
 

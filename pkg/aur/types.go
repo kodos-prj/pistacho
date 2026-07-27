@@ -1,4 +1,4 @@
-// Package aur provides Arch User Repository (AUR) support for Chisel.
+// Package aur provides Arch User Repository (AUR) support for Pistacho.
 // It handles querying AUR packages, downloading PKGBUILDs, and parsing build metadata.
 package aur
 

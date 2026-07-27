@@ -1,4 +1,4 @@
-// Package build provides build system integration for Chisel.
+// Package build provides build system integration for Pistacho.
 // builder_test.go contains tests for the build manager.
 package build
 

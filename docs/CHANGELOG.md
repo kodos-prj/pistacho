@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to Chisel will be documented in this file.
+All notable changes to Pistacho will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -134,6 +134,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 - User-level package installation now uses secure paths
-  - Cache stored in `~/.local/share/chisel/cache/`
-  - Build cache in `~/.local/share/chisel/build-cache/`
-  - Build logs in `~/.local/share/chisel/build-logs/`
+  - Cache stored in `~/.local/share/pistacho/cache/`
+  - Build cache in `~/.local/share/pistacho/build-cache/`
+  - Build logs in `~/.local/share/pistacho/build-logs/`

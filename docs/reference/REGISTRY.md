@@ -1,12 +1,12 @@
 # Registry Reference
 
-Complete reference for Chisel's package registry system that tracks all installed packages and their metadata.
+Complete reference for Pistacho's package registry system that tracks all installed packages and their metadata.
 
 ---
 
 ## Overview
 
-The registry is a JSON file that tracks all packages installed by Chisel, maintaining metadata about each package including version, files, executables, dependencies, and installation date.
+The registry is a JSON file that tracks all packages installed by Pistacho, maintaining metadata about each package including version, files, executables, dependencies, and installation date.
 
 **Location**: `/kod/registry.json` (configurable via `Config.RegistryPath`)
 
@@ -141,7 +141,7 @@ type Package struct {
 - Allows multiple readers or single writer
 
 **File-Level**: NO inter-process locking
-- Different `chisel` invocations don't coordinate access
+- Different `pistacho` invocations don't coordinate access
 - Relies on atomic `os.WriteFile` behavior
 
 ### Concurrency Issues

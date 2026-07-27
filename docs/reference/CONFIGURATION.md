@@ -1,6 +1,6 @@
 # Configuration Guide
 
-Chisel supports multiple ways to specify configuration, giving you flexibility for different use cases.
+Pistacho supports multiple ways to specify configuration, giving you flexibility for different use cases.
 
 ## Configuration Priority
 
@@ -19,17 +19,17 @@ Override specific configuration values on the command line:
 
 ```bash
 # Use custom config file
-chisel -c /path/to/config.json sync
-chisel --config /path/to/config.json sync
+pistacho -c /path/to/config.json sync
+pistacho --config /path/to/config.json sync
 
 # Override base directory
-chisel --base-dir /tmp/chisel-test sync
+pistacho --base-dir /tmp/pistacho-test sync
 
 # Override mirror URL
-chisel --mirror https://mirrors.kernel.org/archlinux sync
+pistacho --mirror https://mirrors.kernel.org/archlinux sync
 
 # Combine multiple options
-chisel -c myconfig.json --base-dir /tmp/test --mirror https://example.com/archlinux search vim
+pistacho -c myconfig.json --base-dir /tmp/test --mirror https://example.com/archlinux search vim
 ```
 
 **Available global flags:**
@@ -43,26 +43,26 @@ Set configuration via environment variables:
 
 ```bash
 # Set custom config file path
-export CHISEL_CONFIG=/home/user/.chisel.json
+export PISTACHO_CONFIG=/home/user/.pistacho.json
 pith sync
 
 # Set custom base directory
-export CHISEL_BASE_DIR=/opt/chisel
+export PISTACHO_BASE_DIR=/opt/pistacho
 pith sync
 
 # Use for single command
-CHISEL_BASE_DIR=/tmp/test pith sync --status
+PISTACHO_BASE_DIR=/tmp/test pith sync --status
 ```
 
 **Available environment variables:**
-- `CHISEL_CONFIG` - Path to configuration file
-- `CHISEL_BASE_DIR` - Base directory for pith data
+- `PISTACHO_CONFIG` - Path to configuration file
+- `PISTACHO_BASE_DIR` - Base directory for pith data
 
 ### 3. Configuration File
 
 Create a JSON configuration file with your settings.
 
-**Default location:** `/etc/chisel/config.json`
+**Default location:** `/etc/pistacho/config.json`
 
 **Example configuration:**
 
@@ -87,7 +87,7 @@ Create a JSON configuration file with your settings.
 #### `base_dir` (string)
 - **Default:** `/kod`
 - **Description:** Base directory for all pith data
-- **Example:** `/kod`, `/opt/chisel`, `/home/user/.local/chisel`
+- **Example:** `/kod`, `/opt/pistacho`, `/home/user/.local/pistacho`
 
 When you set `base_dir`, all the following paths are automatically derived:
 - Store: `{base_dir}/store`
@@ -199,7 +199,7 @@ For local development or testing without requiring root access:
 
 ```json
 {
-  "base_dir": "/home/user/.local/chisel",
+  "base_dir": "/home/user/.local/pistacho",
   "symlink_root": "/home/user/.local",
   "mirror_url": "https://mirrors.kernel.org/archlinux",
   "repositories": ["core", "extra"],
@@ -209,8 +209,8 @@ For local development or testing without requiring root access:
 
 **Usage:**
 ```bash
-chisel -c ~/.chisel-dev.json sync
-chisel -c ~/.chisel-dev.json install vim
+pistacho -c ~/.pistacho-dev.json sync
+pistacho -c ~/.pistacho-dev.json install vim
 ```
 
 ### Production Setup
@@ -243,11 +243,11 @@ Quick testing without creating a config file:
 
 ```bash
 # Test in temporary directory
-chisel --base-dir /tmp/chisel-test sync
-chisel --base-dir /tmp/chisel-test search vim
+pistacho --base-dir /tmp/pistacho-test sync
+pistacho --base-dir /tmp/pistacho-test search vim
 
 # Test with different mirror
-chisel --base-dir /tmp/test --mirror https://mirror.f4st.host/archlinux sync
+pistacho --base-dir /tmp/test --mirror https://mirror.f4st.host/archlinux sync
 ```
 
 ### Environment-Based Configuration
@@ -256,8 +256,8 @@ Use environment variables for containerized environments:
 
 ```bash
 # In Docker/container
-export CHISEL_BASE_DIR=/opt/chisel
-export CHISEL_CONFIG=/etc/chisel/prod.json
+export PISTACHO_BASE_DIR=/opt/pistacho
+export PISTACHO_CONFIG=/etc/pistacho/prod.json
 
 pith sync
 pith install package-name
@@ -265,22 +265,22 @@ pith install package-name
 
 ## Configuration File Locations
 
-Chisel looks for configuration in the following locations (in order):
+Pistacho looks for configuration in the following locations (in order):
 
 1. Path specified with `-c` or `--config` flag
-2. Path in `CHISEL_CONFIG` environment variable
-3. `/etc/chisel/config.json` (default)
+2. Path in `PISTACHO_CONFIG` environment variable
+3. `/etc/pistacho/config.json` (default)
 4. Built-in defaults (if no config file exists)
 
 ## Creating a Configuration File
 
 ### Method 1: Manual Creation
 
-Create `/etc/chisel/config.json`:
+Create `/etc/pistacho/config.json`:
 
 ```bash
-sudo mkdir -p /etc/chisel
-sudo nano /etc/chisel/config.json
+sudo mkdir -p /etc/pistacho
+sudo nano /etc/pistacho/config.json
 ```
 
 Paste your JSON configuration and save.
@@ -291,8 +291,8 @@ Generate a config file with default values:
 
 ```go
 // Future feature - config generation command
-chisel config init
-chisel config init --output /home/user/.chisel.json
+pistacho config init
+pistacho config init --output /home/user/.pistacho.json
 ```
 
 (Note: This feature is planned for a future release)
@@ -305,7 +305,7 @@ Use Go code to generate a config:
 package main
 
 import (
-	"github.com/yourusername/chisel-go/pkg/config"
+	"github.com/yourusername/pistacho-go/pkg/config"
 )
 
 func main() {
@@ -313,7 +313,7 @@ func main() {
 	cfg.MirrorURL = "https://mirrors.kernel.org/archlinux"
 	cfg.Repositories = []string{"core", "extra", "multilib"}
 	
-	if err := cfg.Save("/etc/chisel/config.json"); err != nil {
+	if err := cfg.Save("/etc/pistacho/config.json"); err != nil {
 		panic(err)
 	}
 }
@@ -321,7 +321,7 @@ func main() {
 
 ## Validation
 
-Chisel automatically validates configuration on load:
+Pistacho automatically validates configuration on load:
 
 - Sets defaults for missing fields
 - Ensures all paths are properly derived from `base_dir`
@@ -348,8 +348,8 @@ If configuration is invalid, pith will:
 
 Check if config file exists and is valid JSON:
 ```bash
-cat /etc/chisel/config.json
-python -m json.tool /etc/chisel/config.json
+cat /etc/pistacho/config.json
+python -m json.tool /etc/pistacho/config.json
 ```
 
 ### Override not working
@@ -361,14 +361,14 @@ Remember priority order:
 
 ### Permission denied
 
-If using `/kod` or `/etc/chisel`, you need root access:
+If using `/kod` or `/etc/pistacho`, you need root access:
 ```bash
 sudo pith sync
 ```
 
 Or use a user-writable location:
 ```bash
-chisel --base-dir ~/.local/pith sync
+pistacho --base-dir ~/.local/pith sync
 ```
 
 ## See Also

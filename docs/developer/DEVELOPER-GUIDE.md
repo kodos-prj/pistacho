@@ -2,7 +2,7 @@
 
 ## Overview
 
-Chisel has migrated from `go-alpm/v2` (CGO-based wrapper around libalpm) to a pure Go implementation of the ALPM (Arch Linux Package Manager) protocol. This document guides developers on the architecture, usage, and migration patterns.
+Pistacho has migrated from `go-alpm/v2` (CGO-based wrapper around libalpm) to a pure Go implementation of the ALPM (Arch Linux Package Manager) protocol. This document guides developers on the architecture, usage, and migration patterns.
 
 ## Architecture
 
@@ -49,7 +49,7 @@ pkg, err := client.GetPackage("bash")
 
 #### New (Pure Go):
 ```go
-import "github.com/kodos-prj/chisel/pkg/alpm"
+import "github.com/kodos-prj/pistacho/pkg/alpm"
 
 client, err := alpm.NewClient("/", "/var/lib/pacman/sync")
 if err != nil {
@@ -310,7 +310,7 @@ client := alpm.NewGoClient("/", "/var/lib/pacman/sync")
 
 When migrating code from go-alpm to pure Go:
 
-- [ ] Replace imports from `github.com/jguer/go-alpm/v2` to `github.com/kodos-prj/chisel/pkg/alpm`
+- [ ] Replace imports from `github.com/jguer/go-alpm/v2` to `github.com/kodos-prj/pistacho/pkg/alpm`
 - [ ] Update `NewHandle()` to `NewClient()` with correct dbPath
 - [ ] Update method calls: `GetPackage()` → `SearchPackage()`, etc.
 - [ ] Ensure `RegisterAllSyncDBs()` is called before searches
@@ -329,7 +329,7 @@ package main
 
 import (
     "fmt"
-    "github.com/kodos-prj/chisel/pkg/alpm"
+    "github.com/kodos-prj/pistacho/pkg/alpm"
 )
 
 func main() {

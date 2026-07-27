@@ -2,11 +2,11 @@
 
 ## Overview
 
-Chisel is a cross-distribution package manager that brings Arch Linux packages to any Linux distribution (Ubuntu, Fedora, Debian, etc.) with complete dependency isolation.
+Pistacho is a cross-distribution package manager that brings Arch Linux packages to any Linux distribution (Ubuntu, Fedora, Debian, etc.) with complete dependency isolation.
 
 ## Core Problem
 
-Stable LTS distributions (Ubuntu 22.04, Debian 12) ship with outdated packages. Chisel solves this by:
+Stable LTS distributions (Ubuntu 22.04, Debian 12) ship with outdated packages. Pistacho solves this by:
 - Running Arch binaries natively on any distribution
 - Providing complete dependency isolation (ALL dependencies from Arch, not host)
 - Creating wrapper scripts that dynamically set `LD_LIBRARY_PATH`
@@ -41,7 +41,7 @@ Stable LTS distributions (Ubuntu 22.04, Debian 12) ship with outdated packages. 
 
 ### 1. Configuration (`pkg/config`)
 
-**Purpose**: Manage Chisel configuration
+**Purpose**: Manage Pistacho configuration
 
 **Data Structure**:
 ```json
@@ -321,7 +321,7 @@ Search for packages in repositories.
 
 **Output**: List of matching packages with version and description
 
-### `chisel info <package>`
+### `pith info <package>`
 Show detailed information about a package.
 
 **Output**: All PackageInfo fields in formatted output
@@ -369,7 +369,7 @@ function ResolveDependencies(packageName):
     return result
 ```
 
-## Configuration File (`/etc/chisel/config.json`)
+## Configuration File (`/etc/pistacho/config.json`)
 
 ```json
 {
@@ -407,7 +407,7 @@ function ResolveDependencies(packageName):
 
 ### Pure Go Implementation
 
-Chisel uses a **pure Go implementation** of libalpm functionality (`pkg/alpm/`), eliminating the need for external C libraries and CGO compilation. This provides several benefits:
+Pistacho uses a **pure Go implementation** of libalpm functionality (`pkg/alpm/`), eliminating the need for external C libraries and CGO compilation. This provides several benefits:
 
 - **Zero system dependencies**: No need to install libalpm-dev or libarchive-dev
 - **Better portability**: Cross-compilation to different architectures without CGO hassles
