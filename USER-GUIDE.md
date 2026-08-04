@@ -4,7 +4,7 @@ This guide explains how to use pith as a regular user to install and manage pack
 
 ## Overview
 
-By default, pith stores packages in `/kod/` which requires root access. This guide shows how to configure pith to use user-level directories following the XDG Base Directory specification, allowing any user to independently manage packages.
+By default, pith stores packages in the current working directory (`.`) which is convenient for development and testing. This guide shows how to configure pith to use user-level directories following the XDG Base Directory specification for user-level installations, allowing any user to independently manage packages.
 
 **Key Benefits:**
 - ✅ No root/sudo required
@@ -96,7 +96,7 @@ Pistacho uses this priority order for configuration:
 2. **Environment variables** (`PISTACHO_USER_BASE_DIR`, `PISTACHO_CONFIG`, `PISTACHO_BASE_DIR`)
 3. **User config file** (`~/.config/pistacho/config.json`)
 4. **System config file** (`/etc/pistacho/config.json`)
-5. **Built-in defaults** (`/kod`, `/etc/pistacho/config.json`)
+5. **Built-in defaults** (`.` current directory, `/etc/pistacho/config.json`)
 
 ### Using pith-user vs pith
 
@@ -270,8 +270,8 @@ pith-user install vim --chroot /tmp/demo
 When you install a package with `--chroot`, pith modifies the symlink paths by removing the specified prefix. This enables packages to work correctly within a chroot environment.
 
 **Example:**
-- Without prefix stripping: `/tmp/demo/kod/store/vim/bin/vim`
-- With `--chroot=/tmp/demo`: `/kod/store/vim/bin/vim`
+- Without prefix stripping: `/tmp/demo/pool/vim/9.0.0/usr/bin/vim`
+- With `--chroot=/tmp/demo`: `./pool/vim/9.0.0/usr/bin/vim`
 
 #### Use Cases
 
@@ -443,7 +443,7 @@ df -h ~/.local/share/
 If you have both user and system configs:
 
 1. User config takes priority (good for customization)
-2. To force system config: `pith --base-dir /kod install vim`
+2. To force system-level: Use system config file or set appropriate environment variables
 3. To use specific config: `pith --config /path/to/config.json install vim`
 
 ### Symlink prefix stripping issues
@@ -630,7 +630,7 @@ A: By default, each user has isolated packages. To share, set the same PISTACHO_
 A: No. User-level pith is completely sudo-free. All packages go to user-owned directories.
 
 **Q: Can I use the system pith and pith-user together?**
-A: Yes. System pith uses /kod, user-level uses ~/.local/share/pistacho. They don't conflict.
+A: Yes. System pith defaults to current directory (.), user-level uses ~/.local/share/pistacho via pith-user-init.sh. They don't conflict.
 
 **Q: What if ~/.local/bin is not in my PATH?**
 A: The setup script adds it. If not, manually add to your ~/.bashrc:

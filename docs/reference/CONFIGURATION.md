@@ -23,13 +23,13 @@ pistacho -c /path/to/config.json sync
 pistacho --config /path/to/config.json sync
 
 # Override base directory
-pistacho --base-dir /tmp/pistacho-test sync
+pistacho --base-dir ./test-packages sync
 
 # Override mirror URL
 pistacho --mirror https://mirrors.kernel.org/archlinux sync
 
 # Combine multiple options
-pistacho -c myconfig.json --base-dir /tmp/test --mirror https://example.com/archlinux search vim
+pistacho -c myconfig.json --base-dir ./my-packages --mirror https://example.com/archlinux search vim
 ```
 
 **Available global flags:**
@@ -51,7 +51,7 @@ export PISTACHO_BASE_DIR=/opt/pistacho
 pith sync
 
 # Use for single command
-PISTACHO_BASE_DIR=/tmp/test pith sync --status
+PISTACHO_BASE_DIR=./test pith sync --status
 ```
 
 **Available environment variables:**
@@ -68,7 +68,7 @@ Create a JSON configuration file with your settings.
 
 ```json
 {
-  "base_dir": "/kod",
+  "base_dir": ".",
   "symlink_root": "/",
   "mirror_url": "https://mirror.rackspace.com/archlinux",
   "architecture": "x86_64",
@@ -85,12 +85,12 @@ Create a JSON configuration file with your settings.
 ### Directory Paths
 
 #### `base_dir` (string)
-- **Default:** `/kod`
+- **Default:** `.` (current working directory)
 - **Description:** Base directory for all pith data
-- **Example:** `/kod`, `/opt/pistacho`, `/home/user/.local/pistacho`
+- **Example:** `.`, `./packages`, `/opt/pistacho`, `~/.local/share/pistacho`
 
 When you set `base_dir`, all the following paths are automatically derived:
-- Store: `{base_dir}/store`
+- Store: `{base_dir}/pool`
 - Registry: `{base_dir}/registry.json`
 - Databases: `{base_dir}/db`
 - Wrappers: `{base_dir}/wrappers`
@@ -215,11 +215,11 @@ pistacho -c ~/.pistacho-dev.json install vim
 
 ### Production Setup
 
-System-wide installation with default paths:
+System-wide installation with absolute paths:
 
 ```json
 {
-  "base_dir": "/kod",
+  "base_dir": "/opt/pistacho",
   "symlink_root": "/",
   "mirror_url": "https://geo.mirror.pkgbuild.com",
   "architecture": "x86_64",
@@ -242,12 +242,12 @@ sudo pith install vim
 Quick testing without creating a config file:
 
 ```bash
-# Test in temporary directory
-pistacho --base-dir /tmp/pistacho-test sync
-pistacho --base-dir /tmp/pistacho-test search vim
+# Test in current directory
+pistacho --base-dir ./test sync
+pistacho --base-dir ./test search vim
 
 # Test with different mirror
-pistacho --base-dir /tmp/test --mirror https://mirror.f4st.host/archlinux sync
+pistacho --base-dir ./test --mirror https://mirror.f4st.host/archlinux sync
 ```
 
 ### Environment-Based Configuration
@@ -361,14 +361,14 @@ Remember priority order:
 
 ### Permission denied
 
-If using `/kod` or `/etc/pistacho`, you need root access:
+If using system directories like `/etc/pistacho`, you need root access:
 ```bash
 sudo pith sync
 ```
 
 Or use a user-writable location:
 ```bash
-pistacho --base-dir ~/.local/pith sync
+pistacho --base-dir ~/.local/share/pith sync
 ```
 
 ## See Also

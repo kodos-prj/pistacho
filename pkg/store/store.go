@@ -1,4 +1,4 @@
-// Package store manages the central package pool at /kod/pool.
+// Package store manages the central package pool.
 // It handles package extraction, storage, and cleanup operations.
 package store
 
@@ -14,7 +14,7 @@ import (
 
 const (
 	// DefaultPoolRoot is the default location for the package pool
-	DefaultPoolRoot = "/kod/pool"
+	DefaultPoolRoot = "./pool"
 )
 
 // Store manages package storage operations.

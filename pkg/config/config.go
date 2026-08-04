@@ -13,7 +13,7 @@ const (
 	DefaultConfigPath = "/etc/pith/config.json"
 
 	// DefaultBaseDir is the default base directory for all pith data
-	DefaultBaseDir = "/kod"
+	DefaultBaseDir = "."
 
 	// DefaultSymlinkRoot is the default root for symlinks (system root)
 	DefaultSymlinkRoot = "/"
@@ -21,7 +21,7 @@ const (
 
 // Config represents the pith configuration.
 type Config struct {
-	// BaseDir is the base directory for all pith data (/kod by default)
+	// BaseDir is the base directory for all pith data (. by default, current working directory)
 	// All paths below are relative to this unless they're absolute
 	BaseDir string `json:"base_dir"`
 
@@ -85,7 +85,7 @@ func DefaultConfig() *Config {
 		SymlinkRoot:            DefaultSymlinkRoot,
 		PoolRoot:              filepath.Join(baseDir, "pool"),
 		RegistryPath:           filepath.Join(baseDir, "registry.json"),
-		AlpmRoot:               baseDir,                              // Use /kod as ALPM root for cross-distribution
+		AlpmRoot:               baseDir,                              // Use current directory as ALPM root for cross-distribution
 		AlpmDBPath:             filepath.Join(baseDir, "db"),         // Directory containing sync/ subdirectory
 		DBPath:                 filepath.Join(baseDir, "db", "sync"), // Actual sync databases location
 		WrapperDir:             filepath.Join(baseDir, "wrappers"),
@@ -144,20 +144,11 @@ func GetUserConfigPath() (string, error) {
 }
 
 // GetUserBaseDir returns the user-level base directory for pith data.
-// Priority: $PITH_USER_BASE_DIR -> ~/.local/share/pith
+// Priority: $PITH_USER_BASE_DIR -> $XDG_DATA_HOME/pith -> ~/.local/share/pith
 func GetUserBaseDir() (string, error) {
 	// Check environment variable first
 	if userBase := os.Getenv("PITH_USER_BASE_DIR"); userBase != "" {
 		return userBase, nil
-	}
-
-	// Check if running as root with /kod directory (likely a chroot)
-	// If /kod exists and we're root, prefer /kod over user home directory
-	if os.Getuid() == 0 {
-		if info, err := os.Stat("/kod"); err == nil && info.IsDir() {
-			// /kod exists and is a directory, use it as base dir (indicates chroot)
-			return "/kod", nil
-		}
 	}
 
 	// Check XDG_DATA_HOME
@@ -258,7 +249,7 @@ func (c *Config) Normalize() {
 		c.WrapperDir = filepath.Join(c.BaseDir, "wrappers")
 	}
 
-	// Set CachePath default if empty (simplified: /kod/cache)
+	// Set CachePath default if empty (simplified: ./cache)
 	if c.CachePath == "" {
 		c.CachePath = filepath.Join(c.BaseDir, "cache")
 	}

@@ -10,17 +10,17 @@ Stable LTS distributions (Ubuntu 22.04, Debian 12) ship with outdated packages. 
 - Running Arch binaries natively on any distribution
 - Providing complete dependency isolation (ALL dependencies from Arch, not host)
 - Creating wrapper scripts that dynamically set `LD_LIBRARY_PATH`
-- Using a custom ALPM root at `/kod/` instead of `/`
+- Using a custom ALPM root at `./` instead of `/`
 
 ## Architecture
 
 ### Directory Structure
 
 ```
-/kod/
-├── store/           # Package storage: /kod/store/<package>/<version>/
-├── wrappers/        # Wrapper scripts: /kod/wrappers/<package>
-├── db/              # Arch databases: /kod/db/<repo>/
+./
+├── pool/            # Package storage: ./pool/<package>/<version>/
+├── wrappers/        # Wrapper scripts: ./wrappers/<package>
+├── db/              # Arch databases: ./db/<repo>/
 ├── registry.json    # Package registry (JSON)
 └── config.json      # Configuration file
 ```
@@ -46,12 +46,12 @@ Stable LTS distributions (Ubuntu 22.04, Debian 12) ship with outdated packages. 
 **Data Structure**:
 ```json
 {
-  "base_dir": "/kod",
-  "db_dir": "/kod/db",
-  "store_dir": "/kod/store",
-  "wrappers_dir": "/kod/wrappers",
+  "base_dir": ".",
+  "db_dir": "./db",
+  "store_dir": "./pool",
+  "wrappers_dir": "./wrappers",
   "symlink_dir": "/usr/bin",
-  "registry_file": "/kod/registry.json",
+  "registry_file": "./registry.json",
   "mirror_url": "https://geo.mirror.pkgbuild.com",
   "arch": "x86_64",
   "repos": ["core", "extra", "community"]
@@ -152,7 +152,7 @@ Stable LTS distributions (Ubuntu 22.04, Debian 12) ship with outdated packages. 
 
 **Storage Layout**:
 ```
-/kod/store/<package>/<version>/
+./pool/<package>/<version>/
 ├── usr/
 ├── lib/
 └── ... (rest of package filesystem)
@@ -213,8 +213,8 @@ Stable LTS distributions (Ubuntu 22.04, Debian 12) ship with outdated packages. 
 **Wrapper Script Format**:
 ```bash
 #!/bin/bash
-export LD_LIBRARY_PATH="/kod/store/vim/9.0.000/usr/lib:$LD_LIBRARY_PATH"
-exec "/kod/store/vim/9.0.000/usr/bin/vim" "$@"
+export LD_LIBRARY_PATH="./pool/vim/9.0.000/usr/lib:$LD_LIBRARY_PATH"
+exec "./pool/vim/9.0.000/usr/bin/vim" "$@"
 ```
 
 **Operations**:
@@ -239,9 +239,9 @@ exec "/kod/store/vim/9.0.000/usr/bin/vim" "$@"
 
 **Symlink Structure**:
 ```
-/usr/bin/vim              → /kod/wrappers/vim (symlink)
-/kod/wrappers/vim         → /kod/store/vim/9.0.000/usr/bin/vim (symlink)
-/kod/store/vim/9.0.000/usr/bin/vim (actual binary)
+/usr/bin/vim              → ./wrappers/vim (symlink)
+./wrappers/vim            → ./pool/vim/9.0.000/usr/bin/vim (symlink)
+./pool/vim/9.0.000/usr/bin/vim (actual binary)
 ```
 
 **Operations**:
@@ -373,12 +373,12 @@ function ResolveDependencies(packageName):
 
 ```json
 {
-  "base_dir": "/kod",
-  "db_dir": "/kod/db",
-  "store_dir": "/kod/store",
-  "wrappers_dir": "/kod/wrappers",
+  "base_dir": ".",
+  "db_dir": "./db",
+  "store_dir": "./pool",
+  "wrappers_dir": "./wrappers",
   "symlink_dir": "/usr/bin",
-  "registry_file": "/kod/registry.json",
+  "registry_file": "./registry.json",
   "mirror_url": "https://geo.mirror.pkgbuild.com",
   "arch": "x86_64",
   "repos": ["core", "extra", "community"],

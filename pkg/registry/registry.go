@@ -1,4 +1,4 @@
-// Package registry manages the JSON-based package registry at /kod/registry.json.
+// Package registry manages the JSON-based package registry.
 // It tracks installed packages, their versions, and file lists.
 package registry
 
@@ -11,7 +11,7 @@ import (
 
 const (
 	// DefaultRegistryPath is the default location for the registry file
-	DefaultRegistryPath = "/kod/registry.json"
+	DefaultRegistryPath = "./registry.json"
 )
 
 // Package represents an installed package in the registry.

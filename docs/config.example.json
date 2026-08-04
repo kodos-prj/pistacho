@@ -1,9 +1,9 @@
 {
-  "base_dir": "/kod",
+  "base_dir": ".",
   "symlink_root": "/",
-  "pool_root": "/kod/pool",
-  "registry_path": "/kod/registry.json",
-  "alpm_root": "/",
-  "alpm_db_path": "/var/lib/pacman",
+  "pool_root": "./pool",
+  "registry_path": "./registry.json",
+  "alpm_root": ".",
+  "alpm_db_path": "./db",
   "keep_versions": 3
 }

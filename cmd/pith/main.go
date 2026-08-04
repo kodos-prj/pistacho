@@ -10,7 +10,7 @@ import (
 	"github.com/kodos-prj/pistacho/pkg/config"
 )
 
-const version = "0.4.0"
+const version = "0.4.2"
 
 var (
 	configPath      string
@@ -24,7 +24,7 @@ func main() {
 	// Define global flags
 	flag.StringVar(&configPath, "config", "", "Path to configuration file")
 	flag.StringVar(&configPath, "c", "", "Path to configuration file (shorthand)")
-	flag.StringVar(&baseDir, "base-dir", "", "Base directory for pith data (overrides config)")
+	flag.StringVar(&baseDir, "base-dir", "", "Base directory for pith data (default: . current working directory)")
 	flag.StringVar(&mirrorURL, "mirror", "", "Arch mirror URL (overrides config)")
 	flag.StringVar(&symlinkDir, "symlink-dir", "", "Directory to create symlink hierarchy (optional)")
 
@@ -101,7 +101,7 @@ func showUsage() {
 	fmt.Println("")
 	fmt.Println("Global Options:")
 	fmt.Println("  -c, --config <path>   Path to configuration file (default: /etc/pith/config.json)")
-	fmt.Println("  --base-dir <path>     Base directory for pith data (default: /kod)")
+	fmt.Println("  --base-dir <path>     Base directory for pith data (default: . current directory)")
 	fmt.Println("  --mirror <url>        Arch mirror URL (overrides config)")
 	fmt.Println("")
 	fmt.Println("Available Commands (Phase 1):")
@@ -146,13 +146,13 @@ func showUsage() {
 	fmt.Println("  pith -c /home/user/.pith.json sync")
 	fmt.Println("")
 	fmt.Println("  # Use custom base directory for testing")
-	fmt.Println("  pith --base-dir /tmp/pith-test sync")
+	fmt.Println("  pith --base-dir ./test-packages sync")
 	fmt.Println("")
 	fmt.Println("  # Use different mirror")
 	fmt.Println("  pith --mirror https://mirrors.kernel.org/archlinux sync")
 	fmt.Println("")
 	fmt.Println("  # Combine options")
-	fmt.Println("  pith -c myconfig.json --base-dir /tmp/test search vim")
+	fmt.Println("  pith -c myconfig.json --base-dir ./my-packages search vim")
 	fmt.Println("")
 	fmt.Println("Configuration: /etc/pith/config.json (or specify with --config)")
 	fmt.Println("Environment variables: PITH_CONFIG, PITH_BASE_DIR")
