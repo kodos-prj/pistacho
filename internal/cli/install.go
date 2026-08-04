@@ -430,13 +430,24 @@ func (i *InstallCommand) Run(args []string) error {
 			}
 
 			// Apply symlink target transformation if --chroot is configured
+			// Only strip prefix if the target path actually starts with the chroot path
 			if opts.Chroot != "" {
-					strippedPath, err := symlink.StripPrefix(targetPath, opts.Chroot)
-					if err != nil {
-						fmt.Fprintf(os.Stderr, "  ! Warning: Failed to strip prefix from %s: %v\n", targetPath, err)
-						continue
+					// Normalize chroot path with trailing slash for comparison
+					chrootWithSlash := opts.Chroot
+					if !strings.HasSuffix(chrootWithSlash, "/") {
+						chrootWithSlash = chrootWithSlash + "/"
 					}
-					targetPath = strippedPath
+					
+					// Only attempt to strip if path starts with chroot
+					if strings.HasPrefix(targetPath, chrootWithSlash) {
+						strippedPath, err := symlink.StripPrefix(targetPath, opts.Chroot)
+						if err != nil {
+							fmt.Fprintf(os.Stderr, "  ! Warning: Failed to strip prefix from %s: %v\n", targetPath, err)
+							continue
+						}
+						targetPath = strippedPath
+					}
+					// If targetPath doesn't start with chroot, use it as-is (pool is outside chroot)
 				}
 
 				// Check if symlink already exists
