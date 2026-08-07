@@ -5,6 +5,72 @@ All notable changes to Pith will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.3] - 2026-08-06
+
+### Fixed
+- **Architecture detection**: Use `runtime.GOARCH` instead of hardcoded `x86_64` for system architecture detection
+- **Per-package architecture in download URLs**: Download URLs now use each package's architecture from the database `%ARCH%` field (e.g. `any`, `x86_64`, `aarch64`) instead of the system architecture for the URL path and filename
+  - `any` packages download from `/os/any/` with `-any` suffix (e.g. `ca-certificates-20240618-1-any.pkg.tar.zst`)
+  - `aarch64` packages download from `/os/aarch64/` with `-aarch64` suffix
+  - Falls back to `x86_64` if architecture is not specified
+
+## [0.4.2] - 2026-06-18
+
+### Fixed
+- **Symlink creation with pool outside chroot**: Allow symlink creation when package pool directory is located outside the chroot environment
+
+### Changed
+- **Default base-dir**: Changed default base directory from `/kod` to current working directory for easier local testing
+
+## [0.4.1] - 2026-06-12
+
+### Fixed
+- **PoolRoot path**: Corrected PoolRoot path to use `pool` directory instead of `store`
+
+### Changed
+- **Project rebranding**: Completed renaming from `chisel` to `pistacho` and CLI binary from `chisel` to `pith`
+  - Updated all internal references, configuration, and release workflows
+  - Removed archived `/old/` directory with legacy documentation
+
+## [0.4.0] - 2026-06-10
+
+### Added
+- **Project rename to pistacho**: Renamed project from `chisel` to `pistacho` and CLI binary from `chisel` to `pith`
+  - Updated all internal references, configuration paths, and release workflows
+  - Renamed user-level scripts from `chisel-user` to `pith-user`
+
+### Changed
+- **Project branding**: Updated CHANGELOG, README, and all documentation to reflect new project name
+
+## [0.3.2] - 2026-05-15
+
+### Added
+- **Package storage migration**: Migrated package storage from `store` to `pool` directory structure
+  - New directory layout: `{baseDir}/pool/{pkgName}/{version}/`
+  - Improved organization and separation of concerns
+
+- **Install scripts support**: Added support for executing post_install/post_upgrade scripts from Arch packages
+  - `pith install-scripts` command for executing scripts in local or chroot context
+  - Automatic detection of `.INSTALL` files in extracted packages
+  - Proper handling of `post_install` vs `post_upgrade` operations
+
+- **Chroot flag enhancements**: Improved `--chroot` flag behavior
+  - Renamed `--symlink-prefix` to `--chroot` for clarity
+  - Auto-set `--base-dir` to `{chroot}/kod` when `--chroot` is specified
+  - Create symlinks directly to installed files in chroot mode
+
+### Fixed
+- **Verbose output**: Fixed various output formatting issues
+- **Install scripts command**: Fixed command execution and parameter handling
+
+## [0.3.1] - 2026-05-08
+
+### Fixed
+- **Optional dependencies display**: Strip descriptions from optional dependencies for cleaner output
+  - Example: `aspell: spelling corrections` → `aspell`
+- **CI workflow**: Updated test workflow to use valid `ubuntu-latest` runner
+- **README accuracy**: Updated README to accurately reflect v0.3.0 features
+
 ## [0.3.0] - 2026-04-06
 
 ### Added
