@@ -18,6 +18,8 @@ var (
 	baseDirExplicit bool // Track if --base-dir was explicitly provided
 	mirrorURL       string
 	symlinkDir      string
+	showVersion     bool
+	showHelp        bool
 )
 
 func main() {
@@ -27,9 +29,22 @@ func main() {
 	flag.StringVar(&baseDir, "base-dir", "", "Base directory for pith data (default: . current working directory)")
 	flag.StringVar(&mirrorURL, "mirror", "", "Arch mirror URL (overrides config)")
 	flag.StringVar(&symlinkDir, "symlink-dir", "", "Directory to create symlink hierarchy (optional)")
+	flag.BoolVar(&showVersion, "version", false, "Show version information")
+	flag.BoolVar(&showHelp, "help", false, "Show help message")
 
 	// Parse flags before checking commands
 	flag.Parse()
+
+	// Handle global --version and --help flags
+	if showVersion {
+		fmt.Printf("pith version %s\n", version)
+		return
+	}
+
+	if showHelp {
+		showUsage()
+		return
+	}
 
 	// Track if --base-dir was explicitly provided (before loading config)
 	baseDirExplicit = (baseDir != "")
@@ -103,6 +118,8 @@ func showUsage() {
 	fmt.Println("  -c, --config <path>   Path to configuration file (default: /etc/pith/config.json)")
 	fmt.Println("  --base-dir <path>     Base directory for pith data (default: . current directory)")
 	fmt.Println("  --mirror <url>        Arch mirror URL (overrides config)")
+	fmt.Println("  --version             Show version information")
+	fmt.Println("  --help                Show help message")
 	fmt.Println("")
 	fmt.Println("Available Commands (Phase 1):")
 	fmt.Println("  sync              Sync package databases from Arch mirrors")
