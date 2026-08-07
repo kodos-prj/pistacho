@@ -279,7 +279,6 @@ func (i *InstallCommand) Run(args []string) error {
 			downloader := download.NewDownloader(
 				i.config.MirrorURL,
 				i.config.CachePath,
-				i.config.Architecture,
 				i.config.MaxConcurrentDownloads,
 				0,
 			)
@@ -754,9 +753,10 @@ func (i *InstallCommand) resolveDependencies(client *alpm.ALPMClient, pkgNames [
 			}
 
 			toInstall = append(toInstall, download.PackageInfo{
-				Name:    pkgInfo.Name,
-				Version: pkgInfo.Version,
-				Repo:    pkgInfo.Repository,
+				Name:         pkgInfo.Name,
+				Version:      pkgInfo.Version,
+				Repo:         pkgInfo.Repository,
+				Architecture: pkgInfo.Architecture,
 			})
 		}
 	}
@@ -830,9 +830,10 @@ func (i *InstallCommand) resolveDependenciesWithMap(client *alpm.ALPMClient, pkg
 			}
 
 			toInstall = append(toInstall, download.PackageInfo{
-				Name:    pkgInfo.Name,
-				Version: pkgInfo.Version,
-				Repo:    pkgInfo.Repository,
+				Name:         pkgInfo.Name,
+				Version:      pkgInfo.Version,
+				Repo:         pkgInfo.Repository,
+				Architecture: pkgInfo.Architecture,
 			})
 		}
 	}
@@ -996,9 +997,10 @@ func (i *InstallCommand) resolveMixedDependencies(resolver *build.MixedResolver,
 			if pkgSource.Source == "official" {
 				// Official repository package - will be downloaded
 				toInstall = append(toInstall, download.PackageInfo{
-					Name:    pkgSource.Name,
-					Version: pkgSource.Version,
-					Repo:    pkgSource.Repo,
+					Name:         pkgSource.Name,
+					Version:      pkgSource.Version,
+					Repo:         pkgSource.Repo,
+					Architecture: pkgSource.Architecture,
 				})
 				// Show constraint indicator only for root package
 				if isRootPackage && pkgIdx == 0 && sourceConstraint != "" {
@@ -1011,9 +1013,10 @@ func (i *InstallCommand) resolveMixedDependencies(resolver *build.MixedResolver,
 				// For AUR packages, we still add them to the install list
 				// but mark them as AUR so we know to build them
 				toInstall = append(toInstall, download.PackageInfo{
-					Name:    pkgSource.Name,
-					Version: pkgSource.Version,
-					Repo:    "aur", // Special marker for AUR packages
+					Name:         pkgSource.Name,
+					Version:      pkgSource.Version,
+					Repo:         "aur", // Special marker for AUR packages
+					Architecture: pkgSource.Architecture,
 				})
 				// Show constraint indicator only for root package
 				if isRootPackage && pkgIdx == 0 && sourceConstraint != "" {

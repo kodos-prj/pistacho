@@ -7,6 +7,7 @@ import (
 	"net/http/httptest"
 	"os"
 	"path/filepath"
+	"sync"
 	"sync/atomic"
 	"testing"
 	"time"
@@ -17,7 +18,6 @@ func TestNewDownloader(t *testing.T) {
 	d := NewDownloader(
 		"https://mirror.example.com/archlinux",
 		"/tmp/cache",
-		"x86_64",
 		5,
 		30*time.Second,
 	)
@@ -30,9 +30,6 @@ func TestNewDownloader(t *testing.T) {
 	}
 	if d.cachePath != "/tmp/cache" {
 		t.Errorf("cachePath mismatch: got %s", d.cachePath)
-	}
-	if d.arch != "x86_64" {
-		t.Errorf("arch mismatch: got %s", d.arch)
 	}
 	if d.maxConcurrent != 5 {
 		t.Errorf("maxConcurrent mismatch: got %d", d.maxConcurrent)
@@ -56,12 +53,13 @@ func TestDownloadPackage(t *testing.T) {
 	}))
 	defer server.Close()
 
-	d := NewDownloader(server.URL, cacheDir, "x86_64", 5, 30*time.Second)
+	d := NewDownloader(server.URL, cacheDir, 5, 30*time.Second)
 
 	pkg := PackageInfo{
-		Name:    "bash",
-		Version: "5.3.9-1",
-		Repo:    "core",
+		Name:         "bash",
+		Version:      "5.3.9-1",
+		Repo:         "core",
+		Architecture: "x86_64",
 	}
 
 	path, err := d.DownloadPackage(pkg)
@@ -90,6 +88,47 @@ func TestDownloadPackage(t *testing.T) {
 	}
 }
 
+// TestDownloadPackageAnyArch tests that "any" architecture packages use /os/any/ in URL.
+func TestDownloadPackageAnyArch(t *testing.T) {
+	cacheDir := t.TempDir()
+
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/core/os/any/ca-certificates-20240618-1-any.pkg.tar.zst" {
+			http.NotFound(w, r)
+			return
+		}
+		content := "fake any package content"
+		w.Header().Set("Content-Length", fmt.Sprintf("%d", len(content)))
+		fmt.Fprint(w, content)
+	}))
+	defer server.Close()
+
+	d := NewDownloader(server.URL, cacheDir, 5, 30*time.Second)
+
+	pkg := PackageInfo{
+		Name:         "ca-certificates",
+		Version:      "20240618-1",
+		Repo:         "core",
+		Architecture: "any",
+	}
+
+	path, err := d.DownloadPackage(pkg)
+	if err != nil {
+		t.Fatalf("DownloadPackage failed: %v", err)
+	}
+
+	// Verify file exists
+	if _, err := os.Stat(path); err != nil {
+		t.Errorf("Downloaded file does not exist: %v", err)
+	}
+
+	// Verify filename uses -any
+	expectedFilename := "ca-certificates-20240618-1-any.pkg.tar.zst"
+	if filepath.Base(path) != expectedFilename {
+		t.Errorf("Filename mismatch: expected %s, got %s", expectedFilename, filepath.Base(path))
+	}
+}
+
 // TestDownloadPackageNotFound tests handling of 404 errors.
 func TestDownloadPackageNotFound(t *testing.T) {
 	cacheDir := t.TempDir()
@@ -99,12 +138,13 @@ func TestDownloadPackageNotFound(t *testing.T) {
 	}))
 	defer server.Close()
 
-	d := NewDownloader(server.URL, cacheDir, "x86_64", 5, 30*time.Second)
+	d := NewDownloader(server.URL, cacheDir, 5, 30*time.Second)
 
 	pkg := PackageInfo{
-		Name:    "nonexistent",
-		Version: "1.0.0-1",
-		Repo:    "core",
+		Name:         "nonexistent",
+		Version:      "1.0.0-1",
+		Repo:         "core",
+		Architecture: "x86_64",
 	}
 
 	_, err := d.DownloadPackage(pkg)
@@ -122,12 +162,13 @@ func TestDownloadPackageCreatesDirectory(t *testing.T) {
 	}))
 	defer server.Close()
 
-	d := NewDownloader(server.URL, cacheDir, "x86_64", 5, 30*time.Second)
+	d := NewDownloader(server.URL, cacheDir, 5, 30*time.Second)
 
 	pkg := PackageInfo{
-		Name:    "bash",
-		Version: "5.3.9-1",
-		Repo:    "core",
+		Name:         "bash",
+		Version:      "5.3.9-1",
+		Repo:         "core",
+		Architecture: "x86_64",
 	}
 
 	path, err := d.DownloadPackage(pkg)
@@ -152,12 +193,13 @@ func TestDownloadPackageAtomicWrite(t *testing.T) {
 	}))
 	defer server.Close()
 
-	d := NewDownloader(server.URL, cacheDir, "x86_64", 5, 30*time.Second)
+	d := NewDownloader(server.URL, cacheDir, 5, 30*time.Second)
 
 	pkg := PackageInfo{
-		Name:    "bash",
-		Version: "5.3.9-1",
-		Repo:    "core",
+		Name:         "bash",
+		Version:      "5.3.9-1",
+		Repo:         "core",
+		Architecture: "x86_64",
 	}
 
 	// Download should succeed
@@ -188,12 +230,12 @@ func TestDownloadPackages(t *testing.T) {
 	}))
 	defer server.Close()
 
-	d := NewDownloader(server.URL, cacheDir, "x86_64", 2, 30*time.Second)
+	d := NewDownloader(server.URL, cacheDir, 2, 30*time.Second)
 
 	packages := []PackageInfo{
-		{Name: "bash", Version: "5.3.9-1", Repo: "core"},
-		{Name: "vim", Version: "9.0.0-1", Repo: "extra"},
-		{Name: "git", Version: "2.40.0-1", Repo: "extra"},
+		{Name: "bash", Version: "5.3.9-1", Repo: "core", Architecture: "x86_64"},
+		{Name: "vim", Version: "9.0.0-1", Repo: "extra", Architecture: "x86_64"},
+		{Name: "git", Version: "2.40.0-1", Repo: "extra", Architecture: "x86_64"},
 	}
 
 	results, err := d.DownloadPackages(packages)
@@ -230,11 +272,11 @@ func TestDownloadPackagesPartialFailure(t *testing.T) {
 	}))
 	defer server.Close()
 
-	d := NewDownloader(server.URL, cacheDir, "x86_64", 5, 30*time.Second)
+	d := NewDownloader(server.URL, cacheDir, 5, 30*time.Second)
 
 	packages := []PackageInfo{
-		{Name: "bash", Version: "5.3.9-1", Repo: "core"},
-		{Name: "nonexistent", Version: "1.0.0-1", Repo: "core"},
+		{Name: "bash", Version: "5.3.9-1", Repo: "core", Architecture: "x86_64"},
+		{Name: "nonexistent", Version: "1.0.0-1", Repo: "core", Architecture: "x86_64"},
 	}
 
 	results, err := d.DownloadPackages(packages)
@@ -248,16 +290,69 @@ func TestDownloadPackagesPartialFailure(t *testing.T) {
 	}
 }
 
+// TestDownloadPackageMixedArch tests downloading packages with different architectures in one batch.
+func TestDownloadPackageMixedArch(t *testing.T) {
+	cacheDir := t.TempDir()
+
+	var receivedPaths []string
+	var mu sync.Mutex
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		mu.Lock()
+		receivedPaths = append(receivedPaths, r.URL.Path)
+		mu.Unlock()
+		fmt.Fprint(w, "package content")
+	}))
+	defer server.Close()
+
+	d := NewDownloader(server.URL, cacheDir, 5, 30*time.Second)
+
+	packages := []PackageInfo{
+		{Name: "bash", Version: "5.3.9-1", Repo: "core", Architecture: "x86_64"},
+		{Name: "ca-certificates", Version: "20240618-1", Repo: "core", Architecture: "any"},
+		{Name: "ncurses", Version: "6.4-1", Repo: "core", Architecture: "aarch64"},
+	}
+
+	results, err := d.DownloadPackages(packages)
+	if err != nil {
+		t.Fatalf("DownloadPackages failed: %v", err)
+	}
+
+	if len(results) != 3 {
+		t.Fatalf("Expected 3 results, got %d", len(results))
+	}
+
+	mu.Lock()
+	received := make(map[string]bool)
+	for _, p := range receivedPaths {
+		received[p] = true
+	}
+	mu.Unlock()
+
+	// Verify each package hit the correct URL path (order is non-deterministic due to concurrency)
+	expectedPaths := []string{
+		"/core/os/x86_64/bash-5.3.9-1-x86_64.pkg.tar.zst",
+		"/core/os/any/ca-certificates-20240618-1-any.pkg.tar.zst",
+		"/core/os/aarch64/ncurses-6.4-1-aarch64.pkg.tar.zst",
+	}
+
+	for _, expected := range expectedPaths {
+		if !received[expected] {
+			t.Errorf("Expected URL path %s was not received. Got: %v", expected, receivedPaths)
+		}
+	}
+}
+
 // TestPackageExists tests checking if package is already cached.
 func TestPackageExists(t *testing.T) {
 	cacheDir := t.TempDir()
 
-	d := NewDownloader("https://mirror.example.com", cacheDir, "x86_64", 5, 30*time.Second)
+	d := NewDownloader("https://mirror.example.com", cacheDir, 5, 30*time.Second)
 
 	pkg := PackageInfo{
-		Name:    "bash",
-		Version: "5.3.9-1",
-		Repo:    "core",
+		Name:         "bash",
+		Version:      "5.3.9-1",
+		Repo:         "core",
+		Architecture: "x86_64",
 	}
 
 	// Package doesn't exist yet
@@ -278,21 +373,100 @@ func TestPackageExists(t *testing.T) {
 	}
 }
 
+// TestPackageExistsAnyArch tests checking cached packages with "any" architecture.
+func TestPackageExistsAnyArch(t *testing.T) {
+	cacheDir := t.TempDir()
+
+	d := NewDownloader("https://mirror.example.com", cacheDir, 5, 30*time.Second)
+
+	pkg := PackageInfo{
+		Name:         "ca-certificates",
+		Version:      "20240618-1",
+		Repo:         "core",
+		Architecture: "any",
+	}
+
+	// Package doesn't exist yet
+	if d.PackageExists(pkg) {
+		t.Fatal("Package should not exist initially")
+	}
+
+	// Create the package file with -any suffix
+	filename := "ca-certificates-20240618-1-any.pkg.tar.zst"
+	pkgPath := filepath.Join(cacheDir, filename)
+	if err := os.WriteFile(pkgPath, []byte("content"), 0644); err != nil {
+		t.Fatalf("Failed to create test package: %v", err)
+	}
+
+	// Now package should exist
+	if !d.PackageExists(pkg) {
+		t.Fatal("Package should exist after creation")
+	}
+}
+
 // TestGetLocalPath tests getting the local path for a package.
 func TestGetLocalPath(t *testing.T) {
 	cacheDir := "/tmp/cache"
-	d := NewDownloader("https://mirror.example.com", cacheDir, "x86_64", 5, 30*time.Second)
+	d := NewDownloader("https://mirror.example.com", cacheDir, 5, 30*time.Second)
 
 	pkg := PackageInfo{
-		Name:    "bash",
-		Version: "5.3.9-1",
-		Repo:    "core",
+		Name:         "bash",
+		Version:      "5.3.9-1",
+		Repo:         "core",
+		Architecture: "x86_64",
 	}
 
 	path := d.GetLocalPath(pkg)
 	expected := filepath.Join(cacheDir, "bash-5.3.9-1-x86_64.pkg.tar.zst")
 	if path != expected {
 		t.Errorf("Path mismatch: expected %s, got %s", expected, path)
+	}
+}
+
+// TestGetLocalPathAnyArch tests local path with "any" architecture.
+func TestGetLocalPathAnyArch(t *testing.T) {
+	cacheDir := "/tmp/cache"
+	d := NewDownloader("https://mirror.example.com", cacheDir, 5, 30*time.Second)
+
+	pkg := PackageInfo{
+		Name:         "ca-certificates",
+		Version:      "20240618-1",
+		Repo:         "core",
+		Architecture: "any",
+	}
+
+	path := d.GetLocalPath(pkg)
+	expected := filepath.Join(cacheDir, "ca-certificates-20240618-1-any.pkg.tar.zst")
+	if path != expected {
+		t.Errorf("Path mismatch: expected %s, got %s", expected, path)
+	}
+}
+
+// TestDownloadPackageFallbackArch tests that missing Architecture defaults to x86_64.
+func TestDownloadPackageFallbackArch(t *testing.T) {
+	cacheDir := t.TempDir()
+
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/core/os/x86_64/fallback-1.0-1-x86_64.pkg.tar.zst" {
+			http.NotFound(w, r)
+			return
+		}
+		fmt.Fprint(w, "content")
+	}))
+	defer server.Close()
+
+	d := NewDownloader(server.URL, cacheDir, 5, 30*time.Second)
+
+	// Empty Architecture should fall back to x86_64
+	pkg := PackageInfo{
+		Name:    "fallback",
+		Version: "1.0-1",
+		Repo:    "core",
+	}
+
+	_, err := d.DownloadPackage(pkg)
+	if err != nil {
+		t.Fatalf("DownloadPackage failed: %v", err)
 	}
 }
 
@@ -306,12 +480,13 @@ func TestDownloadPackageServerError(t *testing.T) {
 	}))
 	defer server.Close()
 
-	d := NewDownloader(server.URL, cacheDir, "x86_64", 5, 30*time.Second)
+	d := NewDownloader(server.URL, cacheDir, 5, 30*time.Second)
 
 	pkg := PackageInfo{
-		Name:    "bash",
-		Version: "5.3.9-1",
-		Repo:    "core",
+		Name:         "bash",
+		Version:      "5.3.9-1",
+		Repo:         "core",
+		Architecture: "x86_64",
 	}
 
 	_, err := d.DownloadPackage(pkg)
@@ -344,13 +519,13 @@ func TestDownloadPackageConcurrencyLimit(t *testing.T) {
 	}))
 	defer server.Close()
 
-	d := NewDownloader(server.URL, cacheDir, "x86_64", 2, 30*time.Second)
+	d := NewDownloader(server.URL, cacheDir, 2, 30*time.Second)
 
 	packages := []PackageInfo{
-		{Name: "pkg1", Version: "1.0.0-1", Repo: "core"},
-		{Name: "pkg2", Version: "1.0.0-1", Repo: "core"},
-		{Name: "pkg3", Version: "1.0.0-1", Repo: "core"},
-		{Name: "pkg4", Version: "1.0.0-1", Repo: "core"},
+		{Name: "pkg1", Version: "1.0.0-1", Repo: "core", Architecture: "x86_64"},
+		{Name: "pkg2", Version: "1.0.0-1", Repo: "core", Architecture: "x86_64"},
+		{Name: "pkg3", Version: "1.0.0-1", Repo: "core", Architecture: "x86_64"},
+		{Name: "pkg4", Version: "1.0.0-1", Repo: "core", Architecture: "x86_64"},
 	}
 
 	_, _ = d.DownloadPackages(packages)
@@ -376,14 +551,15 @@ func BenchmarkDownloadPackage(b *testing.B) {
 	}))
 	defer server.Close()
 
-	d := NewDownloader(server.URL, cacheDir, "x86_64", 5, 30*time.Second)
+	d := NewDownloader(server.URL, cacheDir, 5, 30*time.Second)
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		pkg := PackageInfo{
-			Name:    fmt.Sprintf("pkg%d", i),
-			Version: "1.0.0-1",
-			Repo:    "core",
+			Name:         fmt.Sprintf("pkg%d", i),
+			Version:      "1.0.0-1",
+			Repo:         "core",
+			Architecture: "x86_64",
 		}
 		d.DownloadPackage(pkg)
 	}
