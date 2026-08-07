@@ -258,7 +258,7 @@ func (c *Client) GetDownloadURL(pkg *Package, mirrorURL string) string {
 	return fmt.Sprintf("%s/archlinux/%s/os/%s/%s-%s-%s.pkg.tar.zst",
 		mirrorURL,
 		pkg.Repository,
-		c.Arch,
+		pkg.Architecture,
 		pkg.Name,
 		pkg.Version,
 		pkg.Architecture,

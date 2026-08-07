@@ -82,6 +82,9 @@ type PackageSource struct {
 	// For AUR packages only
 	PKGBUILD *aur.PKGBUILDInfo
 
+	// Architecture (from official repo desc or PKGBUILD)
+	Architecture string
+
 	// Dependency information
 	Depends     []string // Runtime dependencies
 	MakeDepends []string // Build-time dependencies (AUR only)
@@ -304,13 +307,14 @@ func (mr *MixedResolver) findOfficialPackage(pkgName string) (*PackageSource, er
 	pkgInfo, err := mr.alpClient.GetPackageInfo(pkgName)
 	if err == nil && pkgInfo != nil {
 		return &PackageSource{
-			Name:       pkgInfo.Name,
-			Version:    pkgInfo.Version,
-			Source:     "official",
-			Repo:       pkgInfo.Repository,
-			IsAUR:      false,
-			Depends:    pkgInfo.DependsOn,
-			OptDepends: pkgInfo.OptDepends,
+			Name:         pkgInfo.Name,
+			Version:      pkgInfo.Version,
+			Source:       "official",
+			Repo:         pkgInfo.Repository,
+			IsAUR:        false,
+			Architecture: pkgInfo.Architecture,
+			Depends:      pkgInfo.DependsOn,
+			OptDepends:   pkgInfo.OptDepends,
 		}, nil
 	}
 
@@ -320,13 +324,14 @@ func (mr *MixedResolver) findOfficialPackage(pkgName string) (*PackageSource, er
 		// Use the first providing package
 		pkg := providingPkgs[0]
 		return &PackageSource{
-			Name:       pkg.Name,
-			Version:    pkg.Version,
-			Source:     "official",
-			Repo:       pkg.Repository,
-			IsAUR:      false,
-			Depends:    pkg.DependsOn,
-			OptDepends: pkg.OptDepends,
+			Name:         pkg.Name,
+			Version:      pkg.Version,
+			Source:       "official",
+			Repo:         pkg.Repository,
+			IsAUR:        false,
+			Architecture: pkg.Architecture,
+			Depends:      pkg.DependsOn,
+			OptDepends:   pkg.OptDepends,
 		}, nil
 	}
 
@@ -368,16 +373,22 @@ func (mr *MixedResolver) findAURPackage(pkgName string) (*PackageSource, error) 
 		return nil, fmt.Errorf("invalid PKGBUILD metadata for %s: %w", pkgName, err)
 	}
 
+	arch := "x86_64"
+	if len(pkgbuildInfo.Architecture) > 0 {
+		arch = pkgbuildInfo.Architecture[0]
+	}
+
 	return &PackageSource{
-		Name:        aurPkg.Name,
-		Version:     aurPkg.Version,
-		Source:      "aur",
-		Repo:        "aur",
-		IsAUR:       true,
-		PKGBUILD:    pkgbuildInfo,
-		Depends:     pkgbuildInfo.Depends,
-		MakeDepends: pkgbuildInfo.MakeDepends,
-		OptDepends:  pkgbuildInfo.OptDepends,
+		Name:         aurPkg.Name,
+		Version:      aurPkg.Version,
+		Source:       "aur",
+		Repo:         "aur",
+		IsAUR:        true,
+		Architecture: arch,
+		PKGBUILD:     pkgbuildInfo,
+		Depends:      pkgbuildInfo.Depends,
+		MakeDepends:  pkgbuildInfo.MakeDepends,
+		OptDepends:   pkgbuildInfo.OptDepends,
 	}, nil
 }
 

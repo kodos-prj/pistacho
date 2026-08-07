@@ -44,7 +44,6 @@ func (d *DownloadCommand) Run(args []string) error {
 	downloader := download.NewDownloader(
 		d.config.MirrorURL,
 		d.config.CachePath,
-		d.config.Architecture,
 		d.config.MaxConcurrentDownloads,
 		0, // timeout handled via context in real implementation
 	)
@@ -60,9 +59,10 @@ func (d *DownloadCommand) Run(args []string) error {
 		}
 
 		packages = append(packages, download.PackageInfo{
-			Name:    info.Name,
-			Version: info.Version,
-			Repo:    info.Repository,
+			Name:         info.Name,
+			Version:      info.Version,
+			Repo:         info.Repository,
+			Architecture: info.Architecture,
 		})
 	}
 

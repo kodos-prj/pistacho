@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"runtime"
 )
 
 const (
@@ -77,6 +78,19 @@ type Config struct {
 	KeepVersions int `json:"keep_versions"`
 }
 
+// DetectArchitecture returns the host architecture mapped to
+// Arch Linux naming (x86_64, aarch64, etc.).
+func DetectArchitecture() string {
+	switch runtime.GOARCH {
+	case "amd64":
+		return "x86_64"
+	case "arm64":
+		return "aarch64"
+	default:
+		return "x86_64"
+	}
+}
+
 // DefaultConfig returns a configuration with default values.
 func DefaultConfig() *Config {
 	baseDir := DefaultBaseDir
@@ -91,7 +105,7 @@ func DefaultConfig() *Config {
 		WrapperDir:             filepath.Join(baseDir, "wrappers"),
 		CachePath:              filepath.Join(baseDir, "cache"), // Package cache
 		MirrorURL:              "https://mirror.rackspace.com/archlinux",
-		Architecture:           "x86_64",
+		Architecture:           DetectArchitecture(),
 		Repositories:           []string{"core", "extra"},
 		VerifySignatures:       false, // Optional for simplicity
 		MaxConcurrentDownloads: 5,
@@ -261,7 +275,7 @@ func (c *Config) Normalize() {
 
 	// Set Architecture default if empty
 	if c.Architecture == "" {
-		c.Architecture = "x86_64"
+		c.Architecture = DetectArchitecture()
 	}
 
 	// Set Repositories default if empty

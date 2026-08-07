@@ -15,18 +15,16 @@ import (
 type Downloader struct {
 	mirrorURL       string
 	cachePath       string
-	arch            string
 	maxConcurrent   int
 	downloadTimeout time.Duration
 	httpClient      *http.Client
 }
 
 // NewDownloader creates a new package downloader.
-func NewDownloader(mirrorURL, cachePath, arch string, maxConcurrent int, timeout time.Duration) *Downloader {
+func NewDownloader(mirrorURL, cachePath string, maxConcurrent int, timeout time.Duration) *Downloader {
 	return &Downloader{
 		mirrorURL:       mirrorURL,
 		cachePath:       cachePath,
-		arch:            arch,
 		maxConcurrent:   maxConcurrent,
 		downloadTimeout: timeout,
 		httpClient: &http.Client{
@@ -37,9 +35,10 @@ func NewDownloader(mirrorURL, cachePath, arch string, maxConcurrent int, timeout
 
 // PackageInfo contains information needed to download a package.
 type PackageInfo struct {
-	Name    string // e.g., "bash"
-	Version string // e.g., "5.3.9-1"
-	Repo    string // e.g., "core", "extra"
+	Name         string // e.g., "bash"
+	Version      string // e.g., "5.3.9-1"
+	Repo         string // e.g., "core", "extra"
+	Architecture string // e.g., "x86_64", "aarch64", "any" — from desc %ARCH%
 }
 
 // DownloadPackage downloads a single package from the Arch mirror.
@@ -52,9 +51,13 @@ func (d *Downloader) DownloadPackage(pkg PackageInfo) (string, error) {
 
 	// Construct package filename and URL
 	// Format: bash-5.3.9-1-x86_64.pkg.tar.zst
-	filename := fmt.Sprintf("%s-%s-%s.pkg.tar.zst", pkg.Name, pkg.Version, d.arch)
+	arch := pkg.Architecture
+	if arch == "" {
+		arch = "x86_64"
+	}
+	filename := fmt.Sprintf("%s-%s-%s.pkg.tar.zst", pkg.Name, pkg.Version, arch)
 	// URL format: https://mirror.rackspace.com/archlinux/core/os/x86_64/bash-5.3.9-1-x86_64.pkg.tar.zst
-	pkgURL := fmt.Sprintf("%s/%s/os/%s/%s", d.mirrorURL, pkg.Repo, d.arch, filename)
+	pkgURL := fmt.Sprintf("%s/%s/os/%s/%s", d.mirrorURL, pkg.Repo, arch, filename)
 
 	fmt.Printf("Downloading %s/%s from %s...\n", pkg.Repo, filename, pkgURL)
 
@@ -156,7 +159,11 @@ func (d *Downloader) DownloadPackages(packages []PackageInfo) (map[string]string
 
 // PackageExists checks if a package has already been downloaded.
 func (d *Downloader) PackageExists(pkg PackageInfo) bool {
-	filename := fmt.Sprintf("%s-%s-%s.pkg.tar.zst", pkg.Name, pkg.Version, d.arch)
+	arch := pkg.Architecture
+	if arch == "" {
+		arch = "x86_64"
+	}
+	filename := fmt.Sprintf("%s-%s-%s.pkg.tar.zst", pkg.Name, pkg.Version, arch)
 	pkgPath := filepath.Join(d.cachePath, filename)
 	_, err := os.Stat(pkgPath)
 	return err == nil
@@ -164,7 +171,11 @@ func (d *Downloader) PackageExists(pkg PackageInfo) bool {
 
 // GetLocalPath returns the local path where a package would be cached.
 func (d *Downloader) GetLocalPath(pkg PackageInfo) string {
-	filename := fmt.Sprintf("%s-%s-%s.pkg.tar.zst", pkg.Name, pkg.Version, d.arch)
+	arch := pkg.Architecture
+	if arch == "" {
+		arch = "x86_64"
+	}
+	filename := fmt.Sprintf("%s-%s-%s.pkg.tar.zst", pkg.Name, pkg.Version, arch)
 	return filepath.Join(d.cachePath, filename)
 }
 
