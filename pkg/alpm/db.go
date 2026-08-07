@@ -255,10 +255,14 @@ func (c *Client) Close() error {
 // GetDownloadURL constructs the download URL for a package.
 // Format: {mirror}/archlinux/{repo}/os/{arch}/{pkgname}-{version}-{arch}.pkg.tar.zst
 func (c *Client) GetDownloadURL(pkg *Package, mirrorURL string) string {
+	arch := pkg.Architecture
+	if arch == "any" {
+		arch = c.Arch
+	}
 	return fmt.Sprintf("%s/archlinux/%s/os/%s/%s-%s-%s.pkg.tar.zst",
 		mirrorURL,
 		pkg.Repository,
-		pkg.Architecture,
+		arch,
 		pkg.Name,
 		pkg.Version,
 		pkg.Architecture,
