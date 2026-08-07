@@ -46,6 +46,7 @@ func (d *DownloadCommand) Run(args []string) error {
 		d.config.CachePath,
 		d.config.MaxConcurrentDownloads,
 		0, // timeout handled via context in real implementation
+		d.config.Architecture,
 	)
 
 	// Prepare packages to download

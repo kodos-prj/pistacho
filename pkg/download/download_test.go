@@ -20,6 +20,7 @@ func TestNewDownloader(t *testing.T) {
 		"/tmp/cache",
 		5,
 		30*time.Second,
+		"x86_64",
 	)
 
 	if d == nil {
@@ -53,7 +54,7 @@ func TestDownloadPackage(t *testing.T) {
 	}))
 	defer server.Close()
 
-	d := NewDownloader(server.URL, cacheDir, 5, 30*time.Second)
+	d := NewDownloader(server.URL, cacheDir, 5, 30*time.Second, "x86_64")
 
 	pkg := PackageInfo{
 		Name:         "bash",
@@ -88,12 +89,12 @@ func TestDownloadPackage(t *testing.T) {
 	}
 }
 
-// TestDownloadPackageAnyArch tests that "any" architecture packages use /os/any/ in URL.
+// TestDownloadPackageAnyArch tests that "any" architecture packages use system arch in URL path.
 func TestDownloadPackageAnyArch(t *testing.T) {
 	cacheDir := t.TempDir()
 
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/core/os/any/ca-certificates-20240618-1-any.pkg.tar.zst" {
+		if r.URL.Path != "/core/os/x86_64/ca-certificates-20240618-1-any.pkg.tar.zst" {
 			http.NotFound(w, r)
 			return
 		}
@@ -103,7 +104,7 @@ func TestDownloadPackageAnyArch(t *testing.T) {
 	}))
 	defer server.Close()
 
-	d := NewDownloader(server.URL, cacheDir, 5, 30*time.Second)
+	d := NewDownloader(server.URL, cacheDir, 5, 30*time.Second, "x86_64")
 
 	pkg := PackageInfo{
 		Name:         "ca-certificates",
@@ -138,7 +139,7 @@ func TestDownloadPackageNotFound(t *testing.T) {
 	}))
 	defer server.Close()
 
-	d := NewDownloader(server.URL, cacheDir, 5, 30*time.Second)
+	d := NewDownloader(server.URL, cacheDir, 5, 30*time.Second, "x86_64")
 
 	pkg := PackageInfo{
 		Name:         "nonexistent",
@@ -162,7 +163,7 @@ func TestDownloadPackageCreatesDirectory(t *testing.T) {
 	}))
 	defer server.Close()
 
-	d := NewDownloader(server.URL, cacheDir, 5, 30*time.Second)
+	d := NewDownloader(server.URL, cacheDir, 5, 30*time.Second, "x86_64")
 
 	pkg := PackageInfo{
 		Name:         "bash",
@@ -193,7 +194,7 @@ func TestDownloadPackageAtomicWrite(t *testing.T) {
 	}))
 	defer server.Close()
 
-	d := NewDownloader(server.URL, cacheDir, 5, 30*time.Second)
+	d := NewDownloader(server.URL, cacheDir, 5, 30*time.Second, "x86_64")
 
 	pkg := PackageInfo{
 		Name:         "bash",
@@ -230,7 +231,7 @@ func TestDownloadPackages(t *testing.T) {
 	}))
 	defer server.Close()
 
-	d := NewDownloader(server.URL, cacheDir, 2, 30*time.Second)
+	d := NewDownloader(server.URL, cacheDir, 2, 30*time.Second, "x86_64")
 
 	packages := []PackageInfo{
 		{Name: "bash", Version: "5.3.9-1", Repo: "core", Architecture: "x86_64"},
@@ -272,7 +273,7 @@ func TestDownloadPackagesPartialFailure(t *testing.T) {
 	}))
 	defer server.Close()
 
-	d := NewDownloader(server.URL, cacheDir, 5, 30*time.Second)
+	d := NewDownloader(server.URL, cacheDir, 5, 30*time.Second, "x86_64")
 
 	packages := []PackageInfo{
 		{Name: "bash", Version: "5.3.9-1", Repo: "core", Architecture: "x86_64"},
@@ -304,7 +305,7 @@ func TestDownloadPackageMixedArch(t *testing.T) {
 	}))
 	defer server.Close()
 
-	d := NewDownloader(server.URL, cacheDir, 5, 30*time.Second)
+	d := NewDownloader(server.URL, cacheDir, 5, 30*time.Second, "x86_64")
 
 	packages := []PackageInfo{
 		{Name: "bash", Version: "5.3.9-1", Repo: "core", Architecture: "x86_64"},
@@ -331,7 +332,7 @@ func TestDownloadPackageMixedArch(t *testing.T) {
 	// Verify each package hit the correct URL path (order is non-deterministic due to concurrency)
 	expectedPaths := []string{
 		"/core/os/x86_64/bash-5.3.9-1-x86_64.pkg.tar.zst",
-		"/core/os/any/ca-certificates-20240618-1-any.pkg.tar.zst",
+		"/core/os/x86_64/ca-certificates-20240618-1-any.pkg.tar.zst",
 		"/core/os/aarch64/ncurses-6.4-1-aarch64.pkg.tar.zst",
 	}
 
@@ -346,7 +347,7 @@ func TestDownloadPackageMixedArch(t *testing.T) {
 func TestPackageExists(t *testing.T) {
 	cacheDir := t.TempDir()
 
-	d := NewDownloader("https://mirror.example.com", cacheDir, 5, 30*time.Second)
+	d := NewDownloader("https://mirror.example.com", cacheDir, 5, 30*time.Second, "x86_64")
 
 	pkg := PackageInfo{
 		Name:         "bash",
@@ -377,7 +378,7 @@ func TestPackageExists(t *testing.T) {
 func TestPackageExistsAnyArch(t *testing.T) {
 	cacheDir := t.TempDir()
 
-	d := NewDownloader("https://mirror.example.com", cacheDir, 5, 30*time.Second)
+	d := NewDownloader("https://mirror.example.com", cacheDir, 5, 30*time.Second, "x86_64")
 
 	pkg := PackageInfo{
 		Name:         "ca-certificates",
@@ -407,7 +408,7 @@ func TestPackageExistsAnyArch(t *testing.T) {
 // TestGetLocalPath tests getting the local path for a package.
 func TestGetLocalPath(t *testing.T) {
 	cacheDir := "/tmp/cache"
-	d := NewDownloader("https://mirror.example.com", cacheDir, 5, 30*time.Second)
+	d := NewDownloader("https://mirror.example.com", cacheDir, 5, 30*time.Second, "x86_64")
 
 	pkg := PackageInfo{
 		Name:         "bash",
@@ -426,7 +427,7 @@ func TestGetLocalPath(t *testing.T) {
 // TestGetLocalPathAnyArch tests local path with "any" architecture.
 func TestGetLocalPathAnyArch(t *testing.T) {
 	cacheDir := "/tmp/cache"
-	d := NewDownloader("https://mirror.example.com", cacheDir, 5, 30*time.Second)
+	d := NewDownloader("https://mirror.example.com", cacheDir, 5, 30*time.Second, "x86_64")
 
 	pkg := PackageInfo{
 		Name:         "ca-certificates",
@@ -455,7 +456,7 @@ func TestDownloadPackageFallbackArch(t *testing.T) {
 	}))
 	defer server.Close()
 
-	d := NewDownloader(server.URL, cacheDir, 5, 30*time.Second)
+	d := NewDownloader(server.URL, cacheDir, 5, 30*time.Second, "x86_64")
 
 	// Empty Architecture should fall back to x86_64
 	pkg := PackageInfo{
@@ -480,7 +481,7 @@ func TestDownloadPackageServerError(t *testing.T) {
 	}))
 	defer server.Close()
 
-	d := NewDownloader(server.URL, cacheDir, 5, 30*time.Second)
+	d := NewDownloader(server.URL, cacheDir, 5, 30*time.Second, "x86_64")
 
 	pkg := PackageInfo{
 		Name:         "bash",
@@ -519,7 +520,7 @@ func TestDownloadPackageConcurrencyLimit(t *testing.T) {
 	}))
 	defer server.Close()
 
-	d := NewDownloader(server.URL, cacheDir, 2, 30*time.Second)
+	d := NewDownloader(server.URL, cacheDir, 2, 30*time.Second, "x86_64")
 
 	packages := []PackageInfo{
 		{Name: "pkg1", Version: "1.0.0-1", Repo: "core", Architecture: "x86_64"},
@@ -551,7 +552,7 @@ func BenchmarkDownloadPackage(b *testing.B) {
 	}))
 	defer server.Close()
 
-	d := NewDownloader(server.URL, cacheDir, 5, 30*time.Second)
+	d := NewDownloader(server.URL, cacheDir, 5, 30*time.Second, "x86_64")
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {

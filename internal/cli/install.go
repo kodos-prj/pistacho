@@ -256,7 +256,11 @@ func (i *InstallCommand) Run(args []string) error {
 				fmt.Printf("  ✓ Built %s\n", builtPkg)
 
 				// Copy built package from build cache to regular cache
-				fileName := fmt.Sprintf("%s-%s-x86_64.pkg.tar.zst", pkg.Name, pkg.Version)
+				arch := pkg.Architecture
+				if arch == "" {
+					arch = "x86_64"
+				}
+				fileName := fmt.Sprintf("%s-%s-%s.pkg.tar.zst", pkg.Name, pkg.Version, arch)
 				cachePath := filepath.Join(i.config.CachePath, fileName)
 
 				// Get file size for progress reporting
@@ -281,6 +285,7 @@ func (i *InstallCommand) Run(args []string) error {
 				i.config.CachePath,
 				i.config.MaxConcurrentDownloads,
 				0,
+				i.config.Architecture,
 			)
 
 			results, err := downloader.DownloadPackages(officialPackages)
@@ -297,7 +302,11 @@ func (i *InstallCommand) Run(args []string) error {
 
 		for _, pkgInfo := range toInstall {
 			// Construct cache file path
-			fileName := fmt.Sprintf("%s-%s-x86_64.pkg.tar.zst", pkgInfo.Name, pkgInfo.Version)
+			arch := pkgInfo.Architecture
+			if arch == "" {
+				arch = "x86_64"
+			}
+			fileName := fmt.Sprintf("%s-%s-%s.pkg.tar.zst", pkgInfo.Name, pkgInfo.Version, arch)
 			cachePath := filepath.Join(i.config.CachePath, fileName)
 
 			// Check if file exists

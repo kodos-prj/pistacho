@@ -17,16 +17,18 @@ type Downloader struct {
 	cachePath       string
 	maxConcurrent   int
 	downloadTimeout time.Duration
+	systemArch      string
 	httpClient      *http.Client
 }
 
 // NewDownloader creates a new package downloader.
-func NewDownloader(mirrorURL, cachePath string, maxConcurrent int, timeout time.Duration) *Downloader {
+func NewDownloader(mirrorURL, cachePath string, maxConcurrent int, timeout time.Duration, systemArch string) *Downloader {
 	return &Downloader{
 		mirrorURL:       mirrorURL,
 		cachePath:       cachePath,
 		maxConcurrent:   maxConcurrent,
 		downloadTimeout: timeout,
+		systemArch:      systemArch,
 		httpClient: &http.Client{
 			Timeout: timeout,
 		},
@@ -57,7 +59,15 @@ func (d *Downloader) DownloadPackage(pkg PackageInfo) (string, error) {
 	}
 	filename := fmt.Sprintf("%s-%s-%s.pkg.tar.zst", pkg.Name, pkg.Version, arch)
 	// URL format: https://mirror.rackspace.com/archlinux/core/os/x86_64/bash-5.3.9-1-x86_64.pkg.tar.zst
-	pkgURL := fmt.Sprintf("%s/%s/os/%s/%s", d.mirrorURL, pkg.Repo, arch, filename)
+	// For 'any' architecture packages, use system arch in URL path (e.g., /os/x86_64/)
+	urlArch := arch
+	if arch == "any" {
+		urlArch = d.systemArch
+		if urlArch == "" {
+			urlArch = "x86_64"
+		}
+	}
+	pkgURL := fmt.Sprintf("%s/%s/os/%s/%s", d.mirrorURL, pkg.Repo, urlArch, filename)
 
 	fmt.Printf("Downloading %s/%s from %s...\n", pkg.Repo, filename, pkgURL)
 
