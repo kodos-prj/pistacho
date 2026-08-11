@@ -3,6 +3,8 @@
 /chisel-test
 /chisel-new
 /build/chisel-test
+/pith
+/pith-mac
 *.exe
 *.dll
 *.so
