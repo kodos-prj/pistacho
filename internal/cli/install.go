@@ -459,27 +459,31 @@ func (i *InstallCommand) Run(args []string) error {
 				}
 
 				// Check if symlink already exists
-				if !opts.Force {
-					if stat, err := os.Lstat(symlinkPath); err == nil {
-						// File/symlink exists
-						if stat.Mode()&os.ModeSymlink == os.ModeSymlink {
-							// It's a symlink, check if it points to the same location
-							target, err := os.Readlink(symlinkPath)
-							if err == nil && target == targetPath {
-								// Symlink already points to correct location, skip
-								continue
-							}
-							// Symlink points elsewhere, skip with warning
-							fmt.Fprintf(os.Stderr, "  ! Warning: Symlink exists at %s (pointing elsewhere), skipping\n", symlinkPath)
+				if stat, err := os.Lstat(symlinkPath); err == nil {
+					// File/symlink exists
+					if opts.Force {
+						// Force mode: remove existing path so it can be recreated
+						if err := os.Remove(symlinkPath); err != nil {
+							fmt.Fprintf(os.Stderr, "  ! Warning: Failed to remove existing path %s: %v\n", symlinkPath, err)
 							continue
 						}
+					} else if stat.Mode()&os.ModeSymlink == os.ModeSymlink {
+						// It's a symlink, check if it points to the same location
+						target, err := os.Readlink(symlinkPath)
+						if err == nil && target == targetPath {
+							// Symlink already points to correct location, skip
+							continue
+						}
+						// Symlink points elsewhere, remove it so it can be recreated
+						if err := os.Remove(symlinkPath); err != nil {
+							fmt.Fprintf(os.Stderr, "  ! Warning: Failed to remove existing symlink %s: %v\n", symlinkPath, err)
+							continue
+						}
+					} else {
 						// Regular file exists, skip with warning
 						fmt.Fprintf(os.Stderr, "  ! Warning: Regular file exists at %s, skipping\n", symlinkPath)
 						continue
 					}
-				} else {
-					// Force mode: remove existing symlink
-					_ = os.Remove(symlinkPath)
 				}
 
 				// Create symlink

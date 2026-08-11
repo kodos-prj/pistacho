@@ -38,3 +38,6 @@ Thumbs.db
 # Documentation build artifacts
 docs/_build/
 docs/.buildinfo
+
+# Local chroot test tree
+/mnt/

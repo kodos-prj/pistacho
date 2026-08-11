@@ -5,6 +5,11 @@ All notable changes to Pith will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.4] - 2026-08-11
+
+### Fixed
+- **Conflicting symlinks**: `install` now replaces an existing symlink that points elsewhere instead of skipping it, so the correct package file is linked
+
 ## [0.4.3] - 2026-08-06
 
 ### Fixed
