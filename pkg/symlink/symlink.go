@@ -96,15 +96,18 @@ func (m *Manager) CreateSymlinks(pkgName, version string, files []string) error 
 					// Symlink already points to correct location, skip
 					continue
 				}
-				// Symlink points elsewhere, skip with warning
-				skippedFiles = append(skippedFiles, fmt.Sprintf("%s (symlink exists, pointing to %s)", file, target))
+				// Symlink points elsewhere, remove it so it can be recreated
+				if err := os.Remove(symlinkPath); err != nil {
+					failedFiles = append(failedFiles, fmt.Sprintf("%s (remove existing symlink failed: %v)", file, err))
+					continue
+				}
+			} else {
+				// Regular file exists, skip with warning
+				skippedFiles = append(skippedFiles, fmt.Sprintf("%s (regular file exists)", file))
 				continue
 			}
-			// Regular file exists, skip with warning
-			skippedFiles = append(skippedFiles, fmt.Sprintf("%s (regular file exists)", file))
-			continue
 		}
-		// Path doesn't exist, create symlink
+		// Path doesn't exist (or existing symlink was removed), create symlink
 
 		if err := os.Symlink(storePath, symlinkPath); err != nil {
 			failedFiles = append(failedFiles, fmt.Sprintf("%s (symlink creation failed: %v)", file, err))

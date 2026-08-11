@@ -87,6 +87,46 @@ func TestCreateSymlinksWithExistingSymlink(t *testing.T) {
 	}
 }
 
+func TestCreateSymlinksReplacesExistingSymlink(t *testing.T) {
+	tmpDir := t.TempDir()
+	storeRoot := filepath.Join(tmpDir, "pool")
+	symlinkRoot := filepath.Join(tmpDir, "root")
+
+	// Create test directories
+	os.MkdirAll(filepath.Join(storeRoot, "bash", "5.3.9-1", "usr", "bin"), 0755)
+	os.MkdirAll(filepath.Join(symlinkRoot, "usr", "bin"), 0755)
+
+	// Create fake store files
+	storeFile := filepath.Join(storeRoot, "bash", "5.3.9-1", "usr", "bin", "bash")
+	os.WriteFile(storeFile, []byte("dummy"), 0644)
+
+	// Create a symlink pointing elsewhere
+	symlinkPath := filepath.Join(symlinkRoot, "usr", "bin", "bash")
+	wrongTarget := filepath.Join(tmpDir, "other", "bash")
+	if err := os.Symlink(wrongTarget, symlinkPath); err != nil {
+		t.Fatalf("Failed to create existing symlink: %v", err)
+	}
+
+	m := NewManager(storeRoot, symlinkRoot)
+
+	// Creating should replace the wrong symlink
+	files := []string{"usr/bin/bash"}
+	err := m.CreateSymlinks("bash", "5.3.9-1", files)
+	if err != nil {
+		t.Fatalf("CreateSymlinks failed: %v", err)
+	}
+
+	// Verify symlink now points to the correct store location
+	target, err := os.Readlink(symlinkPath)
+	if err != nil {
+		t.Fatalf("Readlink failed: %v", err)
+	}
+	expectedTarget := m.GetStorePath("bash", "5.3.9-1", "usr/bin/bash")
+	if target != expectedTarget {
+		t.Errorf("Symlink points to %s, expected %s", target, expectedTarget)
+	}
+}
+
 func TestCreateSymlinksWithExistingFile(t *testing.T) {
 	tmpDir := t.TempDir()
 	storeRoot := filepath.Join(tmpDir, "pool")
