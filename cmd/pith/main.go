@@ -10,7 +10,7 @@ import (
 	"github.com/kodos-prj/pistacho/pkg/config"
 )
 
-const version = "0.4.2"
+const version = "0.4.3"
 
 var (
 	configPath      string
@@ -21,6 +21,14 @@ var (
 )
 
 func main() {
+	// Handle version flags before flag.Parse (which would reject unknown flags)
+	for _, a := range os.Args[1:] {
+		if a == "--version" || a == "-v" {
+			fmt.Printf("pith version %s\n", version)
+			return
+		}
+	}
+
 	// Define global flags
 	flag.StringVar(&configPath, "config", "", "Path to configuration file")
 	flag.StringVar(&configPath, "c", "", "Path to configuration file (shorthand)")
@@ -43,10 +51,6 @@ func main() {
 	command := args[0]
 
 	switch command {
-	case "version":
-		fmt.Printf("pith version %s\n", version)
-		return
-
 	case "sync":
 		handleSync(args[1:])
 
@@ -138,7 +142,7 @@ func showUsage() {
 	fmt.Println("  cache --dry-run    Preview cache clean without making changes")
 	fmt.Println("")
 	fmt.Println("Other:")
-	fmt.Println("  version           Show version information")
+	fmt.Println("  --version         Show version information")
 	fmt.Println("  help              Show this help message")
 	fmt.Println("")
 	fmt.Println("Examples:")
