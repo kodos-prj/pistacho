@@ -220,6 +220,187 @@ func TestDownloadPackageAtomicWrite(t *testing.T) {
 	}
 }
 
+// TestDownloadPackageSpecialCharsInVersion tests downloading packages with special characters
+// in version strings that need URL encoding (e.g., #, %, ?).
+// Note: + is not encoded by url.PathEscape since it's valid in URL paths per RFC 3986.
+func TestDownloadPackageSpecialCharsInVersion(t *testing.T) {
+	cacheDir := t.TempDir()
+
+	var receivedRawURI string
+	var mu sync.Mutex
+
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		mu.Lock()
+		receivedRawURI = r.RequestURI
+		mu.Unlock()
+		content := "special chars package"
+		w.Header().Set("Content-Length", fmt.Sprintf("%d", len(content)))
+		fmt.Fprint(w, content)
+	}))
+	defer server.Close()
+
+	d := NewDownloader(server.URL, cacheDir, 5, 30*time.Second, "x86_64")
+
+	pkg := PackageInfo{
+		Name:         "myapp",
+		Version:      "1.0.0+git12345",
+		Repo:         "extra",
+		Architecture: "x86_64",
+	}
+
+	path, err := d.DownloadPackage(pkg)
+	if err != nil {
+		t.Fatalf("DownloadPackage failed: %v", err)
+	}
+
+	content, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatalf("Failed to read downloaded file: %v", err)
+	}
+	if string(content) != "special chars package" {
+		t.Errorf("File content mismatch: got %s", string(content))
+	}
+
+	expectedFilename := "myapp-1.0.0+git12345-x86_64.pkg.tar.zst"
+	if filepath.Base(path) != expectedFilename {
+		t.Errorf("Filename mismatch: expected %s, got %s", expectedFilename, filepath.Base(path))
+	}
+
+	// + is encoded as %2B to match Arch mirror URL format
+	expectedRawURI := "/extra/os/x86_64/myapp-1.0.0%2Bgit12345-x86_64.pkg.tar.zst"
+	mu.Lock()
+	if receivedRawURI != expectedRawURI {
+		t.Errorf("Raw URI mismatch: expected %s, got %s", expectedRawURI, receivedRawURI)
+	}
+	mu.Unlock()
+}
+
+// TestDownloadPackageHashInVersion tests downloading packages with # in version.
+func TestDownloadPackageHashInVersion(t *testing.T) {
+	cacheDir := t.TempDir()
+
+	var receivedRawURI string
+	var mu sync.Mutex
+
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		mu.Lock()
+		receivedRawURI = r.RequestURI
+		mu.Unlock()
+		fmt.Fprint(w, "hash version content")
+	}))
+	defer server.Close()
+
+	d := NewDownloader(server.URL, cacheDir, 5, 30*time.Second, "x86_64")
+
+	pkg := PackageInfo{
+		Name:         "specialpkg",
+		Version:      "2.0#beta-1",
+		Repo:         "extra",
+		Architecture: "x86_64",
+	}
+
+	path, err := d.DownloadPackage(pkg)
+	if err != nil {
+		t.Fatalf("DownloadPackage failed: %v", err)
+	}
+
+	expectedFilename := "specialpkg-2.0#beta-1-x86_64.pkg.tar.zst"
+	if filepath.Base(path) != expectedFilename {
+		t.Errorf("Filename mismatch: expected %s, got %s", expectedFilename, filepath.Base(path))
+	}
+
+	expectedRawURI := "/extra/os/x86_64/specialpkg-2.0%23beta-1-x86_64.pkg.tar.zst"
+	mu.Lock()
+	if receivedRawURI != expectedRawURI {
+		t.Errorf("Raw URI mismatch: expected %s, got %s", expectedRawURI, receivedRawURI)
+	}
+	mu.Unlock()
+}
+
+// TestDownloadPackagePercentInVersion tests downloading packages with % in version.
+func TestDownloadPackagePercentInVersion(t *testing.T) {
+	cacheDir := t.TempDir()
+
+	var receivedRawURI string
+	var mu sync.Mutex
+
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		mu.Lock()
+		receivedRawURI = r.RequestURI
+		mu.Unlock()
+		fmt.Fprint(w, "percent version content")
+	}))
+	defer server.Close()
+
+	d := NewDownloader(server.URL, cacheDir, 5, 30*time.Second, "x86_64")
+
+	pkg := PackageInfo{
+		Name:         "percentpkg",
+		Version:      "1.0%dev-1",
+		Repo:         "extra",
+		Architecture: "x86_64",
+	}
+
+	path, err := d.DownloadPackage(pkg)
+	if err != nil {
+		t.Fatalf("DownloadPackage failed: %v", err)
+	}
+
+	expectedFilename := "percentpkg-1.0%dev-1-x86_64.pkg.tar.zst"
+	if filepath.Base(path) != expectedFilename {
+		t.Errorf("Filename mismatch: expected %s, got %s", expectedFilename, filepath.Base(path))
+	}
+
+	expectedRawURI := "/extra/os/x86_64/percentpkg-1.0%25dev-1-x86_64.pkg.tar.zst"
+	mu.Lock()
+	if receivedRawURI != expectedRawURI {
+		t.Errorf("Raw URI mismatch: expected %s, got %s", expectedRawURI, receivedRawURI)
+	}
+	mu.Unlock()
+}
+
+// TestDownloadPackageQuestionMarkInVersion tests downloading packages with ? in version.
+func TestDownloadPackageQuestionMarkInVersion(t *testing.T) {
+	cacheDir := t.TempDir()
+
+	var receivedRawURI string
+	var mu sync.Mutex
+
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		mu.Lock()
+		receivedRawURI = r.RequestURI
+		mu.Unlock()
+		fmt.Fprint(w, "question mark version content")
+	}))
+	defer server.Close()
+
+	d := NewDownloader(server.URL, cacheDir, 5, 30*time.Second, "x86_64")
+
+	pkg := PackageInfo{
+		Name:         "questionpkg",
+		Version:      "1.0?alpha-1",
+		Repo:         "extra",
+		Architecture: "x86_64",
+	}
+
+	path, err := d.DownloadPackage(pkg)
+	if err != nil {
+		t.Fatalf("DownloadPackage failed: %v", err)
+	}
+
+	expectedFilename := "questionpkg-1.0?alpha-1-x86_64.pkg.tar.zst"
+	if filepath.Base(path) != expectedFilename {
+		t.Errorf("Filename mismatch: expected %s, got %s", expectedFilename, filepath.Base(path))
+	}
+
+	expectedRawURI := "/extra/os/x86_64/questionpkg-1.0%3Falpha-1-x86_64.pkg.tar.zst"
+	mu.Lock()
+	if receivedRawURI != expectedRawURI {
+		t.Errorf("Raw URI mismatch: expected %s, got %s", expectedRawURI, receivedRawURI)
+	}
+	mu.Unlock()
+}
+
 // TestDownloadPackages tests concurrent package downloads.
 func TestDownloadPackages(t *testing.T) {
 	cacheDir := t.TempDir()

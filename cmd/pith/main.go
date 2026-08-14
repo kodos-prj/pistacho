@@ -10,7 +10,7 @@ import (
 	"github.com/kodos-prj/pistacho/pkg/config"
 )
 
-const version = "0.4.4"
+const version = "0.4.5"
 
 var (
 	configPath      string

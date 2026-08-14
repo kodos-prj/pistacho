@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"os"
+	"strings"
 	"path/filepath"
 	"sync"
 	"time"
@@ -67,7 +69,8 @@ func (d *Downloader) DownloadPackage(pkg PackageInfo) (string, error) {
 			urlArch = "x86_64"
 		}
 	}
-	pkgURL := fmt.Sprintf("%s/%s/os/%s/%s", d.mirrorURL, pkg.Repo, urlArch, filename)
+	escapedFilename := strings.ReplaceAll(url.PathEscape(filename), "+", "%2B")
+	pkgURL := fmt.Sprintf("%s/%s/os/%s/%s", d.mirrorURL, pkg.Repo, urlArch, escapedFilename)
 
 	fmt.Printf("Downloading %s/%s from %s...\n", pkg.Repo, filename, pkgURL)
 
